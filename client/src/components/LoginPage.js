@@ -152,7 +152,7 @@ cancelCreateAccount = () => {
 
   render() {
     return(
-        <div>
+        <div className="padded-page">
         <center>
         {this.state.statusMsg != "" ? <div className="status-msg"><span>{this.state.statusMsg}</span>
                        <button className="modal-close" onClick={this.closeStatusMsg}>

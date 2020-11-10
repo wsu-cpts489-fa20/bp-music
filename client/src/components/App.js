@@ -130,7 +130,7 @@ class App extends React.Component {
   render() {
     const ModePage = modeToPage[this.state.mode];
     return (
-      <div className="padded-page">
+      <div>
         {this.state.showAboutDialog ? 
           <AboutBox close={() => this.setState({showAboutDialog: false})}/> : null}
         {this.state.statusMsg != "" ? <div className="status-msg">
