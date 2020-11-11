@@ -57,6 +57,12 @@ roundSchema.virtual('SGS').get(function() {
   return (this.strokes * 60) + (this.minutes * 60) + this.seconds;
 });
 
+const fanSchema = new Schema({
+  genres: {type: List[String], required: true},
+  artists: {type: List[String], required: true},
+  venues: {type: List[String], required: true}
+});
+
 //Define schema that maps to a document in the Users collection in the appdb
 //database.
 const userSchema = new Schema({
