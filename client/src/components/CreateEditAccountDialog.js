@@ -1,6 +1,5 @@
 import React from 'react';
 import ConfirmDeleteAccount from './ConfirmDeleteAccount.js';
-import confirmDeleteAccount from './ConfirmDeleteAccount.js';
 
 class CreateEditAccountDialog extends React.Component {
 
@@ -18,6 +17,7 @@ class CreateEditAccountDialog extends React.Component {
                       passwordRepeat: "",
                       securityQuestion: "",
                       securityAnswer: "",
+                      accountType: "fan",
                       formUpdated: false,
                       confirmDelete: false};
     } 
@@ -38,6 +38,7 @@ class CreateEditAccountDialog extends React.Component {
                            profilePicURL: userData.profilePicURL,
                            password: userData.password,
                            passwordRepeat: userData.password,
+                           accountType: userData.accountType,
                            securityQuestion: userData.securityQuestion,
                            securityAnswer: userData.securityAnswer});
         }
@@ -325,6 +326,16 @@ class CreateEditAccountDialog extends React.Component {
                 value={this.state.securityAnswer}
                 onChange={this.handleChange}
                 />
+            </label>
+            <br/>
+            <label>Account Type:
+            <select name="type" value={this.state.accountType} 
+                className="form-control form-textform-center" 
+                onChange={this.handleChange}>
+                <option value="fan">Fan</option>
+                <option value="artist">Artist</option>
+                <option value="venue">Venue</option>
+            </select> 
             </label>
             <br/>
             {!this.props.create ?  

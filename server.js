@@ -68,15 +68,27 @@ const fanSchema = new Schema({
 const userSchema = new Schema({
   id: String, //unique identifier for user
   password: String,
+  userType: String,
   displayName: String, //Name to be displayed within app
   authStrategy: String, //strategy used to authenticate, e.g., github, local
   profilePicURL: String, //link to profile image
   securityQuestion: String,
   securityAnswer: {type: String, required: function() 
     {return this.securityQuestion ? true: false}},
+  userTypeShema: {type: Schema, required: getUserType()},
   rounds: [roundSchema]
 });
 const User = mongoose.model("User",userSchema); 
+
+getUserType = () => {
+  if(userType == "fan")
+  {
+    userAccess: [fanSchema]
+  }
+  else{
+    userAccess: [fanSchema]
+  }
+}
 
 //////////////////////////////////////////////////////////////////////////
 //PASSPORT SET-UP
