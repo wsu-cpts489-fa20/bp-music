@@ -7,7 +7,6 @@ class LocationSearch extends React.Component {
 
         this.state = {
             searchVal: "",
-            key: 'AIzaSyArVAktWDvw8Ban4nGv1baEiaTt4CvcFTg',
             searchResult: {},
             validSearch: false
         }
