@@ -7,29 +7,41 @@ class LocationSearch extends React.Component {
 
         this.state = {
             searchVal: "",
-            key: 'AIzaSyArVAktWDvw8Ban4nGv1baEiaTt4CvcFTg'
+            key: 'AIzaSyArVAktWDvw8Ban4nGv1baEiaTt4CvcFTg',
+            searchResult: {},
+            validSearch: false
         }
     }
 
     handleSubmit = async (event) => {
-        // https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Museum%20of%20Contemporary%20Art%20Australia&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=YOUR_API_KEY
-        
-        // encode query string to ensure valid url
-        let formattedSearch = encodeURIComponent(this.state.searchVal);
-
-        const url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=" + 
-        formattedSearch + 
-        "&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=" + 
-        this.state.key;
-        console.log(url)
-        // let result = await fetch(url)
-        // console.log(result.status)
-        // alert("Search: " + this.state.searchVal + "\n" + result);
         event.preventDefault();
+
+        let result = await fetch('location/' + this.state.searchVal)
+        console.log(result.status)
+        
+        if (result.status === 200) {
+            let text = await result.text()
+            console.log(text)
+            console.log(typeof(text))
+            this.setState({searchResult: JSON.parse(text), validSearch: true});
+        } else {
+            this.setState({searchResult: {}, validSearch: false});
+        }
     }
 
     handleChange = (event) => {
         this.setState({[event.target.name]: event.target.value})
+    }
+
+    displayResults = () => {
+        return (
+            <div>
+                <div>Name: {this.state.searchResult.candidates[0].name}</div>
+                <div>Address: {this.state.searchResult.candidates[0].formatted_address}</div>
+                <div>Latitude: {this.state.searchResult.candidates[0].geometry.location.lat}</div>
+                <div>Longitude: {this.state.searchResult.candidates[0].geometry.location.lng}</div>
+            </div>
+        )
     }
 
     render() {
@@ -48,6 +60,7 @@ class LocationSearch extends React.Component {
                     <br />
                     <button role="submit">Submit</button>
                 </form>
+                {this.state.validSearch ? this.displayResults() : null}
                 </center>
             </div>
         )
