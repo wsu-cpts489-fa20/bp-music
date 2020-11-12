@@ -28,6 +28,10 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+var http = require('http');
+
+var https = require('https');
+
 require('dotenv').config();
 
 var LOCAL_PORT = 8081;
@@ -899,5 +903,71 @@ app["delete"]('/rounds/:userId/:roundId', /*#__PURE__*/function () {
 
   return function (_x31, _x32, _x33) {
     return _ref11.apply(this, arguments);
+  };
+}()); // GET route for google location search
+// Returns an Object containing information about the location
+
+app.get('/location/:search', /*#__PURE__*/function () {
+  var _ref12 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee12(req, res) {
+    var search, url, request, data, formattedData;
+    return _regeneratorRuntime["default"].wrap(function _callee12$(_context12) {
+      while (1) {
+        switch (_context12.prev = _context12.next) {
+          case 0:
+            // Properly encode search text for a URL
+            search = encodeURIComponent(req.params.search);
+            console.log("in /location route (GET) search for: " + search);
+            url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=" + search + "&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=" + process.env.GOOGLE_API_KEY;
+            request = new Promise(function (resolve, reject) {
+              https.get(url, function (resp) {
+                var data = '';
+                resp.on('data', function (chunk) {
+                  data += chunk;
+                });
+                resp.on('end', function () {
+                  resolve(data);
+                });
+              }).on('error', function (err) {
+                reject(err);
+              });
+            });
+            _context12.prev = 4;
+            _context12.next = 7;
+            return request;
+
+          case 7:
+            data = _context12.sent;
+            formattedData = JSON.parse(data);
+            console.log(formattedData);
+
+            if (!(formattedData.status === 'OK')) {
+              _context12.next = 14;
+              break;
+            }
+
+            return _context12.abrupt("return", res.status(200).send(data));
+
+          case 14:
+            return _context12.abrupt("return", res.status(404).send('Location not found'));
+
+          case 15:
+            _context12.next = 20;
+            break;
+
+          case 17:
+            _context12.prev = 17;
+            _context12.t0 = _context12["catch"](4);
+            return _context12.abrupt("return", res.status(400).send(_context12.t0));
+
+          case 20:
+          case "end":
+            return _context12.stop();
+        }
+      }
+    }, _callee12, null, [[4, 17]]);
+  }));
+
+  return function (_x34, _x35) {
+    return _ref12.apply(this, arguments);
   };
 }());
