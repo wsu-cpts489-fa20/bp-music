@@ -19,7 +19,10 @@ class CreateEditAccountDialog extends React.Component {
                       securityAnswer: "",
                       accountType: "",
                       formUpdated: false,
-                      confirmDelete: false};
+                      confirmDelete: false,
+                      showFanDialog: false,
+                      showArtistDialog: false,
+                      showVenueDialog: false};
     } 
 
     //componentDidMount -- If we are editing an existing user acccount, we need to grab the data from
@@ -213,7 +216,7 @@ class CreateEditAccountDialog extends React.Component {
                 &times;</button>
             </div>
             <div className="modal-body">
-            <form onSubmit={this.handleSubmit}>
+            <form onSubmit={this.handleAccountType}>
             <label>
                 Account Type:
                 <select name="accountType" value={this.state.accountType} 
@@ -355,13 +358,78 @@ class CreateEditAccountDialog extends React.Component {
             </div>
         </div>
         {this.state.confirmDelete ? 
-          <ConfirmDeleteAccount email={this.state.accountName}
-                                deleteAccount={this.deleteAccount}
-                                close={() => (this.setState({confirmDelete: false}))}
-         /> : null}
+          <ConfirmDeleteAccount email={this.state.accountName} deleteAccount={this.deleteAccount}
+                                close={() => (this.setState({confirmDelete: false}))}/> : null}
+        {this.state.showFanDialog ? this.renderFanDialog() : null}
+        {this.state.showArtistDialog ? this.renderArtistDialog() : null}
+        {this.state.showVenueDialog ? this.renderVenueDialog() : null}
     </div>
     );
 }
+
+handleAccountType = () => {
+    if (this.state.accountType == "fan") {
+        this.setState({showFanDialog: true});
+    }
+    if (this.state.accountType == "artist") {
+        this.setState({showArtistDialog: true});
+    }
+    if (this.state.accountType == "venue") {
+        this.setState({showVenueDialog: true});
+    }
+}
+
+renderFanDialog = () => {
+    return (
+        <div className="modal" role="dialog">
+        <div className="modal-dialog modal-lg"></div>
+        <div className="modal-content form-center">
+        <div className="modal-header">
+        <h3><b>Create Fan Account</b></h3>
+            <button className="modal-close" onClick={this.props.cancel}>&times;</button>
+        </div>
+        <div className="modal-body">
+        <form onSubmit={this.handleSubmit}>
+
+        </form>
+        </div></div></div>
+    );
+}
+
+renderArtistDialog = () => {
+    return (
+        <div className="modal" role="dialog">
+        <div className="modal-dialog modal-lg"></div>
+        <div className="modal-content form-center">
+        <div className="modal-header">
+        <h3><b>Create Artist Account</b></h3>
+            <button className="modal-close" onClick={this.props.cancel}>&times;</button>
+        </div>
+        <div className="modal-body">
+        <form onSubmit={this.handleSubmit}>
+
+        </form>
+        </div></div></div>
+    );
+}
+
+renderVenueDialog = () => {
+    return (
+        <div className="modal" role="dialog">
+        <div className="modal-dialog modal-lg"></div>
+        <div className="modal-content form-center">
+        <div className="modal-header">
+        <h3><b>Create Venue Account</b></h3>
+            <button className="modal-close" onClick={this.props.cancel}>&times;</button>
+        </div>
+        <div className="modal-body">
+        <form onSubmit={this.handleSubmit}>
+
+        </form>
+        </div></div></div>
+    );
+}
+
 }
 
 export default CreateEditAccountDialog;

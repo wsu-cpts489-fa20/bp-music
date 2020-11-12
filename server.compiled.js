@@ -105,8 +105,33 @@ var roundSchema = new Schema({
 });
 roundSchema.virtual('SGS').get(function () {
   return this.strokes * 60 + this.minutes * 60 + this.seconds;
-}); //Define schema that maps to a document in the Users collection in the appdb
+});
+var fanSchema = new Schema({
+  genres: List[String],
+  artists: List[String],
+  venues: List[String],
+  currLocation: String
+});
+
+var Fan = _mongoose["default"].model("Fan", userSchema);
+
+var artistSchema = new Schema({
+  user: userSchema,
+  artistName: String,
+  genre: String,
+  media: List[String]
+});
+
+var Artist = _mongoose["default"].model("Artist", userSchema);
+
+var venueSchema = new Schema({
+  user: userSchema,
+  location: String
+});
+
+var Venue = _mongoose["default"].model("Venue", userSchema); //Define schema that maps to a document in the Users collection in the appdb
 //database.
+
 
 var userSchema = new Schema({
   id: String,
@@ -125,6 +150,7 @@ var userSchema = new Schema({
       return this.securityQuestion ? true : false;
     }
   },
+  accountType: String,
   rounds: [roundSchema]
 });
 
@@ -459,12 +485,12 @@ app.post('/users/:userId', /*#__PURE__*/function () {
           case 0:
             console.log("in /users route (POST) with params = " + JSON.stringify(req.params) + " and body = " + JSON.stringify(req.body));
 
-            if (!(req.body === undefined || !req.body.hasOwnProperty("password") || !req.body.hasOwnProperty("displayName") || !req.body.hasOwnProperty("profilePicURL") || !req.body.hasOwnProperty("securityQuestion") || !req.body.hasOwnProperty("securityAnswer"))) {
+            if (!(req.body === undefined || !req.body.hasOwnProperty("password") || !req.body.hasOwnProperty("displayName") || !req.body.hasOwnProperty("profilePicURL") || !req.body.hasOwnProperty("securityQuestion") || !req.body.hasOwnProperty("securityAnswer") || !req.body.hasOwnProperty("accountType"))) {
               _context5.next = 3;
               break;
             }
 
-            return _context5.abrupt("return", res.status(400).send("/users POST request formulated incorrectly. " + "It must contain 'password','displayName','profilePicURL','securityQuestion' and 'securityAnswer fields in message body."));
+            return _context5.abrupt("return", res.status(400).send("/users POST request formulated incorrectly. " + "It must contain 'password','displayName','profilePicURL','securityQuestion','securityAnswer' and 'accountType' fields in message body."));
 
           case 3:
             _context5.prev = 3;
@@ -899,5 +925,68 @@ app["delete"]('/rounds/:userId/:roundId', /*#__PURE__*/function () {
 
   return function (_x31, _x32, _x33) {
     return _ref11.apply(this, arguments);
+  };
+}()); /////////////////////////////////
+//ACCOUNTTYPE ROUTES
+////////////////////////////////
+//CREATE accountType route: Addsusers account type as a subdocument to 
+//a document in the users collection (POST)
+
+app.post('/accountType/:userId', /*#__PURE__*/function () {
+  var _ref12 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee12(req, res, next) {
+    var status;
+    return _regeneratorRuntime["default"].wrap(function _callee12$(_context12) {
+      while (1) {
+        switch (_context12.prev = _context12.next) {
+          case 0:
+            console.log("in /accountType (POST) route with params = " + JSON.stringify(req.params) + " and body = " + JSON.stringify(req.body));
+
+            if (!(!req.body.hasOwnProperty("genres") || !req.body.hasOwnProperty("artists") || !req.body.hasOwnProperty("venues"))) {
+              _context12.next = 3;
+              break;
+            }
+
+            return _context12.abrupt("return", res.status(400).send("POST request on /accountType formulated incorrectly." + "Body must contain all 3 required fields: genres, artists, and venues"));
+
+          case 3:
+            _context12.prev = 3;
+            _context12.next = 6;
+            return User.updateOne({
+              id: req.params.userId
+            }, {
+              $push: {
+                accountType: req.body
+              }
+            });
+
+          case 6:
+            status = _context12.sent;
+
+            if (status.nModified != 1) {
+              //Should never happen!
+              res.status(400).send("Unexpected error occurred when adding accountType to" + " database. Account Type was not added.");
+            } else {
+              res.status(200).send("Round successfully added to database.");
+            }
+
+            _context12.next = 14;
+            break;
+
+          case 10:
+            _context12.prev = 10;
+            _context12.t0 = _context12["catch"](3);
+            console.log(_context12.t0);
+            return _context12.abrupt("return", res.status(400).send("Unexpected error occurred when adding round" + " to database: " + _context12.t0));
+
+          case 14:
+          case "end":
+            return _context12.stop();
+        }
+      }
+    }, _callee12, null, [[3, 10]]);
+  }));
+
+  return function (_x34, _x35, _x36) {
+    return _ref12.apply(this, arguments);
   };
 }());
