@@ -58,52 +58,42 @@ roundSchema.virtual('SGS').get(function() {
 });
 
 const fanSchema = new Schema({
-  genres: {type: List[String], required: true},
-  artists: {type: List[String], required: true},
-  venues: {type: List[String], required: true}
+  genres: List[String],
+  artists: List[String],
+  venues: List[String],
+  currLocation: String
 });
+const Fan = mongoose.model("Fan", userSchema);
 
 const artistSchema = new Schema({
-  genres: {type: List[String], required: true},
-  artistName: {type: String, required: true},
-  media: {type: List[String], required: true}
+  user: userSchema,
+  artistName: String,
+  genre: String,
+  media: List[String]
 });
+const Artist = mongoose.model("Artist", userSchema);
 
 const venueSchema = new Schema({
-  
+  user: userSchema,
+  location: String
 });
+const Venue = mongoose.model("Venue", userSchema);
 
 //Define schema that maps to a document in the Users collection in the appdb
 //database.
 const userSchema = new Schema({
   id: String, //unique identifier for user
   password: String,
-  userType: String, 
   displayName: String, //Name to be displayed within app
   authStrategy: String, //strategy used to authenticate, e.g., github, local
   profilePicURL: String, //link to profile image
   securityQuestion: String,
   securityAnswer: {type: String, required: function() 
     {return this.securityQuestion ? true: false}},
-  accountType: {type: Schema, required: getUserType()},
+  accountType: String,
   rounds: [roundSchema]
 });
-const User = mongoose.model("User",userSchema); 
-
-getUserType = () => {
-  if (userType == "fan") {
-    userAccess: [fanSchema]
-  }
-  if (userType == "artist") {
-    userAccess: [artistSchema]
-  }
-  if (userType == "venue") {
-    userAccess: [venueSchema]
-  } 
-  else {
-    userAccess: [userSchema]
-  }
-}
+const User = mongoose.model("User", userSchema); 
 
 //////////////////////////////////////////////////////////////////////////
 //PASSPORT SET-UP
