@@ -57,20 +57,53 @@ roundSchema.virtual('SGS').get(function() {
   return (this.strokes * 60) + (this.minutes * 60) + this.seconds;
 });
 
+const fanSchema = new Schema({
+  genres: {type: List[String], required: true},
+  artists: {type: List[String], required: true},
+  venues: {type: List[String], required: true}
+});
+
+const artistSchema = new Schema({
+  genres: {type: List[String], required: true},
+  artistName: {type: String, required: true},
+  media: {type: List[String], required: true}
+});
+
+const venueSchema = new Schema({
+  
+});
+
 //Define schema that maps to a document in the Users collection in the appdb
 //database.
 const userSchema = new Schema({
   id: String, //unique identifier for user
   password: String,
+  userType: String, 
   displayName: String, //Name to be displayed within app
   authStrategy: String, //strategy used to authenticate, e.g., github, local
   profilePicURL: String, //link to profile image
   securityQuestion: String,
   securityAnswer: {type: String, required: function() 
     {return this.securityQuestion ? true: false}},
+  accountType: {type: Schema, required: getUserType()},
   rounds: [roundSchema]
 });
 const User = mongoose.model("User",userSchema); 
+
+getUserType = () => {
+  if (userType == "fan") {
+    userAccess: [fanSchema]
+  }
+  if (userType == "artist") {
+    userAccess: [artistSchema]
+  }
+  if (userType == "venue") {
+    userAccess: [venueSchema]
+  } 
+  else {
+    userAccess: [userSchema]
+  }
+}
 
 //////////////////////////////////////////////////////////////////////////
 //PASSPORT SET-UP
@@ -268,10 +301,11 @@ app.post('/users/:userId',  async (req, res, next) => {
       !req.body.hasOwnProperty("displayName") ||
       !req.body.hasOwnProperty("profilePicURL") ||
       !req.body.hasOwnProperty("securityQuestion") ||
-      !req.body.hasOwnProperty("securityAnswer")) {
+      !req.body.hasOwnProperty("securityAnswer") ||
+      !req.body.hasOwnProperty("accountType")) {
     //Body does not contain correct properties
     return res.status(400).send("/users POST request formulated incorrectly. " + 
-      "It must contain 'password','displayName','profilePicURL','securityQuestion' and 'securityAnswer fields in message body.")
+      "It must contain 'password','displayName','profilePicURL','securityQuestion','securityAnswer' and 'accountType' fields in message body.")
   }
   try {
     let thisUser = await User.findOne({id: req.params.userId});
@@ -463,3 +497,37 @@ app.delete('/rounds/:userId/:roundId', async (req, res, next) => {
   } 
 });
 
+/////////////////////////////////
+//ACCOUNTTYPE ROUTES
+////////////////////////////////
+
+//CREATE accountType route: Addsusers account type as a subdocument to 
+//a document in the users collection (POST)
+app.post('/accountType/:userId', async (req, res, next) => {
+  console.log("in /accountType (POST) route with params = " + 
+              JSON.stringify(req.params) + " and body = " + 
+              JSON.stringify(req.body));
+  if (!req.body.hasOwnProperty("genres") || 
+      !req.body.hasOwnProperty("artists") || 
+      !req.body.hasOwnProperty("venues")) {
+    //Body does not contain correct properties
+    return res.status(400).send("POST request on /accountType formulated incorrectly." +
+      "Body must contain all 3 required fields: genres, artists, and venues");
+  }
+  try {
+    let status = await User.updateOne(
+    {id: req.params.userId},
+    {$push: {accountType: req.body}});
+    if (status.nModified != 1) { //Should never happen!
+      res.status(400).send("Unexpected error occurred when adding accountType to"+
+        " database. Account Type was not added.");
+    } else {
+      res.status(200).send("Round successfully added to database.");
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send("Unexpected error occurred when adding round" +
+     " to database: " + err);
+  } 
+
+});

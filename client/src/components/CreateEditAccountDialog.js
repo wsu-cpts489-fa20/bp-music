@@ -1,6 +1,5 @@
 import React from 'react';
 import ConfirmDeleteAccount from './ConfirmDeleteAccount.js';
-import confirmDeleteAccount from './ConfirmDeleteAccount.js';
 
 class CreateEditAccountDialog extends React.Component {
 
@@ -18,6 +17,7 @@ class CreateEditAccountDialog extends React.Component {
                       passwordRepeat: "",
                       securityQuestion: "",
                       securityAnswer: "",
+                      accountType: "",
                       formUpdated: false,
                       confirmDelete: false};
     } 
@@ -39,7 +39,8 @@ class CreateEditAccountDialog extends React.Component {
                            password: userData.password,
                            passwordRepeat: userData.password,
                            securityQuestion: userData.securityQuestion,
-                           securityAnswer: userData.securityAnswer});
+                           securityAnswer: userData.securityAnswer,
+                           accountType: userData.accountType,});
         }
     }
 
@@ -136,7 +137,8 @@ class CreateEditAccountDialog extends React.Component {
             password: this.state.password,
             profilePicURL: this.state.profilePicURL,
             securityQuestion: this.state.securityQuestion,
-            securityAnswer: this.state.securityAnswer
+            securityAnswer: this.state.securityAnswer,
+            accountType: this.state.accountType
         };
         const url = '/users/' + this.state.accountName;
         let res;
@@ -212,6 +214,17 @@ class CreateEditAccountDialog extends React.Component {
             </div>
             <div className="modal-body">
             <form onSubmit={this.handleSubmit}>
+            <label>
+                Account Type:
+                <select name="accountType" value={this.state.accountType} 
+                    className="form-control form-textform-center" 
+                    onChange={this.handleChange}>
+                    <option value="fan">Fan</option>
+                    <option value="artist">Artist</option>
+                    <option value="venue">Venue</option>
+                </select> 
+            </label>
+            <br/>
             <label>
                 Email: 
                 <input  
