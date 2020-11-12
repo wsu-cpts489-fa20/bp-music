@@ -499,7 +499,6 @@ app.get('/location/:search', async (req, res) => {
   try {
     let data = await request;
     let formattedData = JSON.parse(data)
-    console.log(formattedData)
     if (formattedData.status === 'OK') {
       return res.status(200).send(data);
     } else {
@@ -510,3 +509,8 @@ app.get('/location/:search', async (req, res) => {
   }
 })
 
+app.get('/map/:address', async (req, res) => {
+  console.log("in /map route (GET) make url for: " + req.params.address);
+  const encodedAddress = encodeURIComponent(req.params.address);
+  return res.status(200).send("https://www.google.com/maps/embed/v1/place?key=" + process.env.GOOGLE_API_KEY +"&q=" + encodedAddress);
+})
