@@ -8,7 +8,8 @@ class LocationSearch extends React.Component {
         this.state = {
             searchVal: "",
             searchResult: {},
-            validSearch: false
+            validSearch: false,
+            mapUrl: ''
         }
     }
 
@@ -16,20 +17,20 @@ class LocationSearch extends React.Component {
         event.preventDefault();
 
         let result = await fetch('location/' + this.state.searchVal)
-        console.log(result.status)
-        
+
         if (result.status === 200) {
-            let text = await result.text()
-            console.log(text)
-            console.log(typeof(text))
-            this.setState({searchResult: JSON.parse(text), validSearch: true});
+            let text = await result.text();
+            let parsedText = JSON.parse(text);
+            result = await fetch('map/' + parsedText.candidates[0].formatted_address);
+            let mapUrl = await result.text();
+            this.setState({ searchResult: JSON.parse(text), validSearch: true, mapUrl: mapUrl});
         } else {
-            this.setState({searchResult: {}, validSearch: false});
+            this.setState({ searchResult: {}, validSearch: false, mapUrl: ""});
         }
     }
 
     handleChange = (event) => {
-        this.setState({[event.target.name]: event.target.value})
+        this.setState({ [event.target.name]: event.target.value })
     }
 
     displayResults = () => {
@@ -47,19 +48,25 @@ class LocationSearch extends React.Component {
         return (
             <div className="padded-page">
                 <center>
-                <form onSubmit={this.handleSubmit}>
-                    <label>Enter a search<br />
-                        <input className="form-control form-text form-center"
-                            name="searchVal"
-                            type="text"
-                            value={this.state.searchVal}
-                            onChange={this.handleChange}>
-                        </input>
-                    </label>
-                    <br />
-                    <button role="submit">Submit</button>
-                </form>
-                {this.state.validSearch ? this.displayResults() : null}
+                    <form onSubmit={this.handleSubmit}>
+                        <label>Enter a search<br />
+                            <input className="form-control form-text form-center"
+                                name="searchVal"
+                                type="text"
+                                value={this.state.searchVal}
+                                onChange={this.handleChange}>
+                            </input>
+                        </label>
+                        <br />
+                        <button role="submit">Submit</button>
+                    </form>
+                    {this.state.validSearch ? this.displayResults() : null}
+                    <iframe
+                        width="400"
+                        height="300"
+                        frameborder="0" style={{border: 0}}
+                        src={this.state.mapUrl} allowfullscreen>
+                    </iframe> 
                 </center>
             </div>
         )

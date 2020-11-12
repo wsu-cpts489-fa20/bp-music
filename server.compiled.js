@@ -971,3 +971,26 @@ app.get('/location/:search', /*#__PURE__*/function () {
     return _ref12.apply(this, arguments);
   };
 }());
+app.get('/map/:address', /*#__PURE__*/function () {
+  var _ref13 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee13(req, res) {
+    var encodedAddress;
+    return _regeneratorRuntime["default"].wrap(function _callee13$(_context13) {
+      while (1) {
+        switch (_context13.prev = _context13.next) {
+          case 0:
+            console.log("in /map route (GET) make url for: " + req.params.address);
+            encodedAddress = encodeURIComponent(req.params.address);
+            return _context13.abrupt("return", res.status(200).send("https://www.google.com/maps/embed/v1/place?key=" + process.env.GOOGLE_API_KEY + "&q=" + encodedAddress));
+
+          case 3:
+          case "end":
+            return _context13.stop();
+        }
+      }
+    }, _callee13);
+  }));
+
+  return function (_x36, _x37) {
+    return _ref13.apply(this, arguments);
+  };
+}());
