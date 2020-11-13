@@ -17,7 +17,7 @@ class CreateEditAccountDialog extends React.Component {
                       passwordRepeat: "",
                       securityQuestion: "",
                       securityAnswer: "",
-                      accountType: "",
+                      accountType: "fan",
                       formUpdated: false,
                       confirmDelete: false,
                       showFanDialog: false,
@@ -400,19 +400,6 @@ renderFanDialog = () => {
         <form onSubmit={this.handleSubmit}>
         <br/>
         <label>
-            Artist Name:
-            <input
-            className="form-control form-text form-center"
-            name="artistName"
-            type="text"
-            size="30"
-            placeholder="Artist Name"
-            required={true}
-            value={this.state.artistName}
-            />
-        </label>
-        <br/>
-        <label>
             Genres:
             <select name="genres"
                 value={this.state.genres} 
@@ -478,7 +465,7 @@ renderFanDialog = () => {
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Fan Account</button>
         </form>
-        </div></div></div>
+    </div></div></div>
     );
 }
 
