@@ -399,6 +399,19 @@ renderFanDialog = () => {
         <form onSubmit={this.handleSubmit}>
         <br/>
         <label>
+            Artist Name:
+            <input
+            className="form-control form-text form-center"
+            name="artistName"
+            type="text"
+            size="30"
+            placeholder="Artist Name"
+            required={true}
+            value={this.state.artistName}
+            />
+        </label>
+        <br/>
+        <label>
             Genres:
             <select name="genres"
                 value={this.state.genres} 
@@ -412,49 +425,55 @@ renderFanDialog = () => {
                 <option value="edm">EDM</option>
                 <option value="country">Country</option>
             </select>
-            <br/>
-                <label>
-                    Artists:
-                    <select name="artists[]" id="artists" onChange={this.handleArtists} multiple>
-                        <option value="postMalone">Post Malone</option>
-                        <option value="arianaGrande">Ariana Grande</option>
-                        <option value="taylorSwift">Taylor Swift</option>
-                        <option value="drake">Drake</option>
-                        <option value="popSmoke">Pop Smoke</option>
-                        <option value="lilWayne">Lil Wayne</option>
-                        <option value="nickiMinaj">Nicki Minaj</option>
-                        <option value="travisScott">Travis Scott</option>
-                        <option value="kanyeWest">Kanye West</option>
-                        <option value="jayZ">Jay-Z</option>
-                        <option value="localArtist1">Local Artist 1</option>
-                        <option value="localArtist2">Local Artist 2</option>
-                    </select>
-                </label>
-            <br/>
-            <label>
-                Venues:
-                <select name="avenues[]" id="venues" onChange={this.handleVenues} multiple>
-                    <option value="redRocksParkAndAmpitheater">Red Rocks Park and Amphitheatre</option>
-                    <option value="hollywoodBowl">Hollywood Bowl</option>
-                    <option value="merriweatherPostPavilion">Merriweather Post Pavilion</option>
-                    <option value="showbox">The Showbox</option>
-                    <option value="underground">The Underground</option>
-                    <option value="seamonsterLounge">Seamonster Lounge</option>
-                    <option value="crocodile">The Crocodile</option>
-                    <option value="venue1">Venue 1</option>
-                    <option value="venue1">Venue 1</option>
-                    <option value="venue2">Venue 2</option>
-                    <option value="venue3">Venue 3</option>
-                    <option value="venue4">Venue 4</option>
-                    <option value="venue5">Venue 5</option>
-                    <option value="venue6">Venue 6</option>
-                    <option value="venue7">Venue 7</option>
-                </select>
-            </label>
-            <br/>
         </label>
         <br/>
-        <label></label>
+        <label>
+            Artists:
+            <select name="artists"
+                value={this.state.artists} 
+                onChange={this.handleChange} 
+                className="form-control form-textform-center"
+                multiple>
+                <option value="postMalone">Post Malone</option>
+                <option value="arianaGrande">Ariana Grande</option>
+                <option value="taylorSwift">Taylor Swift</option>
+                <option value="drake">Drake</option>
+                <option value="popSmoke">Pop Smoke</option>
+                <option value="lilWayne">Lil Wayne</option>
+                <option value="nickiMinaj">Nicki Minaj</option>
+                <option value="travisScott">Travis Scott</option>
+                <option value="kanyeWest">Kanye West</option>
+                <option value="jayZ">Jay-Z</option>
+                <option value="localArtist1">Local Artist 1</option>
+                <option value="localArtist2">Local Artist 2</option>
+            </select>
+        </label>
+        <br/>
+        <label>
+            Venues:
+            <select name="venues"
+                value={this.state.venues} 
+                onChange={this.handleChange} 
+                className="form-control form-textform-center"
+                multiple>
+                <option value="redRocksParkAndAmpitheater">Red Rocks Park and Amphitheatre</option>
+                <option value="hollywoodBowl">Hollywood Bowl</option>
+                <option value="merriweatherPostPavilion">Merriweather Post Pavilion</option>
+                <option value="showbox">The Showbox</option>
+                <option value="underground">The Underground</option>
+                <option value="seamonsterLounge">Seamonster Lounge</option>
+                <option value="crocodile">The Crocodile</option>
+                <option value="venue1">Venue 1</option>
+                <option value="venue1">Venue 1</option>
+                <option value="venue2">Venue 2</option>
+                <option value="venue3">Venue 3</option>
+                <option value="venue4">Venue 4</option>
+                <option value="venue5">Venue 5</option>
+                <option value="venue6">Venue 6</option>
+                <option value="venue7">Venue 7</option>
+            </select>
+        </label>
+        <br/>
         </form>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Fan Account</button>
