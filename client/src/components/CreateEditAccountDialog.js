@@ -17,10 +17,12 @@ class CreateEditAccountDialog extends React.Component {
                       passwordRepeat: "",
                       securityQuestion: "",
                       securityAnswer: "",
-                      accountType: "fan",
+                      accountType: "",
                       formUpdated: false,
                       confirmDelete: false,
-                      showFanDialog: false};
+                      showFanDialog: false,
+                      showArtistDialog: false,
+                      showVenueDialog: false};
     } 
 
     //componentDidMount -- If we are editing an existing user acccount, we need to grab the data from
@@ -39,9 +41,9 @@ class CreateEditAccountDialog extends React.Component {
                            profilePicURL: userData.profilePicURL,
                            password: userData.password,
                            passwordRepeat: userData.password,
-                           accountType: userData.accountType,
                            securityQuestion: userData.securityQuestion,
-                           securityAnswer: userData.securityAnswer});
+                           securityAnswer: userData.securityAnswer,
+                           accountType: userData.accountType,});
         }
     }
 
@@ -82,6 +84,8 @@ class CreateEditAccountDialog extends React.Component {
                 });
                 
             }
+        } else if(event.target.name === "genres") {
+            this.setState({genres: Array.from(event.target.selectedOptions, (item) => item.value)});
         } else {
             this.setState({[event.target.name]: event.target.value,
                            formUpdated: formUpdated},this.checkDataValidity);
@@ -131,7 +135,6 @@ class CreateEditAccountDialog extends React.Component {
     // object for user, save it to localStorage and take user to app's 
     //landing page. 
     handleSubmit = async(event) => {
-        this.setState({showFanDialog: false});
         event.preventDefault();
         //Initialize user account
         let userData = {
@@ -139,7 +142,8 @@ class CreateEditAccountDialog extends React.Component {
             password: this.state.password,
             profilePicURL: this.state.profilePicURL,
             securityQuestion: this.state.securityQuestion,
-            securityAnswer: this.state.securityAnswer
+            securityAnswer: this.state.securityAnswer,
+            accountType: this.state.accountType
         };
         const url = '/users/' + this.state.accountName;
         let res;
@@ -202,80 +206,6 @@ class CreateEditAccountDialog extends React.Component {
         this.setState({confirmDelete: true});
     }
 
-renderFanDialog = () => {
-    return (
-        <div className="modal" role="dialog">
-        <div className="modal-dialog modal-lg"></div>
-        <div className="modal-content form-center">
-        <div className="modal-header">
-        <h3><b>Fan Account</b></h3>
-            <button className="modal-close" onClick={this.props.cancel}>&times;</button>
-        </div>
-        <div className="modal-body">
-            <form onSubmit={this.handleSubmit}>
-                <br/>
-                <label>
-                    Genres:
-                    <select name="genres[]" id="genres" onChange={this.handleGenres} multiple>
-                        <option value="pop">Pop</option>
-                        <option value="hip-hop">Hip-Hop</option>
-                        <option value="rap">Rap</option>
-                        <option value="rock">Rock</option>
-                        <option value="edm">EDM</option>
-                        <option value="country">Country</option>
-                        <option value="rnb">R and B</option>
-                        <option value="metal">Metal</option>
-                    </select>
-                </label>
-                <br/>
-                <label>
-                    Artists:
-                    <select name="artists[]" id="artists" onChange={this.handleArtists} multiple>
-                        <option value="postMalone">Post Malone</option>
-                        <option value="arianaGrande">Ariana Grande</option>
-                        <option value="taylorSwift">Taylor Swift</option>
-                        <option value="drake">Drake</option>
-                        <option value="popSmoke">Pop Smoke</option>
-                        <option value="lilWayne">Lil Wayne</option>
-                        <option value="nickiMinaj">Nicki Minaj</option>
-                        <option value="travisScott">Travis Scott</option>
-                        <option value="kanyeWest">Kanye West</option>
-                        <option value="jayZ">Jay-Z</option>
-                        <option value="localArtist1">Local Artist 1</option>
-                        <option value="localArtist2">Local Artist 2</option>
-                    </select>
-                </label>
-                <br/>
-                <label>
-                    Venues:
-                    <select name="avenues[]" id="venues" onChange={this.handleVenues} multiple>
-                        <option value="redRocksParkAndAmpitheater">Red Rocks Park and Amphitheatre</option>
-                        <option value="hollywoodBowl">Hollywood Bowl</option>
-                        <option value="merriweatherPostPavilion">Merriweather Post Pavilion</option>
-                        <option value="showbox">The Showbox</option>
-                        <option value="underground">The Underground</option>
-                        <option value="seamonsterLounge">Seamonster Lounge</option>
-                        <option value="crocodile">The Crocodile</option>
-                        <option value="venue1">Venue 1</option>
-                        <option value="venue1">Venue 1</option>
-                        <option value="venue2">Venue 2</option>
-                        <option value="venue3">Venue 3</option>
-                        <option value="venue4">Venue 4</option>
-                        <option value="venue5">Venue 5</option>
-                        <option value="venue6">Venue 6</option>
-                        <option value="venue7">Venue 7</option>
-                    </select>
-                </label>
-                <br/>
-            </form>
-        <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
-            &nbsp;Create Fan Account</button>
-        </div>
-        </div>
-        </div>
-    );
-}
-
     render() {
     return (  
     <div className="modal" role="dialog">
@@ -289,6 +219,17 @@ renderFanDialog = () => {
             </div>
             <div className="modal-body">
             <form onSubmit={this.handleAccountType}>
+            <label>
+                Account Type:
+                <select name="accountType" value={this.state.accountType} 
+                    className="form-control form-textform-center" 
+                    onChange={this.handleChange}>
+                    <option value="fan">Fan</option>
+                    <option value="artist">Artist</option>
+                    <option value="venue">Venue</option>
+                </select> 
+            </label>
+            <br/>
             <label>
                 Email: 
                 <input  
@@ -404,16 +345,6 @@ renderFanDialog = () => {
                 />
             </label>
             <br/>
-            <label>Account Type:
-            <select name="type" value={this.state.accountType} 
-                className="form-control form-textform-center" 
-                onChange={this.handleChange}>
-                <option value="fan">Fan</option>
-                <option value="artist">Artist</option>
-                <option value="venue">Venue</option>
-            </select> 
-            </label>
-            <br/>
             {!this.props.create ?  
             <button className="btn btn-small btn-danger" onClick={this.confirmDeleteAccount}>
                 Delete Account...
@@ -429,25 +360,21 @@ renderFanDialog = () => {
             </div>
         </div>
         {this.state.confirmDelete ? 
-          <ConfirmDeleteAccount email={this.state.accountName}
-                                deleteAccount={this.deleteAccount}
-                                close={() => (this.setState({confirmDelete: false}))}
-         /> : null}
-         {this.state.showFanDialog ? this.renderFanDialog() : null}
+          <ConfirmDeleteAccount email={this.state.accountName} deleteAccount={this.deleteAccount}
+                                close={() => (this.setState({confirmDelete: false}))}/> : null}
+        {this.state.showFanDialog ? this.renderFanDialog() : null}
+        {this.state.showArtistDialog ? this.renderArtistDialog() : null}
+        {this.state.showVenueDialog ? this.renderVenueDialog() : null}
     </div>
     );
 }
+
 handleAccountType = (event) => {
     event.preventDefault();
     if (this.state.accountType == "fan") {
         this.setState({showFanDialog: true});
-        this.setState({showFanDialog: true,
-            genres: [],
-            artists: [],
-            venues: []});
     }
     if (this.state.accountType == "artist") {
-        this.setState({showArtistDialog: true});
         this.setState({showArtistDialog: true,
             artistName: "",
             genres: [],
@@ -459,40 +386,179 @@ handleAccountType = (event) => {
     }
 }
 
+renderFanDialog = () => {
+    return (
+        <div className="modal" role="dialog">
+        <div className="modal-dialog modal-lg"></div>
+        <div className="modal-content form-center">
+        <div className="modal-header">
+        <h3><b>Fan Account</b></h3>
+            <button className="modal-close" onClick={this.props.cancel}>&times;</button>
+        </div>
+        <div className="modal-body">
+        <form onSubmit={this.handleSubmit}>
+        <br/>
+        <label>
+            Genres:
+            <select name="genres"
+                value={this.state.genres} 
+                onChange={this.handleChange} 
+                className="form-control form-textform-center"
+                multiple>
+                <option value="pop">Pop</option>
+                <option value="hip-hop">Hip-Hop</option>
+                <option value="rap">Rap</option>
+                <option value="rock">Rock</option>
+                <option value="edm">EDM</option>
+                <option value="country">Country</option>
+            </select>
+            <br/>
+                <label>
+                    Artists:
+                    <select name="artists[]" id="artists" onChange={this.handleArtists} multiple>
+                        <option value="postMalone">Post Malone</option>
+                        <option value="arianaGrande">Ariana Grande</option>
+                        <option value="taylorSwift">Taylor Swift</option>
+                        <option value="drake">Drake</option>
+                        <option value="popSmoke">Pop Smoke</option>
+                        <option value="lilWayne">Lil Wayne</option>
+                        <option value="nickiMinaj">Nicki Minaj</option>
+                        <option value="travisScott">Travis Scott</option>
+                        <option value="kanyeWest">Kanye West</option>
+                        <option value="jayZ">Jay-Z</option>
+                        <option value="localArtist1">Local Artist 1</option>
+                        <option value="localArtist2">Local Artist 2</option>
+                    </select>
+                </label>
+            <br/>
+            <label>
+                Venues:
+                <select name="avenues[]" id="venues" onChange={this.handleVenues} multiple>
+                    <option value="redRocksParkAndAmpitheater">Red Rocks Park and Amphitheatre</option>
+                    <option value="hollywoodBowl">Hollywood Bowl</option>
+                    <option value="merriweatherPostPavilion">Merriweather Post Pavilion</option>
+                    <option value="showbox">The Showbox</option>
+                    <option value="underground">The Underground</option>
+                    <option value="seamonsterLounge">Seamonster Lounge</option>
+                    <option value="crocodile">The Crocodile</option>
+                    <option value="venue1">Venue 1</option>
+                    <option value="venue1">Venue 1</option>
+                    <option value="venue2">Venue 2</option>
+                    <option value="venue3">Venue 3</option>
+                    <option value="venue4">Venue 4</option>
+                    <option value="venue5">Venue 5</option>
+                    <option value="venue6">Venue 6</option>
+                    <option value="venue7">Venue 7</option>
+                </select>
+            </label>
+            <br/>
+        </label>
+        <br/>
+        <label></label>
+        </form>
+        <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
+            &nbsp;Create Fan Account</button>
+        </div></div></div>
+    );
+}
+
+renderArtistDialog = () => {
+    return (
+        <div className="modal" role="dialog">
+        <div className="modal-dialog modal-lg"></div>
+        <div className="modal-content form-center">
+        <div className="modal-header">
+        <h3><b>Artist Account</b></h3>
+            <button className="modal-close" onClick={this.props.cancel}>&times;</button>
+        </div>
+        <div className="modal-body">
+        <form onSubmit={this.handleSubmit}>
+        <br/>
+        <label>
+            Artist Name:
+            <input
+            className="form-control form-text form-center"
+            name="artistName"
+            type="text"
+            size="30"
+            placeholder="Artist Name"
+            required={true}
+            value={this.state.artistName}
+            />
+        </label>
+        <br/>
+        <label>
+            Genres:
+            <select name="genres"
+                value={this.state.genres} 
+                onChange={this.handleChange} 
+                className="form-control form-textform-center"
+                multiple>
+                <option value="pop">Pop</option>
+                <option value="hip-hop">Hip-Hop</option>
+                <option value="rap">Rap</option>
+                <option value="rock">Rock</option>
+                <option value="edm">EDM</option>
+                <option value="country">Country</option>
+            </select>
+        </label>
+        <br/>
+        <label>
+            Instagram:
+            <input
+            className="form-control form-text form-center"
+            name="instagram"
+            type="text"
+            size="30"
+            placeholder="@"
+            required={true}
+            value={this.state.instagram}
+            />
+        </label>
+        <br/>
+        <label>
+            Facebook:
+            <input
+            className="form-control form-text form-center"
+            name="facebook"
+            type="text"
+            size="30"
+            placeholder="@"
+            required={true}
+            value={this.state.facebook}
+            />
+        </label>
+        <br/>
+        </form>
+        <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
+            &nbsp;Create Artist Account</button>
+        </div></div></div>
+    );
+}
+
 handleGenres = () => {
     this.state.genres = document.getElementById("genres").selectedOptions;
 }
 
-handleArtists = () => {
-    this.state.genres = document.getElementById("artists").selectedOptions;
+renderVenueDialog = () => {
+    return (
+        <div className="modal" role="dialog">
+        <div className="modal-dialog modal-lg"></div>
+        <div className="modal-content form-center">
+        <div className="modal-header">
+        <h3><b>Create Venue Account</b></h3>
+            <button className="modal-close" onClick={this.props.cancel}>&times;</button>
+        </div>
+        <div className="modal-body">
+        <form onSubmit={this.handleSubmit}>
+
+        </form>
+        <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
+            &nbsp;Create Venue Account</button>
+        </div></div></div>
+    );
 }
 
-// handleFanArtistResults = () => {
-//     var artistBasedOnGenreList = {
-//         "pop": ["Post Malone", "Ariana Grande", "Taylor Swift", "Drake", "Ed Sheeren"],
-//         "hip-hop": ["Post Malone", "Ariana Grande", "Travis Scott", "Pop Smoke", "Drake","Ed Sheeren"],
-//         "rap": ["Kanye West", "Jay-Z", "Lil Wayne", "Nicki Minaj", "Snoop Dog"],
-//         "rock": ["Taylor Swift", "AC/DC", "Foo Fighters", "Queen"],
-//         "edm": ["Skrillix", "Marshmellow", "Deadmau5"],
-//         "country": ["Taylor Swift"],
-//         "rnb": ["Post Malone", "Drake"],
-//         "metal": ["Black Sabbath", "Iron Maiden"]
-//     };
-//     for (var key in artistBasedOnGenreList)
-//     {
-//         if (key in this.state.genres)
-//         {
-//             var artistNames = artistBasedOnGenreList[Key];
-//             for (artist in artistNames)
-//             {
-//                 var artistName = String(artist)
-//                 return(
-//                     <option value="artistName">{artistName}</option>
-//                 )
-//             }
-//         }
-//     }
-// }
 }
 
 export default CreateEditAccountDialog;
