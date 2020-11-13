@@ -17,7 +17,7 @@ class CreateEditAccountDialog extends React.Component {
                       passwordRepeat: "",
                       securityQuestion: "",
                       securityAnswer: "",
-                      accountType: "",
+                      accountType: "fan",
                       formUpdated: false,
                       confirmDelete: false,
                       showFanDialog: false,
@@ -84,6 +84,8 @@ class CreateEditAccountDialog extends React.Component {
                 });
                 
             }
+        } else if(event.target.name === "genres" || event.target.name === "artists" || event.target.name === "venues") {
+            this.setState({genres: Array.from(event.target.selectedOptions, (item) => item.value)});
         } else {
             this.setState({[event.target.name]: event.target.value,
                            formUpdated: formUpdated},this.checkDataValidity);
@@ -134,14 +136,15 @@ class CreateEditAccountDialog extends React.Component {
     //landing page. 
     handleSubmit = async(event) => {
         event.preventDefault();
-        this.setState({showFanDialog: false, showArtistDialog: false, showVenueDialog: false});
+        this.setState({showFanDialog: false, showArtistDialog: false, showVenueDialog: false})
         //Initialize user account
         let userData = {
             displayName: this.state.displayName,
             password: this.state.password,
             profilePicURL: this.state.profilePicURL,
             securityQuestion: this.state.securityQuestion,
-            securityAnswer: this.state.securityAnswer
+            securityAnswer: this.state.securityAnswer,
+            accountType: this.state.accountType
         };
         const url = '/users/' + this.state.accountName;
         let res;
@@ -395,10 +398,74 @@ renderFanDialog = () => {
         </div>
         <div className="modal-body">
         <form onSubmit={this.handleSubmit}>
+        <br/>
+        <label>
+            Genres:
+            <select name="genres"
+                value={this.state.genres} 
+                onChange={this.handleChange} 
+                className="form-control form-textform-center"
+                multiple>
+                <option value="pop">Pop</option>
+                <option value="hip-hop">Hip-Hop</option>
+                <option value="rap">Rap</option>
+                <option value="rock">Rock</option>
+                <option value="edm">EDM</option>
+                <option value="country">Country</option>
+            </select>
+        </label>
+        <br/>
+        <label>
+            Artists:
+            <select name="artists"
+                value={this.state.artists} 
+                onChange={this.handleChange} 
+                className="form-control form-textform-center"
+                multiple>
+                <option value="postMalone">Post Malone</option>
+                <option value="arianaGrande">Ariana Grande</option>
+                <option value="taylorSwift">Taylor Swift</option>
+                <option value="drake">Drake</option>
+                <option value="popSmoke">Pop Smoke</option>
+                <option value="lilWayne">Lil Wayne</option>
+                <option value="nickiMinaj">Nicki Minaj</option>
+                <option value="travisScott">Travis Scott</option>
+                <option value="kanyeWest">Kanye West</option>
+                <option value="jayZ">Jay-Z</option>
+                <option value="localArtist1">Local Artist 1</option>
+                <option value="localArtist2">Local Artist 2</option>
+            </select>
+        </label>
+        <br/>
+        <label>
+            Venues:
+            <select name="venues"
+                value={this.state.venues} 
+                onChange={this.handleChange} 
+                className="form-control form-textform-center"
+                multiple>
+                <option value="redRocksParkAndAmpitheater">Red Rocks Park and Amphitheatre</option>
+                <option value="hollywoodBowl">Hollywood Bowl</option>
+                <option value="merriweatherPostPavilion">Merriweather Post Pavilion</option>
+                <option value="showbox">The Showbox</option>
+                <option value="underground">The Underground</option>
+                <option value="seamonsterLounge">Seamonster Lounge</option>
+                <option value="crocodile">The Crocodile</option>
+                <option value="venue1">Venue 1</option>
+                <option value="venue1">Venue 1</option>
+                <option value="venue2">Venue 2</option>
+                <option value="venue3">Venue 3</option>
+                <option value="venue4">Venue 4</option>
+                <option value="venue5">Venue 5</option>
+                <option value="venue6">Venue 6</option>
+                <option value="venue7">Venue 7</option>
+            </select>
+        </label>
+        <br/>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Fan Account</button>
-        </form>    
-        </div></div></div>
+        </form>
+    </div></div></div>
     );
 }
 
@@ -413,6 +480,7 @@ renderArtistDialog = () => {
         </div>
         <div className="modal-body">
         <form onSubmit={this.handleSubmit}>
+        <br/>
         <label>
             Artist Name:
             <input
@@ -429,8 +497,11 @@ renderArtistDialog = () => {
         <br/>
         <label>
             Genres:
-            <br/>
-            <select name="genres[]" id="genres" onChange={this.handleGenres} multiple>
+            <select name="genres"
+                value={this.state.genres} 
+                onChange={this.handleChange} 
+                className="form-control form-textform-center"
+                multiple>
                 <option value="pop">Pop</option>
                 <option value="hip-hop">Hip-Hop</option>
                 <option value="rap">Rap</option>
@@ -475,10 +546,6 @@ renderArtistDialog = () => {
     );
 }
 
-handleGenres = (event) => {
-    this.setState({genres : document.getElementById("genres").selectedOptions});
-}
-
 renderVenueDialog = () => {
     return (
         <div className="modal" role="dialog">
@@ -490,9 +557,10 @@ renderVenueDialog = () => {
         </div>
         <div className="modal-body">
         <form onSubmit={this.handleSubmit}>
+
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Venue Account</button>
-        </form>    
+        </form>
         </div></div></div>
     );
 }
