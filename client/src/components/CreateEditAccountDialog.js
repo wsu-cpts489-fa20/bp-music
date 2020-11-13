@@ -431,6 +431,7 @@ renderArtistDialog = () => {
         <br/>
         <label>
             Genres:
+            <br/>
             <select name="genres[]" id="genres" onChange={this.handleGenres} multiple>
                 <option value="pop">Pop</option>
                 <option value="hip-hop">Hip-Hop</option>
