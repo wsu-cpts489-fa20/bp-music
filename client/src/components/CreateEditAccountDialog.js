@@ -84,7 +84,7 @@ class CreateEditAccountDialog extends React.Component {
                 });
                 
             }
-        } else if(event.target.name === "genres") {
+        } else if(event.target.name === "genres" || event.target.name === "artists" || event.target.name === "venues") {
             this.setState({genres: Array.from(event.target.selectedOptions, (item) => item.value)});
         } else {
             this.setState({[event.target.name]: event.target.value,
