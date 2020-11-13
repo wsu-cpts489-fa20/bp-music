@@ -12,12 +12,12 @@ import AboutBox from './AboutBox.js';
 import LocationSearch from './LocationSearch.js';
 
 const modeTitle = {};
-modeTitle[AppMode.LOGIN] = "Welcome to SpeedScore";
-modeTitle[AppMode.FEED] = "Activity Feed";
-modeTitle[AppMode.ROUNDS] = "My Rounds";
-modeTitle[AppMode.ROUNDS_LOGROUND] = "Log New Round";
-modeTitle[AppMode.ROUNDS_EDITROUND] = "Edit Round";
-modeTitle[AppMode.COURSES] = "Courses";
+modeTitle[AppMode.LOGIN] = "URScene Login";
+modeTitle[AppMode.FEED] = "Events near you";
+modeTitle[AppMode.ROUNDS] = "My events";
+modeTitle[AppMode.ROUNDS_LOGROUND] = "Enter new event";
+modeTitle[AppMode.ROUNDS_EDITROUND] = "Edit Event";
+modeTitle[AppMode.COURSES] = "Venues";
 modeTitle[AppMode.LOCATION_SEARCH] = "Location Search"
 
 const modeToPage = {};
