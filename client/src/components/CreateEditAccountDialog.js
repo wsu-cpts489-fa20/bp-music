@@ -134,6 +134,7 @@ class CreateEditAccountDialog extends React.Component {
     //landing page. 
     handleSubmit = async(event) => {
         event.preventDefault();
+        this.setState({showFanDialog: false, showArtistDialog: false, showVenueDialog: false});
         //Initialize user account
         let userData = {
             displayName: this.state.displayName,
@@ -367,7 +368,8 @@ class CreateEditAccountDialog extends React.Component {
     );
 }
 
-handleAccountType = () => {
+handleAccountType = (event) => {
+    event.preventDefault();
     if (this.state.accountType == "fan") {
         this.setState({showFanDialog: true});
     }
@@ -423,6 +425,7 @@ renderArtistDialog = () => {
             placeholder="Artist Name"
             required={true}
             value={this.state.artistName}
+            onChange={this.handleChange}
             />
         </label>
         <br/>
@@ -448,6 +451,7 @@ renderArtistDialog = () => {
             placeholder="@"
             required={true}
             value={this.state.instagram}
+            onChange={this.handleChange}
             />
         </label>
         <br/>
@@ -461,6 +465,7 @@ renderArtistDialog = () => {
             placeholder="@"
             required={true}
             value={this.state.facebook}
+            onChange={this.handleChange}
             />
         </label>
         <br/>
@@ -471,8 +476,8 @@ renderArtistDialog = () => {
     );
 }
 
-handleGenres = () => {
-    this.state.genres = document.getElementById("genres").selectedOptions;
+handleGenres = (event) => {
+    this.setState({genres : document.getElementById("genres").selectedOptions});
 }
 
 renderVenueDialog = () => {
