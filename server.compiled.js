@@ -109,7 +109,26 @@ var roundSchema = new Schema({
 });
 roundSchema.virtual('SGS').get(function () {
   return this.strokes * 60 + this.minutes * 60 + this.seconds;
-}); //Define schema that maps to a document in the Users collection in the appdb
+}); // const fanSchema = new Schema({
+//   genres: [String],
+//   artists: [String],
+//   venues: [String],
+//   currLocation: String
+// });
+// const Fan = mongoose.model("Fan", userSchema);
+// const artistSchema = new Schema({
+//   user: userSchema,
+//   artistName: String,
+//   genre: String,
+//   media: List[String]
+// });
+// const Artist = mongoose.model("Artist", userSchema);
+// const venueSchema = new Schema({
+//   user: userSchema,
+//   location: String
+// });
+// const Venue = mongoose.model("Venue", userSchema);
+//Define schema that maps to a document in the Users collection in the appdb
 //database.
 
 var userSchema = new Schema({
@@ -129,6 +148,7 @@ var userSchema = new Schema({
       return this.securityQuestion ? true : false;
     }
   },
+  accountType: String,
   rounds: [roundSchema]
 });
 
@@ -463,12 +483,12 @@ app.post('/users/:userId', /*#__PURE__*/function () {
           case 0:
             console.log("in /users route (POST) with params = " + JSON.stringify(req.params) + " and body = " + JSON.stringify(req.body));
 
-            if (!(req.body === undefined || !req.body.hasOwnProperty("password") || !req.body.hasOwnProperty("displayName") || !req.body.hasOwnProperty("profilePicURL") || !req.body.hasOwnProperty("securityQuestion") || !req.body.hasOwnProperty("securityAnswer"))) {
+            if (!(req.body === undefined || !req.body.hasOwnProperty("password") || !req.body.hasOwnProperty("displayName") || !req.body.hasOwnProperty("profilePicURL") || !req.body.hasOwnProperty("securityQuestion") || !req.body.hasOwnProperty("securityAnswer") || !req.body.hasOwnProperty("accountType"))) {
               _context5.next = 3;
               break;
             }
 
-            return _context5.abrupt("return", res.status(400).send("/users POST request formulated incorrectly. " + "It must contain 'password','displayName','profilePicURL','securityQuestion' and 'securityAnswer fields in message body."));
+            return _context5.abrupt("return", res.status(400).send("/users POST request formulated incorrectly. " + "It must contain 'password','displayName','profilePicURL','securityQuestion','securityAnswer' and 'accountType' fields in message body."));
 
           case 3:
             _context5.prev = 3;
@@ -904,93 +924,62 @@ app["delete"]('/rounds/:userId/:roundId', /*#__PURE__*/function () {
   return function (_x31, _x32, _x33) {
     return _ref11.apply(this, arguments);
   };
-}()); // GET route for google location search
-// Returns an Object containing information about the location
+}()); /////////////////////////////////
+//ACCOUNTTYPE ROUTES
+////////////////////////////////
+//CREATE accountType route: Addsusers account type as a subdocument to 
+//a document in the users collection (POST)
 
-app.get('/location/:search', /*#__PURE__*/function () {
-  var _ref12 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee12(req, res) {
-    var search, url, request, data, formattedData;
+app.post('/accountType/:userId', /*#__PURE__*/function () {
+  var _ref12 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee12(req, res, next) {
+    var status;
     return _regeneratorRuntime["default"].wrap(function _callee12$(_context12) {
       while (1) {
         switch (_context12.prev = _context12.next) {
           case 0:
-            // Properly encode search text for a URL
-            search = encodeURIComponent(req.params.search);
-            console.log("in /location route (GET) search for: " + search);
-            url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=" + search + "&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=" + process.env.GOOGLE_API_KEY;
-            request = new Promise(function (resolve, reject) {
-              https.get(url, function (resp) {
-                var data = '';
-                resp.on('data', function (chunk) {
-                  data += chunk;
-                });
-                resp.on('end', function () {
-                  resolve(data);
-                });
-              }).on('error', function (err) {
-                reject(err);
-              });
-            });
-            _context12.prev = 4;
-            _context12.next = 7;
-            return request;
+            console.log("in /accountType (POST) route with params = " + JSON.stringify(req.params) + " and body = " + JSON.stringify(req.body));
 
-          case 7:
-            data = _context12.sent;
-            formattedData = JSON.parse(data);
-            console.log(formattedData);
-
-            if (!(formattedData.status === 'OK')) {
-              _context12.next = 14;
+            if (!(!req.body.hasOwnProperty("genres") || !req.body.hasOwnProperty("artists") || !req.body.hasOwnProperty("venues"))) {
+              _context12.next = 3;
               break;
             }
 
-            return _context12.abrupt("return", res.status(200).send(data));
+            return _context12.abrupt("return", res.status(400).send("POST request on /accountType formulated incorrectly." + "Body must contain all 3 required fields: genres, artists, and venues"));
 
-          case 14:
-            return _context12.abrupt("return", res.status(404).send('Location not found'));
+          case 3:
+            _context12.prev = 3;
+            _context12.next = 6;
+            return User.updateOne({
+              id: req.params.userId
+            }, {
+              $push: {
+                accountType: req.body
+              }
+            });
 
-          case 15:
-            _context12.next = 20;
+          case 6:
+            status = _context12.sent;
+
+            if (status.nModified != 1) {
+              //Should never happen!
+              res.status(400).send("Unexpected error occurred when adding accountType to" + " database. Account Type was not added.");
+            } else {
+              res.status(200).send("Round successfully added to database.");
+            }
+
+            _context12.next = 14;
             break;
 
-          case 17:
-            _context12.prev = 17;
-            _context12.t0 = _context12["catch"](4);
-            return _context12.abrupt("return", res.status(400).send(_context12.t0));
+          case 10:
+            _context12.prev = 10;
+            _context12.t0 = _context12["catch"](3);
+            console.log(_context12.t0);
+            return _context12.abrupt("return", res.status(400).send("Unexpected error occurred when adding round" + " to database: " + _context12.t0));
 
-          case 20:
+          case 14:
           case "end":
             return _context12.stop();
         }
       }
-    }, _callee12, null, [[4, 17]]);
-  }));
 
-  return function (_x34, _x35) {
-    return _ref12.apply(this, arguments);
-  };
-}());
-app.get('/map/:address', /*#__PURE__*/function () {
-  var _ref13 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee13(req, res) {
-    var encodedAddress;
-    return _regeneratorRuntime["default"].wrap(function _callee13$(_context13) {
-      while (1) {
-        switch (_context13.prev = _context13.next) {
-          case 0:
-            console.log("in /map route (GET) make url for: " + req.params.address);
-            encodedAddress = encodeURIComponent(req.params.address);
-            return _context13.abrupt("return", res.status(200).send("https://www.google.com/maps/embed/v1/place?key=" + process.env.GOOGLE_API_KEY + "&q=" + encodedAddress));
-
-          case 3:
-          case "end":
-            return _context13.stop();
-        }
-      }
-    }, _callee13);
-  }));
-
-  return function (_x36, _x37) {
-    return _ref13.apply(this, arguments);
-  };
 }());
