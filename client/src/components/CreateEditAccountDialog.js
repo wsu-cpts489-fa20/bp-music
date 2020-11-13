@@ -19,7 +19,8 @@ class CreateEditAccountDialog extends React.Component {
                       securityAnswer: "",
                       accountType: "fan",
                       formUpdated: false,
-                      confirmDelete: false};
+                      confirmDelete: false,
+                      showFanDialog: false};
     } 
 
     //componentDidMount -- If we are editing an existing user acccount, we need to grab the data from
@@ -212,7 +213,7 @@ class CreateEditAccountDialog extends React.Component {
                 &times;</button>
             </div>
             <div className="modal-body">
-            <form onSubmit={this.handleSubmit}>
+            <form onSubmit={this.handleAccountType}>
             <label>
                 Email: 
                 <input  
