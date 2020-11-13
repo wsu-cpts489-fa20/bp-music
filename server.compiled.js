@@ -28,6 +28,10 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+var http = require('http');
+
+var https = require('https');
+
 require('dotenv').config();
 
 var LOCAL_PORT = 8081;
@@ -977,10 +981,5 @@ app.post('/accountType/:userId', /*#__PURE__*/function () {
             return _context12.stop();
         }
       }
-    }, _callee12, null, [[3, 10]]);
-  }));
 
-  return function (_x34, _x35, _x36) {
-    return _ref12.apply(this, arguments);
-  };
 }());
