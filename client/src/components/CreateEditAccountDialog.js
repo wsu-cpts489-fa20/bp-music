@@ -385,13 +385,15 @@ renderFanDialog = () => {
         <div className="modal-dialog modal-lg"></div>
         <div className="modal-content form-center">
         <div className="modal-header">
-        <h3><b>Create Fan Account</b></h3>
+        <h3><b>Fan Account</b></h3>
             <button className="modal-close" onClick={this.props.cancel}>&times;</button>
         </div>
         <div className="modal-body">
         <form onSubmit={this.handleSubmit}>
 
         </form>
+        <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
+            &nbsp;Create Fan Account</button>
         </div></div></div>
     );
 }
@@ -402,13 +404,15 @@ renderArtistDialog = () => {
         <div className="modal-dialog modal-lg"></div>
         <div className="modal-content form-center">
         <div className="modal-header">
-        <h3><b>Create Artist Account</b></h3>
+        <h3><b>Artist Account</b></h3>
             <button className="modal-close" onClick={this.props.cancel}>&times;</button>
         </div>
         <div className="modal-body">
         <form onSubmit={this.handleSubmit}>
 
         </form>
+        <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
+            &nbsp;Create Artist Account</button>
         </div></div></div>
     );
 }
@@ -426,6 +430,8 @@ renderVenueDialog = () => {
         <form onSubmit={this.handleSubmit}>
 
         </form>
+        <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
+            &nbsp;Create Venue Account</button>
         </div></div></div>
     );
 }

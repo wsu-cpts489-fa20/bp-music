@@ -105,33 +105,27 @@ var roundSchema = new Schema({
 });
 roundSchema.virtual('SGS').get(function () {
   return this.strokes * 60 + this.minutes * 60 + this.seconds;
-});
-var fanSchema = new Schema({
-  genres: List[String],
-  artists: List[String],
-  venues: List[String],
-  currLocation: String
-});
-
-var Fan = _mongoose["default"].model("Fan", userSchema);
-
-var artistSchema = new Schema({
-  user: userSchema,
-  artistName: String,
-  genre: String,
-  media: List[String]
-});
-
-var Artist = _mongoose["default"].model("Artist", userSchema);
-
-var venueSchema = new Schema({
-  user: userSchema,
-  location: String
-});
-
-var Venue = _mongoose["default"].model("Venue", userSchema); //Define schema that maps to a document in the Users collection in the appdb
+}); // const fanSchema = new Schema({
+//   genres: [String],
+//   artists: [String],
+//   venues: [String],
+//   currLocation: String
+// });
+// const Fan = mongoose.model("Fan", userSchema);
+// const artistSchema = new Schema({
+//   user: userSchema,
+//   artistName: String,
+//   genre: String,
+//   media: List[String]
+// });
+// const Artist = mongoose.model("Artist", userSchema);
+// const venueSchema = new Schema({
+//   user: userSchema,
+//   location: String
+// });
+// const Venue = mongoose.model("Venue", userSchema);
+//Define schema that maps to a document in the Users collection in the appdb
 //database.
-
 
 var userSchema = new Schema({
   id: String,
