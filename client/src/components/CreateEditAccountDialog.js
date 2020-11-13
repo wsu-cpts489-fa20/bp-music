@@ -364,6 +364,7 @@ class CreateEditAccountDialog extends React.Component {
 }
 handleAccountType = () => {
     if (this.state.accountType == "fan") {
+        this.setState({showFanDialog: true});
         this.setState({showFanDialog: true,
             genres: [],
             artists: [],
