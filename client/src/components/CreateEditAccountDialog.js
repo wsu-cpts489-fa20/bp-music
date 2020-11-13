@@ -136,6 +136,7 @@ class CreateEditAccountDialog extends React.Component {
     //landing page. 
     handleSubmit = async(event) => {
         event.preventDefault();
+        this.setState({showFanDialog: false, showArtistDialog: false, showVenueDialog: false})
         //Initialize user account
         let userData = {
             displayName: this.state.displayName,
@@ -557,6 +558,14 @@ renderArtistDialog = () => {
 
 handleGenres = () => {
     this.state.genres = document.getElementById("genres").selectedOptions;
+}
+
+handleVenues = () => {
+    this.state.venues = document.getElementById("venues").selectedOptions;
+}
+
+handleArtists = () => {
+    this.state.venues = document.getElementById("artists").selectedOptions;
 }
 
 renderVenueDialog = () => {
