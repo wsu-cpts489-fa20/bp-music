@@ -1,5 +1,6 @@
 import React from 'react';
 import ConfirmDeleteAccount from './ConfirmDeleteAccount.js';
+import confirmDeleteAccount from './ConfirmDeleteAccount.js';
 
 class CreateEditAccountDialog extends React.Component {
 
@@ -17,12 +18,8 @@ class CreateEditAccountDialog extends React.Component {
                       passwordRepeat: "",
                       securityQuestion: "",
                       securityAnswer: "",
-                      accountType: "",
                       formUpdated: false,
-                      confirmDelete: false,
-                      showFanDialog: false,
-                      showArtistDialog: false,
-                      showVenueDialog: false};
+                      confirmDelete: false};
     } 
 
     //componentDidMount -- If we are editing an existing user acccount, we need to grab the data from
@@ -42,8 +39,7 @@ class CreateEditAccountDialog extends React.Component {
                            password: userData.password,
                            passwordRepeat: userData.password,
                            securityQuestion: userData.securityQuestion,
-                           securityAnswer: userData.securityAnswer,
-                           accountType: userData.accountType,});
+                           securityAnswer: userData.securityAnswer});
         }
     }
 
@@ -140,8 +136,7 @@ class CreateEditAccountDialog extends React.Component {
             password: this.state.password,
             profilePicURL: this.state.profilePicURL,
             securityQuestion: this.state.securityQuestion,
-            securityAnswer: this.state.securityAnswer,
-            accountType: this.state.accountType
+            securityAnswer: this.state.securityAnswer
         };
         const url = '/users/' + this.state.accountName;
         let res;
@@ -216,18 +211,7 @@ class CreateEditAccountDialog extends React.Component {
                 &times;</button>
             </div>
             <div className="modal-body">
-            <form onSubmit={this.handleAccountType}>
-            <label>
-                Account Type:
-                <select name="accountType" value={this.state.accountType} 
-                    className="form-control form-textform-center" 
-                    onChange={this.handleChange}>
-                    <option value="fan">Fan</option>
-                    <option value="artist">Artist</option>
-                    <option value="venue">Venue</option>
-                </select> 
-            </label>
-            <br/>
+            <form onSubmit={this.handleSubmit}>
             <label>
                 Email: 
                 <input  
@@ -358,142 +342,13 @@ class CreateEditAccountDialog extends React.Component {
             </div>
         </div>
         {this.state.confirmDelete ? 
-          <ConfirmDeleteAccount email={this.state.accountName} deleteAccount={this.deleteAccount}
-                                close={() => (this.setState({confirmDelete: false}))}/> : null}
-        {this.state.showFanDialog ? this.renderFanDialog() : null}
-        {this.state.showArtistDialog ? this.renderArtistDialog() : null}
-        {this.state.showVenueDialog ? this.renderVenueDialog() : null}
+          <ConfirmDeleteAccount email={this.state.accountName}
+                                deleteAccount={this.deleteAccount}
+                                close={() => (this.setState({confirmDelete: false}))}
+         /> : null}
     </div>
     );
 }
-
-handleAccountType = () => {
-    if (this.state.accountType == "fan") {
-        this.setState({showFanDialog: true});
-    }
-    if (this.state.accountType == "artist") {
-        this.setState({showArtistDialog: true,
-            artistName: "",
-            genres: [],
-            instagram: "",
-            facebook: ""});
-    }
-    if (this.state.accountType == "venue") {
-        this.setState({showVenueDialog: true});
-    }
-}
-
-renderFanDialog = () => {
-    return (
-        <div className="modal" role="dialog">
-        <div className="modal-dialog modal-lg"></div>
-        <div className="modal-content form-center">
-        <div className="modal-header">
-        <h3><b>Fan Account</b></h3>
-            <button className="modal-close" onClick={this.props.cancel}>&times;</button>
-        </div>
-        <div className="modal-body">
-        <form onSubmit={this.handleSubmit}>
-
-        </form>
-        <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
-            &nbsp;Create Fan Account</button>
-        </div></div></div>
-    );
-}
-
-renderArtistDialog = () => {
-    return (
-        <div className="modal" role="dialog">
-        <div className="modal-dialog modal-lg"></div>
-        <div className="modal-content form-center">
-        <div className="modal-header">
-        <h3><b>Artist Account</b></h3>
-            <button className="modal-close" onClick={this.props.cancel}>&times;</button>
-        </div>
-        <div className="modal-body">
-        <form onSubmit={this.handleSubmit}>
-        <label>
-            Artist Name:
-            <input
-            className="form-control form-text form-center"
-            name="artistName"
-            type="text"
-            size="30"
-            placeholder="Artist Name"
-            required={true}
-            value={this.state.artistName}
-            />
-        </label>
-        <br/>
-        <label>
-            Genres:
-            <select name="genres[]" id="genres" onChange={this.handleGenres} multiple>
-                <option value="pop">Pop</option>
-                <option value="hip-hop">Hip-Hop</option>
-                <option value="rap">Rap</option>
-                <option value="rock">Rock</option>
-                <option value="edm">EDM</option>
-                <option value="country">Country</option>
-            </select>
-        </label>
-        <br/>
-        <label>
-            Instagram:
-            <input
-            className="form-control form-text form-center"
-            name="instagram"
-            type="text"
-            size="30"
-            placeholder="@"
-            required={true}
-            value={this.state.instagram}
-            />
-        </label>
-        <br/>
-        <label>
-            Facebook:
-            <input
-            className="form-control form-text form-center"
-            name="facebook"
-            type="text"
-            size="30"
-            placeholder="@"
-            required={true}
-            value={this.state.facebook}
-            />
-        </label>
-        <br/>
-        </form>
-        <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
-            &nbsp;Create Artist Account</button>
-        </div></div></div>
-    );
-}
-
-handleGenres = () => {
-    this.state.genres = document.getElementById("genres").selectedOptions;
-}
-
-renderVenueDialog = () => {
-    return (
-        <div className="modal" role="dialog">
-        <div className="modal-dialog modal-lg"></div>
-        <div className="modal-content form-center">
-        <div className="modal-header">
-        <h3><b>Create Venue Account</b></h3>
-            <button className="modal-close" onClick={this.props.cancel}>&times;</button>
-        </div>
-        <div className="modal-body">
-        <form onSubmit={this.handleSubmit}>
-
-        </form>
-        <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
-            &nbsp;Create Venue Account</button>
-        </div></div></div>
-    );
-}
-
 }
 
 export default CreateEditAccountDialog;
