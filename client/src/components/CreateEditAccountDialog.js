@@ -491,6 +491,7 @@ renderArtistDialog = () => {
             placeholder="Artist Name"
             required={true}
             value={this.state.artistName}
+            onChange={this.handleChange}
             />
         </label>
         <br/>
@@ -520,6 +521,7 @@ renderArtistDialog = () => {
             placeholder="@"
             required={true}
             value={this.state.instagram}
+            onChange={this.handleChange}
             />
         </label>
         <br/>
@@ -533,6 +535,7 @@ renderArtistDialog = () => {
             placeholder="@"
             required={true}
             value={this.state.facebook}
+            onChange={this.handleChange}
             />
         </label>
         <br/>
@@ -541,18 +544,6 @@ renderArtistDialog = () => {
         </form>
         </div></div></div>
     );
-}
-
-handleGenres = () => {
-    this.state.genres = document.getElementById("genres").selectedOptions;
-}
-
-handleVenues = () => {
-    this.state.venues = document.getElementById("venues").selectedOptions;
-}
-
-handleArtists = () => {
-    this.state.venues = document.getElementById("artists").selectedOptions;
 }
 
 renderVenueDialog = () => {

@@ -9,14 +9,16 @@ import FeedPage from './FeedPage.js';
 import Rounds from './Rounds.js';
 import CoursesPage from './CoursesPage.js';
 import AboutBox from './AboutBox.js';
+import LocationSearch from './LocationSearch.js';
 
 const modeTitle = {};
-modeTitle[AppMode.LOGIN] = "Welcome to SpeedScore";
-modeTitle[AppMode.FEED] = "Activity Feed";
-modeTitle[AppMode.ROUNDS] = "My Rounds";
-modeTitle[AppMode.ROUNDS_LOGROUND] = "Log New Round";
-modeTitle[AppMode.ROUNDS_EDITROUND] = "Edit Round";
-modeTitle[AppMode.COURSES] = "Courses";
+modeTitle[AppMode.LOGIN] = "URScene Login";
+modeTitle[AppMode.FEED] = "Events near you";
+modeTitle[AppMode.ROUNDS] = "My events";
+modeTitle[AppMode.ROUNDS_LOGROUND] = "Enter new event";
+modeTitle[AppMode.ROUNDS_EDITROUND] = "Edit Event";
+modeTitle[AppMode.COURSES] = "Venues";
+modeTitle[AppMode.LOCATION_SEARCH] = "Location Search"
 
 const modeToPage = {};
 modeToPage[AppMode.LOGIN] = LoginPage;
@@ -25,6 +27,7 @@ modeToPage[AppMode.ROUNDS] = Rounds;
 modeToPage[AppMode.ROUNDS_LOGROUND] = Rounds;
 modeToPage[AppMode.ROUNDS_EDITROUND] = Rounds;
 modeToPage[AppMode.COURSES] = CoursesPage;
+modeToPage[AppMode.LOCATION_SEARCH] = LocationSearch;
 
 
 class App extends React.Component {
@@ -130,7 +133,7 @@ class App extends React.Component {
   render() {
     const ModePage = modeToPage[this.state.mode];
     return (
-      <div className="padded-page">
+      <div>
         {this.state.showAboutDialog ? 
           <AboutBox close={() => this.setState({showAboutDialog: false})}/> : null}
         {this.state.statusMsg != "" ? <div className="status-msg">
@@ -158,7 +161,8 @@ class App extends React.Component {
             localAccount={this.state.userObj.authStrategy === "local"}
             editAccount={this.showEditAccount}
             logOut={() => this.handleChangeMode(AppMode.LOGIN)}
-            showAbout={() => {this.setState({showAboutDialog: true})}}/>
+            showAbout={() => {this.setState({showAboutDialog: true})}}
+            changeMode={this.handleChangeMode}/>
           <ModeBar 
             mode={this.state.mode} 
             changeMode={this.handleChangeMode}
