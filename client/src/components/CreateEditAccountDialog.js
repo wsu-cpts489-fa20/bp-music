@@ -475,9 +475,9 @@ renderFanDialog = () => {
             </select>
         </label>
         <br/>
-        </form>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Fan Account</button>
+        </form>
         </div></div></div>
     );
 }
@@ -549,9 +549,9 @@ renderArtistDialog = () => {
             />
         </label>
         <br/>
-        </form>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Artist Account</button>
+        </form>
         </div></div></div>
     );
 }
@@ -580,9 +580,9 @@ renderVenueDialog = () => {
         <div className="modal-body">
         <form onSubmit={this.handleSubmit}>
 
-        </form>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Venue Account</button>
+        </form>
         </div></div></div>
     );
 }
