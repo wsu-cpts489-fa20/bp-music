@@ -372,7 +372,11 @@ handleAccountType = () => {
         this.setState({showFanDialog: true});
     }
     if (this.state.accountType == "artist") {
-        this.setState({showArtistDialog: true});
+        this.setState({showArtistDialog: true,
+            artistName: "",
+            genres: [],
+            instagram: "",
+            facebook: ""});
     }
     if (this.state.accountType == "venue") {
         this.setState({showVenueDialog: true});
@@ -409,12 +413,66 @@ renderArtistDialog = () => {
         </div>
         <div className="modal-body">
         <form onSubmit={this.handleSubmit}>
-
+        <label>
+            Artist Name:
+            <input
+            className="form-control form-text form-center"
+            name="artistName"
+            type="text"
+            size="30"
+            placeholder="Artist Name"
+            required={true}
+            value={this.state.artistName}
+            />
+        </label>
+        <br/>
+        <label>
+            Genres:
+            <select name="genres[]" id="genres" onChange={this.handleGenres} multiple>
+                <option value="pop">Pop</option>
+                <option value="hip-hop">Hip-Hop</option>
+                <option value="rap">Rap</option>
+                <option value="rock">Rock</option>
+                <option value="edm">EDM</option>
+                <option value="country">Country</option>
+            </select>
+        </label>
+        <br/>
+        <label>
+            Instagram:
+            <input
+            className="form-control form-text form-center"
+            name="instagram"
+            type="text"
+            size="30"
+            placeholder="@"
+            required={true}
+            value={this.state.instagram}
+            />
+        </label>
+        <br/>
+        <label>
+            Facebook:
+            <input
+            className="form-control form-text form-center"
+            name="facebook"
+            type="text"
+            size="30"
+            placeholder="@"
+            required={true}
+            value={this.state.facebook}
+            />
+        </label>
+        <br/>
         </form>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Artist Account</button>
         </div></div></div>
     );
+}
+
+handleGenres = () => {
+    this.state.genres = document.getElementById("genres").selectedOptions;
 }
 
 renderVenueDialog = () => {
