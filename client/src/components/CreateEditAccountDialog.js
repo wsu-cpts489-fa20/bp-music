@@ -437,7 +437,8 @@ renderFanDialog = () => {
     </div>
     );
 }
-handleAccountType = () => {
+handleAccountType = (event) => {
+    event.preventDefault();
     if (this.state.accountType == "fan") {
         this.setState({showFanDialog: true});
         this.setState({showFanDialog: true,
