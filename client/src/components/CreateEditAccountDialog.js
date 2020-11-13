@@ -141,8 +141,7 @@ class CreateEditAccountDialog extends React.Component {
             password: this.state.password,
             profilePicURL: this.state.profilePicURL,
             securityQuestion: this.state.securityQuestion,
-            securityAnswer: this.state.securityAnswer,
-            accountType: this.state.accountType
+            securityAnswer: this.state.securityAnswer
         };
         const url = '/users/' + this.state.accountName;
         let res;
@@ -396,10 +395,9 @@ renderFanDialog = () => {
         </div>
         <div className="modal-body">
         <form onSubmit={this.handleSubmit}>
-
-        </form>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Fan Account</button>
+        </form>    
         </div></div></div>
     );
 }
@@ -470,9 +468,9 @@ renderArtistDialog = () => {
             />
         </label>
         <br/>
-        </form>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Artist Account</button>
+        </form>
         </div></div></div>
     );
 }
@@ -492,10 +490,9 @@ renderVenueDialog = () => {
         </div>
         <div className="modal-body">
         <form onSubmit={this.handleSubmit}>
-
-        </form>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Venue Account</button>
+        </form>    
         </div></div></div>
     );
 }
