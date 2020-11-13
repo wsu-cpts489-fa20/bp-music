@@ -5,7 +5,10 @@
 .navbar {
   overflow: hidden; /* Don't allow scrolling */
   display: block; /* Occupies its own horizontal space */
-  background-color: #13294E;
+  background-color: #530763;
+  outline-style: double;
+  outline-width: 4px;
+  outline: #000;
   position: fixed; /* Doesn't move */
   top: 0;
   width: 100%; /* 100% of width of screen */
@@ -37,7 +40,7 @@ padding-bottom: 5px;
   z-index: 150; /* Force the menu to be at front */
   top: 48px; /* Position menu 48 px from top of screen; accomodates top navbar */
   left: 0; /* Position the menu on the left hand side */
-  background-color: #13294E; /* Background color is dark blue */
+  background-color: #530763; /* Background color is dark blue */
   overflow-x: hidden; /* Don't allow horizontal scroll */
   transition: 0.5s; /* Animation transition time is 0.5 sec */
   padding-top: 12px; /* Place menu content 12 px from top */
@@ -67,12 +70,12 @@ padding-bottom: 5px;
 /* Required ordering of link style definitions: visited, hover, active. If out of this order, they won't work!! */
 
 .sidemenu a:visited {
-background-color:  #13294E !important;
+background-color:  #530763 !important;
 color: white !important;
 }
 
 .sidemenu a:active {
-background-color:  #13294E !important;
+background-color:  #530763 !important;
 color: white !important;
 }
 
@@ -98,7 +101,7 @@ color: white !important;
 /* side menu button styling */
 .sidemenu-btn {
 background-color: transparent;
-border-color: #13294E;
+border-color: #530763;
 text-align: center;
 }
 
@@ -113,7 +116,7 @@ text-align: center;
 .sidemenu-item:hover {
   cursor: default;
   text-decoration: none;
-  color: #13294E !important;
+  color: #530763 !important;
   background-color: #F0F0F0;
 }
 
@@ -122,7 +125,7 @@ text-align: center;
        pointer-events: none;
        cursor: default;
        text-decoration: none;
-       color: #13294E !important;
+       color: #530763 !important;
        background-color: #F0F0F0;
 }
 
@@ -139,14 +142,14 @@ text-align: center;
 
 /* The SpeedScore dark blue color theme  */       
 .btn-color-theme {
-      background-color: #13294E;
+      background-color: #530763;
       color: white;
   }
   
 /* The color theme when a bottom bar menu item is selected */
 .btn-alt-color-theme {
       background-color: #F0F0F0;
-      color: #13294E;
+      color: #530763;
   }
 
 /* change items to gray when disabled class is applied  */
@@ -157,8 +160,8 @@ color: gray;
 
 .btn-color-theme-outline {
       border: 2px;
-      border-color: #13294E;
-      color: #13294E;
+      border-color: #530763;
+      color: #530763;
 }
 
 /* Styling for the divs in the app. Ensures that the content at top isn't obscured by top bar */
@@ -179,7 +182,7 @@ cursor: pointer;
 
 /* Styling for mode bar at the bottom of the page */
 .modebar {
-background-color: #13294E;
+background-color: #530763;
 overflow: hidden;
 position: fixed;
 bottom: 0;
@@ -191,7 +194,7 @@ z-index: 100;
 .modebar a {
 display: block;
 float: left;
-width: 32%;
+width: 25%;
 color: white;
 text-align: center;
 padding: 2px 2px;
@@ -202,7 +205,7 @@ font-size: 17px;
 /* Add a gray background color to the button when it is selected */
 .modebar a:active {
 background-color: #F0F0F0;
-color: #13294E;
+color: #530763;
 }
 
 /* Add a gray background color to button when it is hovered */
@@ -235,7 +238,7 @@ width:60px;
 height:60px;
 bottom:60px;
 right:40px;
-background-color:#13294E;
+background-color:#530763;
 color:white;
 border-radius:50px;
 text-align:center;
@@ -306,7 +309,7 @@ text-align: center;
   pointer-events: none;
   cursor: default;
   text-decoration: none;
-  color: #13294E !important;
+  color: #530763 !important;
   background-color: #F0F0F0;
 }
 
@@ -316,7 +319,7 @@ text-align: center;
 }
 
 .login-link {
-  color:  #13294E;
+  color:  #530763;
 }
 
 .modal {
@@ -342,7 +345,7 @@ text-align: center;
 
 .modal-header {
     padding: 2px 16px;
-    background-color: #13294E;
+    background-color: #530763;
     color: white;
   }
   
