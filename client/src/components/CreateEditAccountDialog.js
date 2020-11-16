@@ -184,10 +184,24 @@ class CreateEditAccountDialog extends React.Component {
     handleSubmit = async(event) => {
         event.preventDefault();
         this.setState({showFanDialog: false, showArtistDialog: false, showVenueDialog: false})
+
         // Initialize checkboxes for create account pages
-        for (const checkbox of this.selectedCheckboxes) {
-            console.log(checkbox, 'is selected.');
-          }
+        Object.keys(this.state.genreCheckboxes)
+        .filter(checkbox => this.state.genreCheckboxes[checkbox])
+        .forEach(checkbox => {
+            console.log(checkbox, "is selected.");
+        });
+        Object.keys(this.state.artistCheckboxes)
+        .filter(checkbox => this.state.artistCheckboxes[checkbox])
+        .forEach(checkbox => {
+            console.log(checkbox, "is selected.");
+        });
+        Object.keys(this.state.venueCheckboxes)
+        .filter(checkbox => this.state.venueCheckboxes[checkbox])
+        .forEach(checkbox => {
+            console.log(checkbox, "is selected.");
+        });
+        
         //Initialize user account
         let userData = {
             displayName: this.state.displayName,
@@ -465,8 +479,6 @@ renderFanDialog = () => {
                 className="btn btn-outline-primary mr-2"
                 onClick={this.deselectAllGenre}
                 > Deselect All </button>
-                <button type="submit" className="btn btn-primary">
-                Save </button>
             </div>
         <br/>
         <label>
@@ -484,8 +496,6 @@ renderFanDialog = () => {
                 className="btn btn-outline-primary mr-2"
                 onClick={this.deselectAllArtist}
                 > Deselect All </button>
-                <button type="submit" className="btn btn-primary">
-                Save </button>
             </div>
         <br/>
         <label>
@@ -503,8 +513,6 @@ renderFanDialog = () => {
                 className="btn btn-outline-primary mr-2"
                 onClick={this.deselectAllVenue}
                 > Deselect All </button>
-                <button type="submit" className="btn btn-primary">
-                Save </button>
             </div>
         <br/>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
@@ -695,22 +703,7 @@ selectAllGenreCheckboxes = isSelected => {
   handleFormSubmit = formSubmitEvent => {
     formSubmitEvent.preventDefault();
 
-    Object.keys(this.state.genreCheckboxes)
-      .filter(checkbox => this.state.genreCheckboxes[checkbox])
-      .forEach(checkbox => {
-        console.log(checkbox, "is selected.");
-      });
-
-    Object.keys(this.state.artistCheckboxes)
-      .filter(checkbox => this.state.artistCheckboxes[checkbox])
-      .forEach(checkbox => {
-        console.log(checkbox, "is selected.");
-      });
-    Object.keys(this.state.venueCheckboxes)
-      .filter(checkbox => this.state.venueCheckboxes[checkbox])
-      .forEach(checkbox => {
-        console.log(checkbox, "is selected.");
-      });
+    
   };
 
   createGenreCheckbox = option => (

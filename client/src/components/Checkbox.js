@@ -1,4 +1,4 @@
-// All Checkbox was inherited from http://react.tips/checkboxes-in-react/
+// All Checkbox was inherited from http://react.tips/checkboxes-in-react-16/
 import React, { Component, PropTypes } from 'react';
 
 const Checkbox = ({ label, isSelected, onCheckboxChange }) => (
