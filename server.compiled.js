@@ -110,24 +110,10 @@ var roundSchema = new Schema({
 roundSchema.virtual('SGS').get(function () {
   return this.strokes * 60 + this.minutes * 60 + this.seconds;
 }); // const fanSchema = new Schema({
-//   genres: [String],
-//   artists: [String],
-//   venues: [String],
-//   currLocation: String
+//   genres: {type: List[String], required: true},
+//   artists: {type: List[String], required: true},
+//   venues: {type: List[String], required: true}
 // });
-// const Fan = mongoose.model("Fan", userSchema);
-// const artistSchema = new Schema({
-//   user: userSchema,
-//   artistName: String,
-//   genre: String,
-//   media: List[String]
-// });
-// const Artist = mongoose.model("Artist", userSchema);
-// const venueSchema = new Schema({
-//   user: userSchema,
-//   location: String
-// });
-// const Venue = mongoose.model("Venue", userSchema);
 //Define schema that maps to a document in the Users collection in the appdb
 //database.
 
@@ -135,6 +121,7 @@ var userSchema = new Schema({
   id: String,
   //unique identifier for user
   password: String,
+  userType: String,
   displayName: String,
   //Name to be displayed within app
   authStrategy: String,
@@ -151,7 +138,16 @@ var userSchema = new Schema({
   rounds: [roundSchema]
 });
 
-var User = _mongoose["default"].model("User", userSchema); //////////////////////////////////////////////////////////////////////////
+var User = _mongoose["default"].model("User", userSchema); // getUserType = () => {
+//   if(userType == "fan")
+//   {
+//     userAccess: [fanSchema]
+//   }
+//   else{
+//     userAccess: [fanSchema]
+//   }
+// }
+//////////////////////////////////////////////////////////////////////////
 //PASSPORT SET-UP
 //The following code sets up the app with OAuth authentication using
 //the 'github' strategy in passport.js.
@@ -923,4 +919,3 @@ app["delete"]('/rounds/:userId/:roundId', /*#__PURE__*/function () {
   return function (_x31, _x32, _x33) {
     return _ref11.apply(this, arguments);
   };
-}());
