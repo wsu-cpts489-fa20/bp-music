@@ -435,18 +435,33 @@ renderFanDialog = () => {
         <br/>
         <label>
             Genres:
+            <select name="genres"
+                value={this.state.genres} 
+                onChange={this.handleChange} 
+                className="form-control form-textform-center"
+                {...createCheckboxes(genreList)}>
+            </select>
         </label>
-        {this.createCheckboxes(genreList)}
         <br/>
         <label>
             Artists:
+            <select name="genres"
+                value={this.state.genres} 
+                onChange={this.handleChange} 
+                className="form-control form-textform-center"
+                {...createCheckboxes(artistList)}>
+            </select>
         </label>
-        {this.createCheckboxes(artistList)}
         <br/>
         <label>
             Venues:
+            <select name="genres"
+                value={this.state.genres} 
+                onChange={this.handleChange} 
+                className="form-control form-textform-center"
+                {...createCheckboxes(venueList)}>
+            </select>
         </label>
-        {this.createCheckboxes(venueList)}
         <br/>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Fan Account</button>
