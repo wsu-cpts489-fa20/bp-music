@@ -435,17 +435,17 @@ renderFanDialog = () => {
         <br/>
         <label>
             Genres:
-            {genreList.createCheckboxes()}
+            {createCheckboxes(genreList)}
         </label>
         <br/>
         <label>
             Artists:
-            {artistList.createCheckboxes()}
+            {createCheckboxes(artistList)}
         </label>
         <br/>
         <label>
             Venues:
-            {venueList.createCheckboxes()}
+            {createCheckboxes(venueList)}
         </label>
         <br/>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
