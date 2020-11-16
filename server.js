@@ -83,16 +83,6 @@ const userSchema = new Schema({
 });
 const User = mongoose.model("User", userSchema); 
 
-getUserType = () => {
-  if(userType == "fan")
-  {
-    userAccess: [fanSchema]
-  }
-  else{
-    userAccess: [fanSchema]
-  }
-}
-
 //////////////////////////////////////////////////////////////////////////
 //PASSPORT SET-UP
 //The following code sets up the app with OAuth authentication using
@@ -291,11 +281,10 @@ app.post('/users/:userId', async (req, res, next) => {
       !req.body.hasOwnProperty("displayName") ||
       !req.body.hasOwnProperty("profilePicURL") ||
       !req.body.hasOwnProperty("securityQuestion") ||
-      !req.body.hasOwnProperty("securityAnswer") ||
-      !req.body.hasOwnProperty("accountType")) {
+      !req.body.hasOwnProperty("securityAnswer")) {
     //Body does not contain correct properties
     return res.status(400).send("/users POST request formulated incorrectly. " + 
-      "It must contain 'password','displayName','profilePicURL','securityQuestion','securityAnswer' and 'accountType' fields in message body.")
+      "It must contain 'password','displayName','profilePicURL','securityQuestion', and'securityAnswer' fields in message body.")
   }
   try {
     let thisUser = await User.findOne({ id: req.params.userId });
@@ -489,40 +478,6 @@ app.delete('/rounds/:userId/:roundId', async (req, res, next) => {
   }
 });
 
-/////////////////////////////////
-//ACCOUNTTYPE ROUTES
-////////////////////////////////
-
-//CREATE accountType route: Addsusers account type as a subdocument to 
-//a document in the users collection (POST)
-app.post('/accountType/:userId', async (req, res, next) => {
-  console.log("in /accountType (POST) route with params = " + 
-              JSON.stringify(req.params) + " and body = " + 
-              JSON.stringify(req.body));
-  if (!req.body.hasOwnProperty("genres") || 
-      !req.body.hasOwnProperty("artists") || 
-      !req.body.hasOwnProperty("venues")) {
-    //Body does not contain correct properties
-    return res.status(400).send("POST request on /accountType formulated incorrectly." +
-      "Body must contain all 3 required fields: genres, artists, and venues");
-  }
-  try {
-    let status = await User.updateOne(
-    {id: req.params.userId},
-    {$push: {accountType: req.body}});
-    if (status.nModified != 1) { //Should never happen!
-      res.status(400).send("Unexpected error occurred when adding accountType to"+
-        " database. Account Type was not added.");
-    } else {
-      res.status(200).send("Round successfully added to database.");
-    }
-  } catch (err) {
-    console.log(err);
-    return res.status(400).send("Unexpected error occurred when adding round" +
-     " to database: " + err);
-  } 
-
-});
 // GET route for google location search
 // Returns an Object containing information about the location
 app.get('/location/:search', async (req, res) => {
