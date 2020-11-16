@@ -557,7 +557,17 @@ renderVenueDialog = () => {
         </div>
         <div className="modal-body">
         <form onSubmit={this.handleSubmit}>
-
+        Street Address:
+                <input
+                className="form-control form-text form-center"
+                name="venue_location"
+                type="text"
+                size="30"
+                placeholder="123 Example St. Portland, OR"
+                required={true}
+                value={this.state.venue_location}
+                onChange={this.handleChange}
+                />
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Venue Account</button>
         </form>
