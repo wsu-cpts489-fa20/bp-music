@@ -52,7 +52,14 @@ class CreateEditAccountDialog extends React.Component {
                       confirmDelete: false,
                       showFanDialog: false,
                       showArtistDialog: false,
-                      showVenueDialog: false};
+                      showVenueDialog: false,
+
+                      checkboxes: OPTIONS.reduce(
+                        (options, option) => ({
+                          ...options,
+                          [option]: false
+                        }), {})
+                    };
     } 
 
     //componentDidMount -- If we are editing an existing user acccount, we need to grab the data from
@@ -435,33 +442,60 @@ renderFanDialog = () => {
         <br/>
         <label>
             Genres:
-            <select name="genres"
-                value={this.state.genres} 
-                onChange={this.handleChange} 
-                className="form-control form-textform-center"
-                {...genreList.map(this.createCheckbox)}>
-            </select>
         </label>
+        {genreList.map(this.createCheckbox)}
+            <div className="form-group mt-2">
+                <button
+                type="button"
+                className="btn btn-outline-primary mr-2"
+                onClick={this.selectAll}
+                > Select All </button>
+                <button
+                type="button"
+                className="btn btn-outline-primary mr-2"
+                onClick={this.deselectAll}
+                > Deselect All </button>
+                <button type="submit" className="btn btn-primary">
+                Save </button>
+            </div>
         <br/>
         <label>
             Artists:
-            <select name="artists"
-                value={this.state.genres} 
-                onChange={this.handleChange} 
-                className="form-control form-textform-center"
-                {...artistList.map(this.createCheckbox)}>
-            </select>
         </label>
+        {artistList.map(this.createCheckbox)}
+            <div className="form-group mt-2">
+                <button
+                type="button"
+                className="btn btn-outline-primary mr-2"
+                onClick={this.selectAll}
+                > Select All </button>
+                <button
+                type="button"
+                className="btn btn-outline-primary mr-2"
+                onClick={this.deselectAll}
+                > Deselect All </button>
+                <button type="submit" className="btn btn-primary">
+                Save </button>
+            </div>
         <br/>
         <label>
             Venues:
-            <select name="venues"
-                value={this.state.genres} 
-                onChange={this.handleChange} 
-                className="form-control form-textform-center"
-                {...venueList.map(this.createCheckbox)}>
-            </select>
         </label>
+        {venueList.map(this.createCheckbox)}
+            <div className="form-group mt-2">
+                <button
+                type="button"
+                className="btn btn-outline-primary mr-2"
+                onClick={this.selectAll}
+                > Select All </button>
+                <button
+                type="button"
+                className="btn btn-outline-primary mr-2"
+                onClick={this.deselectAll}
+                > Deselect All </button>
+                <button type="submit" className="btn btn-primary">
+                Save </button>
+            </div>
         <br/>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Fan Account</button>
@@ -569,39 +603,56 @@ renderVenueDialog = () => {
 /////////////////////
 // Testing making Create Account Page use checkmarks instead
 /////////////////////
-componentWillMount = () => {
-    this.selectedCheckboxes = new Set();
-  }
+selectAllCheckboxes = isSelected => {
+    Object.keys(this.state.checkboxes).forEach(checkbox => {
+      // BONUS: Can you explain why we pass updater function to setState instead of an object?
+      this.setState(prevState => ({
+        checkboxes: {
+          ...prevState.checkboxes,
+          [checkbox]: isSelected
+        }
+      }));
+    });
+  };
 
-toggleCheckbox = label => {
-if (this.selectedCheckboxes.has(label)) {
-    this.selectedCheckboxes.delete(label);
-} else {
-    this.selectedCheckboxes.add(label);
-}
+  selectAll = () => this.selectAllCheckboxes(true);
 
-}
-createCheckbox = label => (
+  deselectAll = () => this.selectAllCheckboxes(false);
+
+  handleCheckboxChange = changeEvent => {
+    const { name } = changeEvent.target;
+
+    this.setState(prevState => ({
+      checkboxes: {
+        ...prevState.checkboxes,
+        [name]: !prevState.checkboxes[name]
+      }
+    }));
+  };
+
+  handleFormSubmit = formSubmitEvent => {
+    formSubmitEvent.preventDefault();
+
+    Object.keys(this.state.checkboxes)
+      .filter(checkbox => this.state.checkboxes[checkbox])
+      .forEach(checkbox => {
+        console.log(checkbox, "is selected.");
+      });
+  };
+
+  createCheckbox = option => (
     <Checkbox
-        label={label}
-        handleCheckboxChange={this.toggleCheckbox}
-        key={label}
-        />
-)
-createCheckboxes = listType => {
-    if (listType === genreList)
-    {
-        genreList.map(this.createCheckbox)
-    }
-    if(listType === artistList)
-    {
-        artistList.map(this.createCheckbox)
-    }
-    if (listType === venueList)
-    {
-        venueList.map(this.createCheckbox)
-    }
-}
+      label={option}
+      isSelected={this.state.checkboxes[option]}
+      onCheckboxChange={this.handleCheckboxChange}
+      key={option}
+    />
+  );
+
+  createCheckboxes = () => {
+      if(listType)
+      OPTIONS.map(this.createCheckbox);
+  };
 
 }
 
