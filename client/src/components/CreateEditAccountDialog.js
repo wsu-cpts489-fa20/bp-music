@@ -439,27 +439,27 @@ renderFanDialog = () => {
                 value={this.state.genres} 
                 onChange={this.handleChange} 
                 className="form-control form-textform-center"
-                {...createCheckboxes(genreList)}>
+                {...genreList.map(this.createCheckbox)}>
             </select>
         </label>
         <br/>
         <label>
             Artists:
-            <select name="genres"
+            <select name="artists"
                 value={this.state.genres} 
                 onChange={this.handleChange} 
                 className="form-control form-textform-center"
-                {...createCheckboxes(artistList)}>
+                {...artistList.map(this.createCheckbox)}>
             </select>
         </label>
         <br/>
         <label>
             Venues:
-            <select name="genres"
+            <select name="venues"
                 value={this.state.genres} 
                 onChange={this.handleChange} 
                 className="form-control form-textform-center"
-                {...createCheckboxes(venueList)}>
+                {...venueList.map(this.createCheckbox)}>
             </select>
         </label>
         <br/>
