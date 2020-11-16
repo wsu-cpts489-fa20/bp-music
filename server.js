@@ -317,6 +317,65 @@ app.post('/fans/:userId', async (req, res, next) => {
   }
 });
 
+app.put('/fans/:userId', async (req, res, next) => {
+  console.log("in /fans update route (PUT) with userId = " + JSON.stringify(req.params.userId) +
+    " and body = " + JSON.stringify(req.body));
+  if (!req.params.hasOwnProperty("userId")) {
+    return res.status(400).send("fans/ PUT request formulated incorrectly." +
+      "It must contain 'userId' as parameter.");
+  }
+  const validProps = ['password', 'displayName', 'profilePicURL',
+    'securityQuestion', 'securityAnswer', 'venues', 'artists', 'events', 'user'];
+  for (const bodyProp in req.body) {
+    if (!validProps.includes(bodyProp)) {
+      return res.status(400).send("users/ PUT request formulated incorrectly." +
+        "Only the following props are allowed in body: " +
+        "'password', 'displayname', 'profilePicURL', 'securityQuestion', 'securityAnswer', 'user");
+    }
+  }
+  try {
+    let fan = await Fan.findOne({ 'user.id': req.params.userId })
+    if (fan) {
+      for (const [key, value] of Object.entries(req.body)) {
+        console.log(`${key}: ${value}`);
+        if (key !== 'user') {
+          fan[key] = value;
+        }
+      }
+      if (req.body.hasOwnProperty('user')) {
+        for (const [key, value] of Object.entries(req.body.user)) {
+          fan.user[key] = value;
+        }
+      }
+
+      await fan.save();
+      return res.status(200).send("Fan account " + req.params.userId + " successfully updated.")
+    } else {
+      return res.status(404).send('Fan account ' + req.params.userId + ' not found')
+    }
+  } catch (err) {
+    res.status(400).send("Unexpected error occurred when updating fan data in database: " + err);
+  }
+});
+
+app.delete('/fans/:userId', async (req, res, next) => {
+  console.log("in /fans route (DELETE) with userId = " +
+    JSON.stringify(req.params.userId));
+  try {
+    let status = await Fan.deleteOne({ 'user.id': req.params.userId });
+    if (status.deletedCount !== 1) {
+      return res.status(404).send("No fan account " +
+        req.params.userId + " was found. Account could not be deleted.");
+    } else {
+      return res.status(200).send("Fan account " +
+        req.params.userId + " was successfully deleted.");
+    }
+  } catch (err) {
+    return res.status(400).send("Unexpected error occurred when attempting to delete fan account with id " +
+      req.params.userId + ": " + err);
+  }
+});
+
 /////////////////////////////////
 //USER ACCOUNT MANAGEMENT ROUTES
 ////////////////////////////////
