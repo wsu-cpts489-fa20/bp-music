@@ -54,7 +54,17 @@ class CreateEditAccountDialog extends React.Component {
                       showArtistDialog: false,
                       showVenueDialog: false,
 
-                      checkboxes: OPTIONS.reduce(
+                      genreCheckboxes: genreList.reduce(
+                        (options, option) => ({
+                          ...options,
+                          [option]: false
+                        }), {}),
+                      artistCheckboxes: artistList.reduce(
+                        (options, option) => ({
+                          ...options,
+                          [option]: false
+                        }), {}),
+                    venueCheckboxes: venueList.reduce(
                         (options, option) => ({
                           ...options,
                           [option]: false
@@ -443,17 +453,17 @@ renderFanDialog = () => {
         <label>
             Genres:
         </label>
-        {genreList.map(this.createCheckbox)}
+        {genreList.map(this.createGenreCheckbox)}
             <div className="form-group mt-2">
                 <button
                 type="button"
                 className="btn btn-outline-primary mr-2"
-                onClick={this.selectAll}
+                onClick={this.selectAllGenre}
                 > Select All </button>
                 <button
                 type="button"
                 className="btn btn-outline-primary mr-2"
-                onClick={this.deselectAll}
+                onClick={this.deselectAllGenre}
                 > Deselect All </button>
                 <button type="submit" className="btn btn-primary">
                 Save </button>
@@ -462,17 +472,17 @@ renderFanDialog = () => {
         <label>
             Artists:
         </label>
-        {artistList.map(this.createCheckbox)}
+        {artistList.map(this.createArtistCheckbox)}
             <div className="form-group mt-2">
                 <button
                 type="button"
                 className="btn btn-outline-primary mr-2"
-                onClick={this.selectAll}
+                onClick={this.selectAllArtist}
                 > Select All </button>
                 <button
                 type="button"
                 className="btn btn-outline-primary mr-2"
-                onClick={this.deselectAll}
+                onClick={this.deselectAllArtist}
                 > Deselect All </button>
                 <button type="submit" className="btn btn-primary">
                 Save </button>
@@ -481,17 +491,17 @@ renderFanDialog = () => {
         <label>
             Venues:
         </label>
-        {venueList.map(this.createCheckbox)}
+        {venueList.map(this.createVenueCheckbox)}
             <div className="form-group mt-2">
                 <button
                 type="button"
                 className="btn btn-outline-primary mr-2"
-                onClick={this.selectAll}
+                onClick={this.selectAllVenue}
                 > Select All </button>
                 <button
                 type="button"
                 className="btn btn-outline-primary mr-2"
-                onClick={this.deselectAll}
+                onClick={this.deselectAllVenue}
                 > Deselect All </button>
                 <button type="submit" className="btn btn-primary">
                 Save </button>
@@ -603,29 +613,81 @@ renderVenueDialog = () => {
 /////////////////////
 // Testing making Create Account Page use checkmarks instead
 /////////////////////
-selectAllCheckboxes = isSelected => {
-    Object.keys(this.state.checkboxes).forEach(checkbox => {
+selectAllGenreCheckboxes = isSelected => {
+    Object.keys(this.state.genreCheckboxes).forEach(checkbox => {
       // BONUS: Can you explain why we pass updater function to setState instead of an object?
       this.setState(prevState => ({
-        checkboxes: {
-          ...prevState.checkboxes,
+        genreCheckboxes: {
+          ...prevState.genreCheckboxes,
+          [checkbox]: isSelected
+        }
+      }));
+    });
+  };
+  selectAllArtistCheckboxes = isSelected => {
+    Object.keys(this.state.artistCheckboxes).forEach(checkbox => {
+      // BONUS: Can you explain why we pass updater function to setState instead of an object?
+      this.setState(prevState => ({
+        artistCheckboxes: {
+          ...prevState.artistCheckboxes,
+          [checkbox]: isSelected
+        }
+      }));
+    });
+  };
+  selectAllVenueCheckboxes = isSelected => {
+    Object.keys(this.state.venueCheckboxes).forEach(checkbox => {
+      // BONUS: Can you explain why we pass updater function to setState instead of an object?
+      this.setState(prevState => ({
+        venueCheckboxes: {
+          ...prevState.venueCheckboxes,
           [checkbox]: isSelected
         }
       }));
     });
   };
 
-  selectAll = () => this.selectAllCheckboxes(true);
+  selectAllGenre = () => this.selectAllGenreCheckboxes(true);
 
-  deselectAll = () => this.selectAllCheckboxes(false);
+  deselectAllGenre = () => this.selectAllGenreCheckboxes(false);
 
-  handleCheckboxChange = changeEvent => {
+  selectAllArtist = () => this.selectAllArtistCheckboxes(true);
+
+  deselectAllArtist = () => this.selectAllArtistCheckboxes(false);
+
+  selectAllVenue = () => this.selectAllVenueCheckboxes(true);
+
+  deselectAllVenue = () => this.selectAllVenueCheckboxes(false);
+
+  handleGenreCheckboxChange = changeEvent => {
     const { name } = changeEvent.target;
 
     this.setState(prevState => ({
-      checkboxes: {
-        ...prevState.checkboxes,
-        [name]: !prevState.checkboxes[name]
+      genreCheckboxes: {
+        ...prevState.genreCheckboxes,
+        [name]: !prevState.genreCheckboxes[name]
+      }
+    }));
+  };
+
+  handleArtistCheckboxChange = changeEvent => {
+    const { name } = changeEvent.target;
+
+    this.setState(prevState => ({
+      artistCheckboxes: {
+        ...prevState.artistCheckboxes,
+        [name]: !prevState.artistCheckboxes[name]
+      }
+    }));
+  };
+
+  handleVenueCheckboxChange = changeEvent => {
+    const { name } = changeEvent.target;
+
+    this.setState(prevState => ({
+      venueCheckboxes: {
+        ...prevState.venueCheckboxes,
+        [name]: !prevState.venueCheckboxes[name]
       }
     }));
   };
@@ -633,26 +695,49 @@ selectAllCheckboxes = isSelected => {
   handleFormSubmit = formSubmitEvent => {
     formSubmitEvent.preventDefault();
 
-    Object.keys(this.state.checkboxes)
-      .filter(checkbox => this.state.checkboxes[checkbox])
+    Object.keys(this.state.genreCheckboxes)
+      .filter(checkbox => this.state.genreCheckboxes[checkbox])
+      .forEach(checkbox => {
+        console.log(checkbox, "is selected.");
+      });
+
+    Object.keys(this.state.artistCheckboxes)
+      .filter(checkbox => this.state.artistCheckboxes[checkbox])
+      .forEach(checkbox => {
+        console.log(checkbox, "is selected.");
+      });
+    Object.keys(this.state.venueCheckboxes)
+      .filter(checkbox => this.state.venueCheckboxes[checkbox])
       .forEach(checkbox => {
         console.log(checkbox, "is selected.");
       });
   };
 
-  createCheckbox = option => (
+  createGenreCheckbox = option => (
     <Checkbox
       label={option}
-      isSelected={this.state.checkboxes[option]}
-      onCheckboxChange={this.handleCheckboxChange}
+      isSelected={this.state.genreCheckboxes[option]}
+      onCheckboxChange={this.handleGenreCheckboxChange}
+      key={option}
+    />
+  );
+  createArtistCheckbox = option => (
+    <Checkbox
+      label={option}
+      isSelected={this.state.artistCheckboxes[option]}
+      onCheckboxChange={this.handleGenreCheckboxChange}
       key={option}
     />
   );
 
-  createCheckboxes = () => {
-      if(listType)
-      OPTIONS.map(this.createCheckbox);
-  };
+  createVenueCheckbox = option => (
+    <Checkbox
+      label={option}
+      isSelected={this.state.venueCheckboxes[option]}
+      onCheckboxChange={this.handleGenreCheckboxChange}
+      key={option}
+    />
+  );
 
 }
 
