@@ -5,29 +5,29 @@
 const User = require('../models').User;
 const Artist = require('../models').Artist;
 
-module.exports = function(app) {
+module.exports = function (app) {
 
-  app.get('/fans/:userId', async (req, res, next) => {
-    console.log("in /fans route (GET) with userId = " +
+  app.get('/artists/:userId', async (req, res, next) => {
+    console.log("in /artists route (GET) with userId = " +
       JSON.stringify(req.params.userId));
     try {
-      let thisFan = await Fan.findOne({ 'user.id': req.params.userId });
-      if (!thisFan) {
-        return res.status(404).send("No fan account with id " +
+      let thisArtist = await Artist.findOne({ 'user.id': req.params.userId });
+      if (!thisArtist) {
+        return res.status(404).send("No artist account with id " +
           req.params.userId + " was found in database.");
       } else {
-        return res.status(200).json(JSON.stringify(thisFan));
+        return res.status(200).json(JSON.stringify(thisArtist));
       }
     } catch (err) {
-      return res.status(400).send("Unexpected error occurred when looking up fan with id " +
+      return res.status(400).send("Unexpected error occurred when looking up artist with id " +
         req.params.userId + " in database: " + err);
     }
   });
-  
-  app.post('/fans/:userId', async (req, res, next) => {
-    console.log("in /fans route (POST) with params = " + JSON.stringify(req.params) +
+
+  app.post('/artists/:userId', async (req, res, next) => {
+    console.log("in /artists route (POST) with params = " + JSON.stringify(req.params) +
       " and body = " + JSON.stringify(req.body));
-  
+
     if (req.body === undefined ||
       !req.body.hasOwnProperty("password") ||
       !req.body.hasOwnProperty("displayName") ||
@@ -36,12 +36,12 @@ module.exports = function(app) {
       !req.body.hasOwnProperty("securityAnswer") ||
       !req.body.hasOwnProperty("artists") ||
       !req.body.hasOwnProperty("venues") ||
-      !req.body.hasOwnProperty("events")) {
+      !req.body.hasOwnProperty("genres")) {
       //Body does not contain correct properties
-      return res.status(400).send("/fans POST request formulated incorrectly. " +
-        "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', artists, venues, and events fields in message body.")
+      return res.status(400).send("/artists POST request formulated incorrectly. " +
+        "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', artists, venues, and genres fields in message body.")
     }
-  
+
     try {
       let thisFan = await Fan.findOne({ 'user.id': req.params.userId });
       if (thisFan) { //account already exists
@@ -57,33 +57,33 @@ module.exports = function(app) {
         securityQuestion: req.body.securityQuestion,
         securityAnswer: req.body.securityAnswer
       });
-  
+
       await new Fan({
         user: thisUser,
         artists: req.body.artists,
         venues: req.body.venues,
-        events: req.body.events
+        genres: req.body.genres
       }).save();
-      return res.status(201).send('New fan account created')
+      return res.status(201).send('New artist account created')
     } catch (err) {
-      return res.status(400).send("Unexpected error occurred when adding or looking up fan in database. " + err);
+      return res.status(400).send("Unexpected error occurred when adding or looking up artist in database. " + err);
     }
   });
-  
-  app.put('/fans/:userId', async (req, res, next) => {
-    console.log("in /fans update route (PUT) with userId = " + JSON.stringify(req.params.userId) +
+
+  app.put('/artists/:userId', async (req, res, next) => {
+    console.log("in /artists update route (PUT) with userId = " + JSON.stringify(req.params.userId) +
       " and body = " + JSON.stringify(req.body));
     if (!req.params.hasOwnProperty("userId")) {
-      return res.status(400).send("fans/ PUT request formulated incorrectly." +
+      return res.status(400).send("artists/ PUT request formulated incorrectly." +
         "It must contain 'userId' as parameter.");
     }
     const validProps = ['password', 'displayName', 'profilePicURL',
-      'securityQuestion', 'securityAnswer', 'venues', 'artists', 'events', 'user'];
+      'securityQuestion', 'securityAnswer', 'venues', 'artists', 'genres', 'user'];
     for (const bodyProp in req.body) {
       if (!validProps.includes(bodyProp)) {
-        return res.status(400).send("users/ PUT request formulated incorrectly." +
+        return res.status(400).send("artist/ PUT request formulated incorrectly." +
           "Only the following props are allowed in body: " +
-          "'password', 'displayname', 'profilePicURL', 'securityQuestion', 'securityAnswer', 'user");
+          "'password', 'displayname', 'profilePicURL', 'securityQuestion', 'securityAnswer', 'venues', 'artists', 'genres', and 'user'");
       }
     }
     try {
@@ -99,31 +99,31 @@ module.exports = function(app) {
             fan.user[key] = value;
           }
         }
-  
+
         await fan.save();
-        return res.status(200).send("Fan account " + req.params.userId + " successfully updated.")
+        return res.status(200).send("artist account " + req.params.userId + " successfully updated.")
       } else {
-        return res.status(404).send('Fan account ' + req.params.userId + ' not found')
+        return res.status(404).send('artist account ' + req.params.userId + ' not found')
       }
     } catch (err) {
-      res.status(400).send("Unexpected error occurred when updating fan data in database: " + err);
+      res.status(400).send("Unexpected error occurred when updating artist data in database: " + err);
     }
   });
-  
-  app.delete('/fans/:userId', async (req, res, next) => {
-    console.log("in /fans route (DELETE) with userId = " +
+
+  app.delete('/artists/:userId', async (req, res, next) => {
+    console.log("in /artists route (DELETE) with userId = " +
       JSON.stringify(req.params.userId));
     try {
       let status = await Fan.deleteOne({ 'user.id': req.params.userId });
       if (status.deletedCount !== 1) {
-        return res.status(404).send("No fan account " +
+        return res.status(404).send("No artist account " +
           req.params.userId + " was found. Account could not be deleted.");
       } else {
-        return res.status(200).send("Fan account " +
+        return res.status(200).send("Artist account " +
           req.params.userId + " was successfully deleted.");
       }
     } catch (err) {
-      return res.status(400).send("Unexpected error occurred when attempting to delete fan account with id " +
+      return res.status(400).send("Unexpected error occurred when attempting to delete artist account with id " +
         req.params.userId + ": " + err);
     }
   });
