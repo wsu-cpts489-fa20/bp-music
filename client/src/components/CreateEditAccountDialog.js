@@ -586,9 +586,6 @@ createCheckboxes = (listType) => {
     {
         venueList.map(this.createCheckbox)
     }
-    else{
-        break;
-    }
 }
 
 }
