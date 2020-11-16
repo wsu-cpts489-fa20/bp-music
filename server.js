@@ -250,25 +250,22 @@ app.post('/auth/login',
   });
 
 /////////////////////////////////
-//USER ACCOUNT MANAGEMENT ROUTES
+//FAN ACCOUNT MANAGEMENT ROUTES
 ////////////////////////////////
 
-
-//READ user route: Retrieves the user with the specified userId from users collection (GET)
-app.get('/users/:userId', async (req, res, next) => {
-  console.log("in /users route (GET) with userId = " +
+app.get('/fans/:userId', async (req, res, next) => {
+  console.log("in /fans route (GET) with userId = " +
     JSON.stringify(req.params.userId));
   try {
-    let thisUser = await User.findOne({ id: req.params.userId });
-    if (!thisUser) {
-      return res.status(404).send("No user account with id " +
+    let thisFan = await Fan.findOne({ 'user.id': req.params.userId });
+    if (!thisFan) {
+      return res.status(404).send("No fan account with id " +
         req.params.userId + " was found in database.");
     } else {
-      return res.status(200).json(JSON.stringify(thisUser));
+      return res.status(200).json(JSON.stringify(thisFan));
     }
   } catch (err) {
-    console.log()
-    return res.status(400).send("Unexpected error occurred when looking up user with id " +
+    return res.status(400).send("Unexpected error occurred when looking up fan with id " +
       req.params.userId + " in database: " + err);
   }
 });
@@ -317,6 +314,30 @@ app.post('/fans/:userId', async (req, res, next) => {
     return res.status(201).send('New fan account created')
   } catch (err) {
     return res.status(400).send("Unexpected error occurred when adding or looking up fan in database. " + err);
+  }
+});
+
+/////////////////////////////////
+//USER ACCOUNT MANAGEMENT ROUTES
+////////////////////////////////
+
+
+//READ user route: Retrieves the user with the specified userId from users collection (GET)
+app.get('/users/:userId', async (req, res, next) => {
+  console.log("in /users route (GET) with userId = " +
+    JSON.stringify(req.params.userId));
+  try {
+    let thisUser = await User.findOne({ id: req.params.userId });
+    if (!thisUser) {
+      return res.status(404).send("No user account with id " +
+        req.params.userId + " was found in database.");
+    } else {
+      return res.status(200).json(JSON.stringify(thisUser));
+    }
+  } catch (err) {
+    console.log()
+    return res.status(400).send("Unexpected error occurred when looking up user with id " +
+      req.params.userId + " in database: " + err);
   }
 });
 
