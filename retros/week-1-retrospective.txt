@@ -1,0 +1,7 @@
+# Local Music Retrospective:
+	- What went well?
+		○ The Google maps API was handled very well by Christian, Kaitlin and Christian did a great job laying down a framework for setting up the different user create account pages. Tristan helped personalize the app so it was unique for the first sprint, as well as created the minimum account creation along with Madison. Good communication, met frequently to discuss progress and get aid. 
+	- What's not going well?
+		○ Getting work done sooner to have more time to improve and fix bugs if necessary, avoid waiting until Friday to attempt first merge. Avoid stepping on each other's toes by working on the same stuff or having to constantly work in the same file.
+	- How to improve:
+Try to have individual work demo-able by Wednesday or Thursday at the latest if possible. Continue communicating with team and working in stuff.
