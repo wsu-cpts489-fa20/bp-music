@@ -1,6 +1,6 @@
 import React from 'react';
 import ConfirmDeleteAccount from './ConfirmDeleteAccount.js';
-import ConfirmDeleteAccount from './ConfirmDeleteAccount.js';
+import Checkbox from './Checkbox.js';
 
 const genreList = [
     'Pop',
