@@ -60,11 +60,11 @@ roundSchema.virtual('SGS').get(function () {
   return (this.strokes * 60) + (this.minutes * 60) + this.seconds;
 });
 
-const fanSchema = new Schema({
-  genres: {type: List[String], required: true},
-  artists: {type: List[String], required: true},
-  venues: {type: List[String], required: true}
-});
+// const fanSchema = new Schema({
+//   genres: {type: List[String], required: true},
+//   artists: {type: List[String], required: true},
+//   venues: {type: List[String], required: true}
+// });
 
 //Define schema that maps to a document in the Users collection in the appdb
 //database.
@@ -78,20 +78,20 @@ const userSchema = new Schema({
   securityQuestion: String,
   securityAnswer: {type: String, required: function() 
     {return this.securityQuestion ? true: false}},
-  userTypeShema: {type: Schema, required: getUserType()},
+  // userTypeShema: {type: Schema, required: getUserType()},
   rounds: [roundSchema]
 });
 const User = mongoose.model("User", userSchema); 
 
-getUserType = () => {
-  if(userType == "fan")
-  {
-    userAccess: [fanSchema]
-  }
-  else{
-    userAccess: [fanSchema]
-  }
-}
+// getUserType = () => {
+//   if(userType == "fan")
+//   {
+//     userAccess: [fanSchema]
+//   }
+//   else{
+//     userAccess: [fanSchema]
+//   }
+// }
 
 //////////////////////////////////////////////////////////////////////////
 //PASSPORT SET-UP
