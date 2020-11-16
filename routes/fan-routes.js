@@ -35,10 +35,10 @@ module.exports = function (app) {
             !req.body.hasOwnProperty("securityAnswer") ||
             !req.body.hasOwnProperty("artists") ||
             !req.body.hasOwnProperty("venues") ||
-            !req.body.hasOwnProperty("events")) {
+            !req.body.hasOwnProperty("genres")) {
             //Body does not contain correct properties
             return res.status(400).send("/fans POST request formulated incorrectly. " +
-                "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', artists, venues, and events fields in message body.")
+                "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', artists, venues, and genres fields in message body.")
         }
 
         try {
@@ -61,7 +61,7 @@ module.exports = function (app) {
                 user: thisUser,
                 artists: req.body.artists,
                 venues: req.body.venues,
-                events: req.body.events
+                genres: req.body.genres
             }).save();
             return res.status(201).send('New fan account created')
         } catch (err) {
@@ -77,12 +77,12 @@ module.exports = function (app) {
                 "It must contain 'userId' as parameter.");
         }
         const validProps = ['password', 'displayName', 'profilePicURL',
-            'securityQuestion', 'securityAnswer', 'venues', 'artists', 'events', 'user'];
+            'securityQuestion', 'securityAnswer', 'venues', 'artists', 'genres', 'user'];
         for (const bodyProp in req.body) {
             if (!validProps.includes(bodyProp)) {
-                return res.status(400).send("users/ PUT request formulated incorrectly." +
+                return res.status(400).send("fan/ PUT request formulated incorrectly." +
                     "Only the following props are allowed in body: " +
-                    "'password', 'displayname', 'profilePicURL', 'securityQuestion', 'securityAnswer', 'user");
+                    "'password', 'displayname', 'profilePicURL', 'securityQuestion', 'securityAnswer', 'venues', 'artists', 'genres', and 'user'");
             }
         }
         try {

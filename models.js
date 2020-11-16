@@ -34,7 +34,7 @@ const fanSchema = new Schema({
   user: userSchema,
   artists: [String],
   venues: [String],
-  events: [String]
+  genres: [String],
 });
 const Fan = mongoose.model("Fan", fanSchema);
 
