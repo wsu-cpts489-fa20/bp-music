@@ -1,5 +1,35 @@
 import React from 'react';
 import ConfirmDeleteAccount from './ConfirmDeleteAccount.js';
+import ConfirmDeleteAccount from './ConfirmDeleteAccount.js';
+
+const genreList = [
+    'Pop',
+    'Hip Hop',
+    'Rap',
+    'Rock',
+    'EDM',
+    'Country',
+    'RnB',
+    'Metal'
+];
+const artistList = [
+    'Post Malone',
+    'Ariana Grande', 
+    'Taylor Swift',
+    'Kanye West',
+    'Jay-Z',
+    'Lil Wayne', 
+    'Nicki Minaj',
+    'Snoop Dog'
+];
+const venueList = [
+    'Red Rocks Park and Amphitheatre',
+    'Hollywood Bowl',
+    'Merriweather Post Pavilion',
+    'The Showbox',
+    'The Underground'
+]
+
 
 class CreateEditAccountDialog extends React.Component {
 
@@ -137,6 +167,10 @@ class CreateEditAccountDialog extends React.Component {
     handleSubmit = async(event) => {
         event.preventDefault();
         this.setState({showFanDialog: false, showArtistDialog: false, showVenueDialog: false})
+        // Initialize checkboxes for create account pages
+        for (const checkbox of this.selectedCheckboxes) {
+            console.log(checkbox, 'is selected.');
+          }
         //Initialize user account
         let userData = {
             displayName: this.state.displayName,
@@ -401,65 +435,17 @@ renderFanDialog = () => {
         <br/>
         <label>
             Genres:
-            <select name="genres"
-                value={this.state.genres} 
-                onChange={this.handleChange} 
-                className="form-control form-textform-center"
-                multiple>
-                <option value="pop">Pop</option>
-                <option value="hip-hop">Hip-Hop</option>
-                <option value="rap">Rap</option>
-                <option value="rock">Rock</option>
-                <option value="edm">EDM</option>
-                <option value="country">Country</option>
-            </select>
+            {this.genreList.createCheckboxes()}
         </label>
         <br/>
         <label>
             Artists:
-            <select name="artists"
-                value={this.state.artists} 
-                onChange={this.handleChange} 
-                className="form-control form-textform-center"
-                multiple>
-                <option value="postMalone">Post Malone</option>
-                <option value="arianaGrande">Ariana Grande</option>
-                <option value="taylorSwift">Taylor Swift</option>
-                <option value="drake">Drake</option>
-                <option value="popSmoke">Pop Smoke</option>
-                <option value="lilWayne">Lil Wayne</option>
-                <option value="nickiMinaj">Nicki Minaj</option>
-                <option value="travisScott">Travis Scott</option>
-                <option value="kanyeWest">Kanye West</option>
-                <option value="jayZ">Jay-Z</option>
-                <option value="localArtist1">Local Artist 1</option>
-                <option value="localArtist2">Local Artist 2</option>
-            </select>
+            {this.artistList.createCheckboxes()}
         </label>
         <br/>
         <label>
             Venues:
-            <select name="venues"
-                value={this.state.venues} 
-                onChange={this.handleChange} 
-                className="form-control form-textform-center"
-                multiple>
-                <option value="redRocksParkAndAmpitheater">Red Rocks Park and Amphitheatre</option>
-                <option value="hollywoodBowl">Hollywood Bowl</option>
-                <option value="merriweatherPostPavilion">Merriweather Post Pavilion</option>
-                <option value="showbox">The Showbox</option>
-                <option value="underground">The Underground</option>
-                <option value="seamonsterLounge">Seamonster Lounge</option>
-                <option value="crocodile">The Crocodile</option>
-                <option value="venue1">Venue 1</option>
-                <option value="venue1">Venue 1</option>
-                <option value="venue2">Venue 2</option>
-                <option value="venue3">Venue 3</option>
-                <option value="venue4">Venue 4</option>
-                <option value="venue5">Venue 5</option>
-                <option value="venue6">Venue 6</option>
-                <option value="venue7">Venue 7</option>
-            </select>
+            {this.venueList.createCheckboxes()}
         </label>
         <br/>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
@@ -563,6 +549,46 @@ renderVenueDialog = () => {
         </form>
         </div></div></div>
     );
+}
+
+/////////////////////
+// Testing making Create Account Page use checkmarks instead
+/////////////////////
+componentWillMount = () => {
+    this.selectedCheckboxes = new Set();
+  }
+
+toggleCheckbox = label => {
+if (this.selectedCheckboxes.has(label)) {
+    this.selectedCheckboxes.delete(label);
+} else {
+    this.selectedCheckboxes.add(label);
+}
+
+}
+createCheckbox = label => (
+    <Checkbox
+        label={label}
+        handleCheckboxChange={this.toggleCheckbox}
+        key={label}
+        />
+)
+createCheckboxes = (listType) => {
+    if (listType === genreList)
+    {
+        genreList.map(this.createCheckbox)
+    }
+    if(listType === artistList)
+    {
+        artistList.map(this.createCheckbox)
+    }
+    if (listType === venueList)
+    {
+        venueList.map(this.createCheckbox)
+    }
+    else{
+        break;
+    }
 }
 
 }
