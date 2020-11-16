@@ -64,7 +64,7 @@ class CreateEditAccountDialog extends React.Component {
                           ...options,
                           [option]: false
                         }), {}),
-                    venueCheckboxes: venueList.reduce(
+                      venueCheckboxes: venueList.reduce(
                         (options, option) => ({
                           ...options,
                           [option]: false
@@ -698,12 +698,6 @@ selectAllGenreCheckboxes = isSelected => {
         [name]: !prevState.venueCheckboxes[name]
       }
     }));
-  };
-
-  handleFormSubmit = formSubmitEvent => {
-    formSubmitEvent.preventDefault();
-
-    
   };
 
   createGenreCheckbox = option => (
