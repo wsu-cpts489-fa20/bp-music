@@ -60,25 +60,17 @@ roundSchema.virtual('SGS').get(function () {
   return (this.strokes * 60) + (this.minutes * 60) + this.seconds;
 });
 
-const fanSchema = new Schema({
-  genres: {type: List[String], required: true},
-  artists: {type: List[String], required: true},
-  venues: {type: List[String], required: true}
-});
-
 //Define schema that maps to a document in the Users collection in the appdb
 //database.
 const userSchema = new Schema({
   id: String, //unique identifier for user
   password: String,
-  userType: String,
   displayName: String, //Name to be displayed within app
   authStrategy: String, //strategy used to authenticate, e.g., github, local
   profilePicURL: String, //link to profile image
   securityQuestion: String,
   securityAnswer: {type: String, required: function() 
     {return this.securityQuestion ? true: false}},
-  userTypeShema: {type: Schema, required: getUserType()},
   rounds: [roundSchema]
 });
 const User = mongoose.model("User", userSchema); 
@@ -284,7 +276,7 @@ app.post('/users/:userId', async (req, res, next) => {
       !req.body.hasOwnProperty("securityAnswer")) {
     //Body does not contain correct properties
     return res.status(400).send("/users POST request formulated incorrectly. " + 
-      "It must contain 'password','displayName','profilePicURL','securityQuestion', and'securityAnswer' fields in message body.")
+      "It must contain 'password','displayName','profilePicURL','securityQuestion', and 'securityAnswer' fields in message body.")
   }
   try {
     let thisUser = await User.findOne({ id: req.params.userId });
