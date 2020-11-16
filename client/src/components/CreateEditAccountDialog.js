@@ -435,17 +435,17 @@ renderFanDialog = () => {
         <br/>
         <label>
             Genres:
-            {createCheckboxes(genreList)}
+            {genreList.createCheckboxes}
         </label>
         <br/>
         <label>
             Artists:
-            {createCheckboxes(artistList)}
+            {artistList.createCheckboxes}
         </label>
         <br/>
         <label>
             Venues:
-            {createCheckboxes(venueList)}
+            {venueList.createCheckboxes}
         </label>
         <br/>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
@@ -573,7 +573,7 @@ createCheckbox = label => (
         key={label}
         />
 )
-createCheckboxes = (listType) => {
+createCheckboxes = listType => {
     if (listType === genreList)
     {
         genreList.map(this.createCheckbox)
