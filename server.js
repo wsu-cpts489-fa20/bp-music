@@ -69,11 +69,20 @@ const userSchema = new Schema({
   authStrategy: String, //strategy used to authenticate, e.g., github, local
   profilePicURL: String, //link to profile image
   securityQuestion: String,
-  securityAnswer: {type: String, required: function() 
-    {return this.securityQuestion ? true: false}},
+  securityAnswer: {
+    type: String, required: function () { return this.securityQuestion ? true : false }
+  },
   rounds: [roundSchema]
 });
-const User = mongoose.model("User", userSchema); 
+const User = mongoose.model("User", userSchema);
+
+const fanSchema = new Schema({
+  user: userSchema,
+  artists: [String],
+  venues: [String],
+  events: [String]
+})
+const Fan = mongoose.model("Fan", fanSchema);
 
 //////////////////////////////////////////////////////////////////////////
 //PASSPORT SET-UP
@@ -264,18 +273,65 @@ app.get('/users/:userId', async (req, res, next) => {
   }
 });
 
+app.post('/fans/:userId', async (req, res, next) => {
+  console.log("in /fans route (POST) with params = " + JSON.stringify(req.params) +
+    " and body = " + JSON.stringify(req.body));
+
+  if (req.body === undefined ||
+    !req.body.hasOwnProperty("password") ||
+    !req.body.hasOwnProperty("displayName") ||
+    !req.body.hasOwnProperty("profilePicURL") ||
+    !req.body.hasOwnProperty("securityQuestion") ||
+    !req.body.hasOwnProperty("securityAnswer") ||
+    !req.body.hasOwnProperty("artists") ||
+    !req.body.hasOwnProperty("venues") ||
+    !req.body.hasOwnProperty("events")) {
+    //Body does not contain correct properties
+    return res.status(400).send("/fans POST request formulated incorrectly. " +
+      "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', artists, venues, and events fields in message body.")
+  }
+
+  try {
+    let thisFan = await Fan.findOne({ 'user.id': req.params.userId });
+    if (thisFan) { //account already exists
+      return res.status(400).send("There is already an account with email '" +
+        req.params.userId + "'.");
+    }
+    let thisUser = new User({
+      id: req.params.userId,
+      password: req.body.password,
+      displayName: req.body.displayName,
+      authStrategy: 'local',
+      profilePicURL: req.body.profilePicURL,
+      securityQuestion: req.body.securityQuestion,
+      securityAnswer: req.body.securityAnswer,
+      rounds: []
+    });
+
+    await new Fan({
+      user: thisUser,
+      artists: req.body.artists,
+      venues: req.body.venues,
+      events: req.body.events
+    }).save();
+    return res.status(201).send('New fan account created')
+  } catch (err) {
+    return res.status(400).send("Unexpected error occurred when adding or looking up fan in database. " + err);
+  }
+});
+
 //CREATE user route: Adds a new user account to the users collection (POST)
 app.post('/users/:userId', async (req, res, next) => {
   console.log("in /users route (POST) with params = " + JSON.stringify(req.params) +
     " and body = " + JSON.stringify(req.body));
   if (req.body === undefined ||
-      !req.body.hasOwnProperty("password") || 
-      !req.body.hasOwnProperty("displayName") ||
-      !req.body.hasOwnProperty("profilePicURL") ||
-      !req.body.hasOwnProperty("securityQuestion") ||
-      !req.body.hasOwnProperty("securityAnswer")) {
+    !req.body.hasOwnProperty("password") ||
+    !req.body.hasOwnProperty("displayName") ||
+    !req.body.hasOwnProperty("profilePicURL") ||
+    !req.body.hasOwnProperty("securityQuestion") ||
+    !req.body.hasOwnProperty("securityAnswer")) {
     //Body does not contain correct properties
-    return res.status(400).send("/users POST request formulated incorrectly. " + 
+    return res.status(400).send("/users POST request formulated incorrectly. " +
       "It must contain 'password','displayName','profilePicURL','securityQuestion', and 'securityAnswer' fields in message body.")
   }
   try {
@@ -511,5 +567,5 @@ app.get('/location/:search', async (req, res) => {
 app.get('/map/:address', async (req, res) => {
   console.log("in /map route (GET) make url for: " + req.params.address);
   const encodedAddress = encodeURIComponent(req.params.address);
-  return res.status(200).send("https://www.google.com/maps/embed/v1/place?key=" + process.env.GOOGLE_API_KEY +"&q=" + encodedAddress);
+  return res.status(200).send("https://www.google.com/maps/embed/v1/place?key=" + process.env.GOOGLE_API_KEY + "&q=" + encodedAddress);
 })
