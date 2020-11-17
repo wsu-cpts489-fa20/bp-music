@@ -85,7 +85,7 @@ module.exports = function (app) {
       if (!validProps.includes(bodyProp)) {
         return res.status(400).send("artist/ PUT request formulated incorrectly." +
           "Only the following props are allowed in body: " +
-          "'password', 'displayname', 'profilePicURL', 'securityQuestion', 'securityAnswer', 'venues', 'artists', 'genres', and 'user'");
+          "'password', 'displayname', 'profilePicURL', 'securityQuestion', 'securityAnswer', 'genres', facebookLink, instagramLink, artistName, and 'user'");
       }
     }
     try {
