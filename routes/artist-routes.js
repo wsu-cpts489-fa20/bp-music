@@ -116,7 +116,7 @@ module.exports = function (app) {
     console.log("in /artists route (DELETE) with userId = " +
       JSON.stringify(req.params.userId));
     try {
-      let status = await Fan.deleteOne({ 'user.id': req.params.userId });
+      let status = await Artist.deleteOne({ 'user.id': req.params.userId });
       if (status.deletedCount !== 1) {
         return res.status(404).send("No artist account " +
           req.params.userId + " was found. Account could not be deleted.");
