@@ -47,7 +47,16 @@ const artistSchema = new Schema({
 });
 const Artist = mongoose.model("Artist", artistSchema);
 
+const venueSchema = new Schema({
+  user: userSchema,
+  streetAddress: String,
+  email: String,
+  phoneNumber: String,
+  socialMediaLinks: String
+});
+const Venue = mongoose.model('Venue', venueSchema);
+
 exports.User = User;
 exports.Artist = Artist;
 exports.Fan = Fan;
-// exports.Venue = Venue;
+exports.Venue = Venue;
