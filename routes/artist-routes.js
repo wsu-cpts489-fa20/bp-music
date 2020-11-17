@@ -80,7 +80,7 @@ module.exports = function (app) {
         "It must contain 'userId' as parameter.");
     }
     const validProps = ['password', 'displayName', 'profilePicURL',
-      'securityQuestion', 'securityAnswer', 'venues', 'artists', 'genres', 'user'];
+      'securityQuestion', 'securityAnswer', 'genres', 'facebookLink', 'instagramLink', 'artistName', 'user'];
     for (const bodyProp in req.body) {
       if (!validProps.includes(bodyProp)) {
         return res.status(400).send("artist/ PUT request formulated incorrectly." +
@@ -89,20 +89,21 @@ module.exports = function (app) {
       }
     }
     try {
-      let fan = await Fan.findOne({ 'user.id': req.params.userId })
-      if (fan) {
+      let artist = await Artist.findOne({ 'user.id': req.params.userId })
+      if (artist) {
         for (const [key, value] of Object.entries(req.body)) {
+          // Prevent user model from being completely over written and removing wanted properties
           if (key !== 'user') {
-            fan[key] = value;
+            artist[key] = value;
           }
         }
         if (req.body.hasOwnProperty('user')) {
           for (const [key, value] of Object.entries(req.body.user)) {
-            fan.user[key] = value;
+            artist.user[key] = value;
           }
         }
 
-        await fan.save();
+        await artist.save();
         return res.status(200).send("artist account " + req.params.userId + " successfully updated.")
       } else {
         return res.status(404).send('artist account ' + req.params.userId + ' not found')

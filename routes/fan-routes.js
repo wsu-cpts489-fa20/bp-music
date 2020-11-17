@@ -89,6 +89,7 @@ module.exports = function (app) {
             let fan = await Fan.findOne({ 'user.id': req.params.userId })
             if (fan) {
                 for (const [key, value] of Object.entries(req.body)) {
+                    // Prevent user model from being completely over written and removing wanted properties
                     if (key !== 'user') {
                         fan[key] = value;
                     }
