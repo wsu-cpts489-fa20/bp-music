@@ -117,12 +117,12 @@ module.exports = function (app) {
     console.log("in /venues route (DELETE) with userId = " +
       JSON.stringify(req.params.userId));
     try {
-      let status = await Artist.deleteOne({ 'user.id': req.params.userId });
+      let status = await Venue.deleteOne({ 'user.id': req.params.userId });
       if (status.deletedCount !== 1) {
         return res.status(404).send("No venue account " +
           req.params.userId + " was found. Account could not be deleted.");
       } else {
-        return res.status(200).send("Artist account " +
+        return res.status(200).send("Venue account " +
           req.params.userId + " was successfully deleted.");
       }
     } catch (err) {
