@@ -80,16 +80,16 @@ module.exports = function (app) {
         "It must contain 'userId' as parameter.");
     }
     const validProps = ['password', 'displayName', 'profilePicURL',
-      'securityQuestion', 'securityAnswer', 'genres', 'facebookLink', 'instagramLink', 'artistName', 'user'];
+      'securityQuestion', 'securityAnswer', 'email', 'phoneNumber', 'streetAddress', 'socialMediaLinks', 'user'];
     for (const bodyProp in req.body) {
       if (!validProps.includes(bodyProp)) {
         return res.status(400).send("venue/ PUT request formulated incorrectly." +
           "Only the following props are allowed in body: " +
-          "'password', 'displayname', 'profilePicURL', 'securityQuestion', 'securityAnswer', and 'user'");
+          "'password', 'displayname', 'profilePicURL', 'securityQuestion', 'securityAnswer', 'streetAddress', 'email', 'phoneNumber', 'socialMediaLinks' and 'user'");
       }
     }
     try {
-      let venue = await Artist.findOne({ 'user.id': req.params.userId })
+      let venue = await Venue.findOne({ 'user.id': req.params.userId })
       if (venue) {
         for (const [key, value] of Object.entries(req.body)) {
           // Prevent user model from being completely over written and removing wanted properties
