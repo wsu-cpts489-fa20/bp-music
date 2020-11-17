@@ -34,18 +34,18 @@ module.exports = function (app) {
       !req.body.hasOwnProperty("profilePicURL") ||
       !req.body.hasOwnProperty("securityQuestion") ||
       !req.body.hasOwnProperty("securityAnswer") ||
-      !req.body.hasOwnProperty("genres") ||
-      !req.body.hasOwnProperty("facebookLink") ||
-      !req.body.hasOwnProperty("instagramLink") || 
-      !req.body.hasOwnProperty("artistName")) {
+      !req.body.hasOwnProperty("streetAddress") ||
+      !req.body.hasOwnProperty("email") ||
+      !req.body.hasOwnProperty("phoneNumber") || 
+      !req.body.hasOwnProperty("socialMediaLinks")) {
       //Body does not contain correct properties
       return res.status(400).send("/venues POST request formulated incorrectly. " +
-        "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', genres, facebookLink, instagramLink, and artistName fields in message body.")
+        "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', streetAddress, email, phoneNumber, and socialMediaLinks fields in message body.")
     }
 
     try {
-      let thisArtist = await Artist.findOne({ 'user.id': req.params.userId });
-      if (thisArtist) { //account already exists
+      let thisVenue = await Venue.findOne({ 'user.id': req.params.userId });
+      if (thisVenue) { //account already exists
         return res.status(400).send("There is already a venue account with id '" +
           req.params.userId + "'.");
       }
@@ -59,12 +59,12 @@ module.exports = function (app) {
         securityAnswer: req.body.securityAnswer
       });
 
-      await new Artist({
+      await new Venue({
         user: thisUser,
-        genres: req.body.genres,
-        facebookLink: req.body.facebookLink,
-        instagramLink: req.body.instagramLink,
-        artistName: req.body.artistName
+        streetAddress: req.body.streetAddress,
+        email: req.body.email,
+        phoneNumber: req.body.phoneNumber,
+        socialMediaLinks: req.body.socialMediaLinks
       }).save();
       return res.status(201).send('New venue account created')
     } catch (err) {

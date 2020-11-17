@@ -125,6 +125,7 @@ app
 
 require('./routes/fan-routes')(app);
 require('./routes/artist-routes')(app);
+require('./routes/venue-routes')(app)
 require('./routes/user-routes')(app);
 require('./routes/auth-routes')(app, passport);
 require('./routes/google-map-routes')(app);
