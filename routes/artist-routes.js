@@ -34,18 +34,19 @@ module.exports = function (app) {
       !req.body.hasOwnProperty("profilePicURL") ||
       !req.body.hasOwnProperty("securityQuestion") ||
       !req.body.hasOwnProperty("securityAnswer") ||
-      !req.body.hasOwnProperty("artists") ||
-      !req.body.hasOwnProperty("venues") ||
-      !req.body.hasOwnProperty("genres")) {
+      !req.body.hasOwnProperty("genres") ||
+      !req.body.hasOwnProperty("facebookLink") ||
+      !req.body.hasOwnProperty("instagramLink") || 
+      !req.body.hasOwnProperty("artistName")) {
       //Body does not contain correct properties
       return res.status(400).send("/artists POST request formulated incorrectly. " +
-        "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', artists, venues, and genres fields in message body.")
+        "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', genres, facebookLink, instagramLink, and artistName fields in message body.")
     }
 
     try {
-      let thisFan = await Fan.findOne({ 'user.id': req.params.userId });
-      if (thisFan) { //account already exists
-        return res.status(400).send("There is already an account with email '" +
+      let thisArtist = await Artist.findOne({ 'user.id': req.params.userId });
+      if (thisArtist) { //account already exists
+        return res.status(400).send("There is already an artist account with id '" +
           req.params.userId + "'.");
       }
       let thisUser = new User({
@@ -58,11 +59,12 @@ module.exports = function (app) {
         securityAnswer: req.body.securityAnswer
       });
 
-      await new Fan({
+      await new Artist({
         user: thisUser,
-        artists: req.body.artists,
-        venues: req.body.venues,
-        genres: req.body.genres
+        genres: req.body.genres,
+        facebookLink: req.body.facebookLink,
+        instagramLink: req.body.instagramLink,
+        artistName: req.body.artistName
       }).save();
       return res.status(201).send('New artist account created')
     } catch (err) {
