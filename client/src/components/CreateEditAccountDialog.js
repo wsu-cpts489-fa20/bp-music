@@ -53,6 +53,7 @@ class CreateEditAccountDialog extends React.Component {
                       showFanDialog: false,
                       showArtistDialog: false,
                       showVenueDialog: false,
+                      url: "",
                       genres: [],
                       artists: [],
                       venues: [],
@@ -185,18 +186,44 @@ class CreateEditAccountDialog extends React.Component {
     //landing page. 
     handleSubmit = async(event) => {
         event.preventDefault();
-        this.setState({showArtistDialog: false, showVenueDialog: false})
-
-        //Initialize user account
-        let userData = {
+        this.setState({showFanDialog: false, showArtistDialog: false, showVenueDialog: false})
+        //Initialize account
+        let userData;
+        if (this.state.accountType == "fan") {
+            let userData = {
+            displayName: this.state.displayName,
+            password: this.state.password,
+            profilePicURL: this.state.profilePicURL,
+            securityQuestion: this.state.securityQuestion,
+            securityAnswer: this.state.securityAnswer,
+            accountType: this.state.accountType,
+            genres: this.state.genres,
+            artists: this.state.artists,
+            venues:this.state.venues
+        };}
+        if (this.state.accountType == "artist") {
+            let userData = {
+            displayName: this.state.displayName,
+            password: this.state.password,
+            profilePicURL: this.state.profilePicURL,
+            securityQuestion: this.state.securityQuestion,
+            securityAnswer: this.state.securityAnswer,
+            accountType: this.state.accountType,
+            artistName: this.state.artistName,
+            genres: this.state.genres,
+            instagramHandle: this.state.instagramHandle,
+            facebookHandle: this.state.facebookHandle
+        };}
+        if (this.state.accountType == "venue") {
+            let userData = {
             displayName: this.state.displayName,
             password: this.state.password,
             profilePicURL: this.state.profilePicURL,
             securityQuestion: this.state.securityQuestion,
             securityAnswer: this.state.securityAnswer,
             accountType: this.state.accountType
-        };
-        const url = '/users/' + this.state.accountName;
+        };}
+        const url = this.state.url;
         let res;
         if (this.props.create) { //use POST route to create new user account
             res = await fetch(url, {
@@ -447,7 +474,7 @@ renderFanDialog = () => {
             <button className="modal-close" onClick={this.props.cancel}>&times;</button>
         </div>
         <div className="modal-body">
-        <form onSubmit={this.handleFanSubmit}>
+        <form onSubmit={this.handleSubmit}>
         <br/>
         <label>
             Genres:
@@ -721,73 +748,73 @@ selectAllGenreCheckboxes = isSelected => {
     //already exist and that the rest of the info is valid. We create a new  
     // object for a fan user, save it to localStorage and take user to app's 
     //landing page. 
-  handleFanSubmit = async(event) => {
-      event.preventDefault();
-      this.setState({showFanDialog: false})
-      // Initialize checkboxes for create account pages
-       Object.keys(this.state.genreCheckboxes)
-       .filter(checkbox => this.state.genreCheckboxes[checkbox])
-       .forEach(checkbox => {
-           console.log(checkbox, "is selected.");
-           this.state.genres.push(checkbox);
-        });
-       Object.keys(this.state.artistCheckboxes)
-       .filter(checkbox => this.state.artistCheckboxes[checkbox])
-       .forEach(checkbox => {
-           console.log(checkbox, "is selected.");
-           this.state.artists.push(checkbox);
-        });
-       Object.keys(this.state.venueCheckboxes)
-       .filter(checkbox => this.state.venueCheckboxes[checkbox])
-       .forEach(checkbox => {
-           console.log(checkbox, "is selected.");
-           this.state.venues.push(checkbox);
-        });
+//   handleFanSubmit = async(event) => {
+//       event.preventDefault();
+//       this.setState({showFanDialog: false})
+//       // Initialize checkboxes for create account pages
+//        Object.keys(this.state.genreCheckboxes)
+//        .filter(checkbox => this.state.genreCheckboxes[checkbox])
+//        .forEach(checkbox => {
+//            console.log(checkbox, "is selected.");
+//            this.state.genres.push(checkbox);
+//         });
+//        Object.keys(this.state.artistCheckboxes)
+//        .filter(checkbox => this.state.artistCheckboxes[checkbox])
+//        .forEach(checkbox => {
+//            console.log(checkbox, "is selected.");
+//            this.state.artists.push(checkbox);
+//         });
+//        Object.keys(this.state.venueCheckboxes)
+//        .filter(checkbox => this.state.venueCheckboxes[checkbox])
+//        .forEach(checkbox => {
+//            console.log(checkbox, "is selected.");
+//            this.state.venues.push(checkbox);
+//         });
 
-        //Initialize user account
-       let userData = {
-           password: this.state.password,
-           displayName: this.state.displayName,
-           profilePicURL: this.state.profilePicURL,
-           securityQuestion: this.state.securityQuestion,
-           securityAnswer: this.state.securityAnswer,
-           artists: this.state.artists,
-           venues: this.state.venues,
-           genres: this.state.genres
-        };
-       const url = '/fans/' + this.state.accountName;
-       let res;
-       if (this.props.create) { //use POST route to create new user account
-        res = await fetch(url, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify(userData)}); 
-            if (res.status == 200) { //successful account creation!
-                this.props.done("New fan account created! Enter credentials to log in.",false);
-            } else { //Unsuccessful account creation
-                //Grab textual error message
-                const resText = await res.text();
-                this.props.done(resText,false);
-            }
-        } else { //use PUT route to update existing user account
-            res = await fetch(url, {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                    },
-                method: 'PUT',
-                body: JSON.stringify(userData)}); 
-            if (res.status == 200) { //successful account creation!
-                this.props.done("Fan Account Updated!",false);
-            } else { //Unsuccessful account update
-                //Grab textual error message
-                const resText = await res.text();
-                this.props.done(resText,false);
-            }
-        }
-    }
+//         //Initialize user account
+//        let userData = {
+//            password: this.state.password,
+//            displayName: this.state.displayName,
+//            profilePicURL: this.state.profilePicURL,
+//            securityQuestion: this.state.securityQuestion,
+//            securityAnswer: this.state.securityAnswer,
+//            artists: this.state.artists,
+//            venues: this.state.venues,
+//            genres: this.state.genres
+//         };
+//        const url = '/fans/' + this.state.accountName;
+//        let res;
+//        if (this.props.create) { //use POST route to create new user account
+//         res = await fetch(url, {
+//             headers: {
+//                 'Accept': 'application/json',
+//                 'Content-Type': 'application/json'
+//             },
+//             method: 'POST',
+//             body: JSON.stringify(userData)}); 
+//             if (res.status == 200) { //successful account creation!
+//                 this.props.done("New fan account created! Enter credentials to log in.",false);
+//             } else { //Unsuccessful account creation
+//                 //Grab textual error message
+//                 const resText = await res.text();
+//                 this.props.done(resText,false);
+//             }
+//         } else { //use PUT route to update existing user account
+//             res = await fetch(url, {
+//                 headers: {
+//                     'Accept': 'application/json',
+//                     'Content-Type': 'application/json'
+//                     },
+//                 method: 'PUT',
+//                 body: JSON.stringify(userData)}); 
+//             if (res.status == 200) { //successful account creation!
+//                 this.props.done("Fan Account Updated!",false);
+//             } else { //Unsuccessful account update
+//                 //Grab textual error message
+//                 const resText = await res.text();
+//                 this.props.done(resText,false);
+//             }
+//         }
+//     }
 }
 export default CreateEditAccountDialog;
