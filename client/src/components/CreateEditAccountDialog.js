@@ -80,7 +80,7 @@ class CreateEditAccountDialog extends React.Component {
     async componentDidMount() {
         if (!this.props.create) {
             //obtain current user data from database and push into state
-            const url = "/users/" + this.props.userId;
+            const url = this.state.url;
             const res = await fetch(url);
             const json = await res.json();
             const userData = JSON.parse(json);
