@@ -28,19 +28,46 @@ module.exports = function (app) {
     console.log("in /artists route (POST) with params = " + JSON.stringify(req.params) +
       " and body = " + JSON.stringify(req.body));
 
-    if (req.body === undefined ||
-      !req.body.hasOwnProperty("password") ||
-      !req.body.hasOwnProperty("displayName") ||
-      !req.body.hasOwnProperty("profilePicURL") ||
-      !req.body.hasOwnProperty("securityQuestion") ||
-      !req.body.hasOwnProperty("securityAnswer") ||
-      !req.body.hasOwnProperty("genres") ||
-      !req.body.hasOwnProperty("facebookLink") ||
-      !req.body.hasOwnProperty("instagramLink") || 
-      !req.body.hasOwnProperty("artistName")) {
-      //Body does not contain correct properties
+    //Body does not contain correct properties
+    if (req.body === undefined) {
       return res.status(400).send("/artists POST request formulated incorrectly. " +
-        "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', genres, facebookLink, instagramLink, and artistName fields in message body.")
+        "Message body is undefined.")
+    }
+    if (!req.body.hasOwnProperty("password")) {
+      return res.status(400).send("/artists POST request formulated incorrectly. " +
+        "It must contain 'password' field in message body.")
+    }
+    if (!req.body.hasOwnProperty("displayName")) {
+      return res.status(400).send("/artists POST request formulated incorrectly. " +
+        "It must contain 'displayName' field in message body.")
+    }
+    if (!req.body.hasOwnProperty("profilePicURL")) {
+      return res.status(400).send("/artists POST request formulated incorrectly. " +
+        "It must contain 'profilePicURL' field in message body.")
+    }
+    if (!req.body.hasOwnProperty("securityQuestion")) {
+      return res.status(400).send("/artists POST request formulated incorrectly. " +
+        "It must contain 'securityQuestion' field in message body.")
+    }
+    if (!req.body.hasOwnProperty("securityAnswer")) {
+      return res.status(400).send("/artists POST request formulated incorrectly. " +
+        "It must contain 'securityAnswer' field in message body.")
+    }
+    if (!req.body.hasOwnProperty("genres")) {
+      return res.status(400).send("/artists POST request formulated incorrectly. " +
+        "It must contain 'genres' field in message body.")
+    }
+    if (!req.body.hasOwnProperty("facebookHandle")) {
+      return res.status(400).send("/artists POST request formulated incorrectly. " +
+        "It must contain 'facebookHandle' field in message body.")
+    }
+    if (!req.body.hasOwnProperty("instagramHandle")) {
+      return res.status(400).send("/artists POST request formulated incorrectly. " +
+        "It must contain 'instagramHandle' field in message body.")
+    } 
+    if (!req.body.hasOwnProperty("artistName")) {
+      return res.status(400).send("/artists POST request formulated incorrectly. " +
+        "It must contain 'artistName' field in message body.")
     }
 
     try {
@@ -62,8 +89,8 @@ module.exports = function (app) {
       await new Artist({
         user: thisUser,
         genres: req.body.genres,
-        facebookLink: req.body.facebookLink,
-        instagramLink: req.body.instagramLink,
+        facebookHandle: req.body.facebookHandle,
+        instagramHandle: req.body.instagramHandle,
         artistName: req.body.artistName
       }).save();
       return res.status(201).send('New artist account created')
@@ -80,12 +107,12 @@ module.exports = function (app) {
         "It must contain 'userId' as parameter.");
     }
     const validProps = ['password', 'displayName', 'profilePicURL',
-      'securityQuestion', 'securityAnswer', 'genres', 'facebookLink', 'instagramLink', 'artistName', 'user'];
+      'securityQuestion', 'securityAnswer', 'genres', 'facebookHandle', 'instagramHandle', 'artistName', 'user'];
     for (const bodyProp in req.body) {
       if (!validProps.includes(bodyProp)) {
         return res.status(400).send("artist/ PUT request formulated incorrectly." +
           "Only the following props are allowed in body: " +
-          "'password', 'displayname', 'profilePicURL', 'securityQuestion', 'securityAnswer', 'genres', facebookLink, instagramLink, artistName, and 'user'");
+          "'password', 'displayname', 'profilePicURL', 'securityQuestion', 'securityAnswer', 'genres', 'facebookHandle', 'instagramHandle', 'artistName', and 'user'");
       }
     }
     try {

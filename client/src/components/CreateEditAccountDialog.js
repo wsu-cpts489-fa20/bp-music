@@ -17,7 +17,8 @@ class CreateEditAccountDialog extends React.Component {
                       passwordRepeat: "",
                       securityQuestion: "",
                       securityAnswer: "",
-                      accountType: "fan",
+                      accountType: "",
+                      url: "",
                       formUpdated: false,
                       confirmDelete: false,
                       showFanDialog: false,
@@ -43,7 +44,8 @@ class CreateEditAccountDialog extends React.Component {
                            passwordRepeat: userData.password,
                            securityQuestion: userData.securityQuestion,
                            securityAnswer: userData.securityAnswer,
-                           accountType: userData.accountType,});
+                           accountType: userData.accountType,
+                           url: '/' + userData.accountType + 's/' + this.state.accountName});
         }
     }
 
@@ -84,7 +86,7 @@ class CreateEditAccountDialog extends React.Component {
                 });
                 
             }
-        } else if(event.target.name === "genres" || event.target.name === "artists" || event.target.name === "venues") {
+        } else if (event.target.name === "genres") {
             this.setState({genres: Array.from(event.target.selectedOptions, (item) => item.value)});
         } else {
             this.setState({[event.target.name]: event.target.value,
@@ -137,16 +139,34 @@ class CreateEditAccountDialog extends React.Component {
     handleSubmit = async(event) => {
         event.preventDefault();
         this.setState({showFanDialog: false, showArtistDialog: false, showVenueDialog: false})
-        //Initialize user account
+        //Initialize account
         let userData = {
-            displayName: this.state.displayName,
-            password: this.state.password,
-            profilePicURL: this.state.profilePicURL,
-            securityQuestion: this.state.securityQuestion,
-            securityAnswer: this.state.securityAnswer,
-            accountType: this.state.accountType
-        };
-        const url = '/users/' + this.state.accountName;
+                displayName: this.state.displayName,
+                password: this.state.password,
+                profilePicURL: this.state.profilePicURL,
+                securityQuestion: this.state.securityQuestion,
+                securityAnswer: this.state.securityAnswer,
+                accountType: this.state.accountType,
+            };
+        if (this.state.accountType == "fan") {
+            userData.artists = this.state.artists;
+            userData.genres = this.state.genres;
+            userData.venues = this.state.venues;
+        }
+        if (this.state.accountType == "artist") {
+            userData.artistName = this.state.artistName;
+            userData.genres = this.state.genres;
+            userData.instagramHandle = this.state.instagramHandle;
+            userData.facebookHandle = this.state.facebookHandle;
+            
+        }
+        if (this.state.accountType == "venue") {
+            userData.streetAddress = this.state.streetAddress;
+            userData.email = this.state.email;
+            userData.phoneNumber = this.state.phoneNumber;
+            userData.socialMediaLinks = this.state.socialMediaLinks;
+        }
+        const url = this.state.url;
         let res;
         if (this.props.create) { //use POST route to create new user account
             res = await fetch(url, {
@@ -186,7 +206,7 @@ class CreateEditAccountDialog extends React.Component {
     //Calls on done with status message and
     //true if delete was succesful, false otherwise.
     deleteAccount = async() => {
-       const url = '/users/' + this.state.accountName;
+       const url = this.state.url;
        const res = await fetch(url, 
                     {method: 'DELETE'}); 
         if (res.status == 200) { //successful account deletion!
@@ -373,17 +393,27 @@ class CreateEditAccountDialog extends React.Component {
 handleAccountType = (event) => {
     event.preventDefault();
     if (this.state.accountType == "fan") {
-        this.setState({showFanDialog: true});
+        this.setState({showFanDialog: true,
+            url: '/fans/' + this.state.accountName,
+            artists: "",
+            venues: "",
+            genres: ""});
     }
     if (this.state.accountType == "artist") {
         this.setState({showArtistDialog: true,
+            url: '/artists/' + this.state.accountName,
             artistName: "",
             genres: [],
-            instagram: "",
-            facebook: ""});
+            instagramHandle: "",
+            facebookHandle: ""});
     }
     if (this.state.accountType == "venue") {
-        this.setState({showVenueDialog: true});
+        this.setState({showVenueDialog: true,
+            url: '/venues/' + this.state.accountName,
+            streetAddress: "",
+            email: "",
+            phoneNumber: "",
+            socialMediaLinks: ""});
     }
 }
 
@@ -497,11 +527,9 @@ renderArtistDialog = () => {
         <br/>
         <label>
             Genres:
-            <select name="genres"
-                value={this.state.genres} 
+            <select name="genres" 
                 onChange={this.handleChange} 
-                className="form-control form-textform-center"
-                multiple>
+                className="form-control form-textform-center" multiple>
                 <option value="pop">Pop</option>
                 <option value="hip-hop">Hip-Hop</option>
                 <option value="rap">Rap</option>
@@ -515,12 +543,12 @@ renderArtistDialog = () => {
             Instagram:
             <input
             className="form-control form-text form-center"
-            name="instagram"
+            name="instagramHandle"
             type="text"
             size="30"
-            placeholder="@"
+            placeholder="@your-handle"
             required={true}
-            value={this.state.instagram}
+            value={this.state.instagramHandle}
             onChange={this.handleChange}
             />
         </label>
@@ -529,12 +557,12 @@ renderArtistDialog = () => {
             Facebook:
             <input
             className="form-control form-text form-center"
-            name="facebook"
+            name="facebookHandle"
             type="text"
             size="30"
-            placeholder="@"
+            placeholder="@your-handle"
             required={true}
-            value={this.state.facebook}
+            value={this.state.facebookHandle}
             onChange={this.handleChange}
             />
         </label>

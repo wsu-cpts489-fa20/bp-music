@@ -42,8 +42,8 @@ const artistSchema = new Schema({
   user: userSchema,
   artistName: String,
   genres: [String],
-  facebookLink: String,
-  instagramLink: String
+  facebookHandle: String,
+  instagramHandle: String
 });
 const Artist = mongoose.model("Artist", artistSchema);
 
