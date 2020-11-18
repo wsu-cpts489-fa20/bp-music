@@ -712,7 +712,7 @@ selectAllGenreCheckboxes = isSelected => {
     <Checkbox
       label={option}
       isSelected={this.state.artistCheckboxes[option]}
-      onCheckboxChange={this.handleGenreCheckboxChange}
+      onCheckboxChange={this.handleArtistCheckboxChange}
       key={option}
     />
   );
@@ -721,7 +721,7 @@ selectAllGenreCheckboxes = isSelected => {
     <Checkbox
       label={option}
       isSelected={this.state.venueCheckboxes[option]}
-      onCheckboxChange={this.handleGenreCheckboxChange}
+      onCheckboxChange={this.handleVenueCheckboxChange}
       key={option}
     />
   );
