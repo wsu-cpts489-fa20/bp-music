@@ -562,12 +562,46 @@ renderVenueDialog = () => {
                 className="form-control form-text form-center"
                 name="venue_location"
                 type="text"
-                size="30"
+                size="40"
                 placeholder="123 Example St. Portland, OR"
                 required={true}
                 value={this.state.venue_location}
                 onChange={this.handleChange}
                 />
+        Email:
+                <input
+                className="form-control form-text form-center"
+                name="Email"
+                type="text"
+                size="30"
+                placeholder="Email"
+                required={true}
+                value={this.state.venue_location}
+                onChange={this.handleChange}
+                />
+        Phone:
+        <input
+                className="form-control form-text form-center"
+                name="Phone"
+                type="text"
+                size="30"
+                placeholder="666-777-1337"
+                required={true}
+                value={this.state.phone_number}
+                onChange={this.handleChange}
+                />
+        Social Media Links:
+        <input
+                className="form-control form-text form-center"
+                name="social_media"
+                type="text"
+                size="30"
+                placeholder="Facebook,IG,Etc."
+                required={true}
+                value={this.state.social_media}
+                onChange={this.handleChange}
+                />
+        <p></p>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Venue Account</button>
         </form>
