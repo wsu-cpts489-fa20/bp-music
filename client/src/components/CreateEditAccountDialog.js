@@ -751,9 +751,9 @@ selectAllGenreCheckboxes = isSelected => {
            profilePicURL: this.state.profilePicURL,
            securityQuestion: this.state.securityQuestion,
            securityAnswer: this.state.securityAnswer,
-           artists: this.state.artistCheckboxes,
-           venues: this.state.venueCheckboxes,
-           genres: this.state.genreCheckboxes
+           artists: this.state.artists,
+           venues: this.state.venues,
+           genres: this.state.genres
         };
        const url = '/fans/' + this.state.accountName;
        let res;
