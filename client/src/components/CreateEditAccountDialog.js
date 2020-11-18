@@ -263,7 +263,7 @@ class CreateEditAccountDialog extends React.Component {
     //Calls on done with status message and
     //true if delete was succesful, false otherwise.
     deleteAccount = async() => {
-       const url = '/users/' + this.state.accountName;
+       const url = this.state.url;
        const res = await fetch(url, 
                     {method: 'DELETE'}); 
         if (res.status == 200) { //successful account deletion!
@@ -451,7 +451,10 @@ handleAccountType = (event) => {
     event.preventDefault();
     if (this.state.accountType == "fan") {
         this.setState({showFanDialog: true,
-            url: '/fans/' + this.state.accountName});
+            url: '/fans/' + this.state.accountName,
+            genres: [],
+            artists: [],
+            venues: []});
     }
     if (this.state.accountType == "artist") {
         this.setState({showArtistDialog: true,
