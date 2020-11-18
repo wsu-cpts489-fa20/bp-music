@@ -223,7 +223,7 @@ class CreateEditAccountDialog extends React.Component {
             securityAnswer: this.state.securityAnswer,
             accountType: this.state.accountType
         };}
-        const url = this.state.url + '/' + accountType;
+        const url = this.state.url + '/' + this.state.accountType;
         let res;
         if (this.props.create) { //use POST route to create new user account
             res = await fetch(url, {
