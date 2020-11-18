@@ -109,13 +109,13 @@ var roundSchema = new Schema({
 });
 roundSchema.virtual('SGS').get(function () {
   return this.strokes * 60 + this.minutes * 60 + this.seconds;
-}); //Define schema that maps to a document in the Users collection in the appdb
-//database.
+});
 
 var userSchema = new Schema({
   id: String,
   //unique identifier for user
   password: String,
+  userType: String,
   displayName: String,
   //Name to be displayed within app
   authStrategy: String,
@@ -132,7 +132,16 @@ var userSchema = new Schema({
   rounds: [roundSchema]
 });
 
-var User = _mongoose["default"].model("User", userSchema); //////////////////////////////////////////////////////////////////////////
+var User = _mongoose["default"].model("User", userSchema); // getUserType = () => {
+//   if(userType == "fan")
+//   {
+//     userAccess: [fanSchema]
+//   }
+//   else{
+//     userAccess: [fanSchema]
+//   }
+// }
+//////////////////////////////////////////////////////////////////////////
 //PASSPORT SET-UP
 //The following code sets up the app with OAuth authentication using
 //the 'github' strategy in passport.js.
@@ -904,92 +913,4 @@ app["delete"]('/rounds/:userId/:roundId', /*#__PURE__*/function () {
   return function (_x31, _x32, _x33) {
     return _ref11.apply(this, arguments);
   };
-}()); // GET route for google location search
-// Returns an Object containing information about the location
-
-app.get('/location/:search', /*#__PURE__*/function () {
-  var _ref12 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee12(req, res) {
-    var search, url, request, data, formattedData;
-    return _regeneratorRuntime["default"].wrap(function _callee12$(_context12) {
-      while (1) {
-        switch (_context12.prev = _context12.next) {
-          case 0:
-            // Properly encode search text for a URL
-            search = encodeURIComponent(req.params.search);
-            console.log("in /location route (GET) search for: " + search);
-            url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=" + search + "&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=" + process.env.GOOGLE_API_KEY;
-            request = new Promise(function (resolve, reject) {
-              https.get(url, function (resp) {
-                var data = '';
-                resp.on('data', function (chunk) {
-                  data += chunk;
-                });
-                resp.on('end', function () {
-                  resolve(data);
-                });
-              }).on('error', function (err) {
-                reject(err);
-              });
-            });
-            _context12.prev = 4;
-            _context12.next = 7;
-            return request;
-
-          case 7:
-            data = _context12.sent;
-            formattedData = JSON.parse(data);
-
-            if (!(formattedData.status === 'OK')) {
-              _context12.next = 13;
-              break;
-            }
-
-            return _context12.abrupt("return", res.status(200).send(data));
-
-          case 13:
-            return _context12.abrupt("return", res.status(404).send('Location not found'));
-
-          case 14:
-            _context12.next = 19;
-            break;
-
-          case 16:
-            _context12.prev = 16;
-            _context12.t0 = _context12["catch"](4);
-            return _context12.abrupt("return", res.status(400).send(_context12.t0));
-
-          case 19:
-          case "end":
-            return _context12.stop();
-        }
-      }
-    }, _callee12, null, [[4, 16]]);
-  }));
-
-  return function (_x34, _x35) {
-    return _ref12.apply(this, arguments);
-  };
-}());
-app.get('/map/:address', /*#__PURE__*/function () {
-  var _ref13 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee13(req, res) {
-    var encodedAddress;
-    return _regeneratorRuntime["default"].wrap(function _callee13$(_context13) {
-      while (1) {
-        switch (_context13.prev = _context13.next) {
-          case 0:
-            console.log("in /map route (GET) make url for: " + req.params.address);
-            encodedAddress = encodeURIComponent(req.params.address);
-            return _context13.abrupt("return", res.status(200).send("https://www.google.com/maps/embed/v1/place?key=" + process.env.GOOGLE_API_KEY + "&q=" + encodedAddress));
-
-          case 3:
-          case "end":
-            return _context13.stop();
-        }
-      }
-    }, _callee13);
-  }));
-
-  return function (_x36, _x37) {
-    return _ref13.apply(this, arguments);
-  };
-}());
+})
