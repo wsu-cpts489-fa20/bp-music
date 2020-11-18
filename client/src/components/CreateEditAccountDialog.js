@@ -729,19 +729,19 @@ selectAllGenreCheckboxes = isSelected => {
        .filter(checkbox => this.state.genreCheckboxes[checkbox])
        .forEach(checkbox => {
            console.log(checkbox, "is selected.");
-           genres.push(checkbox);
+           this.state.genres.push(checkbox);
         });
        Object.keys(this.state.artistCheckboxes)
        .filter(checkbox => this.state.artistCheckboxes[checkbox])
        .forEach(checkbox => {
            console.log(checkbox, "is selected.");
-           artists.push(checkbox);
+           this.state.artists.push(checkbox);
         });
        Object.keys(this.state.venueCheckboxes)
        .filter(checkbox => this.state.venueCheckboxes[checkbox])
        .forEach(checkbox => {
            console.log(checkbox, "is selected.");
-           venues.push(checkbox);
+           this.state.venues.push(checkbox);
         });
 
         //Initialize user account
