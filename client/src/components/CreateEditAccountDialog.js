@@ -223,7 +223,7 @@ class CreateEditAccountDialog extends React.Component {
             securityAnswer: this.state.securityAnswer,
             accountType: this.state.accountType
         };}
-        const url = '/users/' + this.state.accountType + '/';
+        const url = this.state.url;
         let res;
         if (this.props.create) { //use POST route to create new user account
             res = await fetch(url, {
@@ -450,17 +450,20 @@ class CreateEditAccountDialog extends React.Component {
 handleAccountType = (event) => {
     event.preventDefault();
     if (this.state.accountType == "fan") {
-        this.setState({showFanDialog: true});
+        this.setState({showFanDialog: true,
+            url: '/fans/' + this.state.accountName});
     }
     if (this.state.accountType == "artist") {
         this.setState({showArtistDialog: true,
+            url: '/artists/' + this.state.accountName,
             artistName: "",
             genres: [],
-            instagram: "",
-            facebook: ""});
+            instagramHandle: "",
+            facebookHandle: ""});
     }
     if (this.state.accountType == "venue") {
-        this.setState({showVenueDialog: true});
+        this.setState({showVenueDialog: true,
+            url: '/venues/' + this.state.accountName});
     }
 }
 
