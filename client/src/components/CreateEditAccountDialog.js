@@ -183,25 +183,8 @@ class CreateEditAccountDialog extends React.Component {
     //landing page. 
     handleSubmit = async(event) => {
         event.preventDefault();
-        this.setState({showFanDialog: false, showArtistDialog: false, showVenueDialog: false})
+        this.setState({showArtistDialog: false, showVenueDialog: false})
 
-        // Initialize checkboxes for create account pages
-        Object.keys(this.state.genreCheckboxes)
-        .filter(checkbox => this.state.genreCheckboxes[checkbox])
-        .forEach(checkbox => {
-            console.log(checkbox, "is selected.");
-        });
-        Object.keys(this.state.artistCheckboxes)
-        .filter(checkbox => this.state.artistCheckboxes[checkbox])
-        .forEach(checkbox => {
-            console.log(checkbox, "is selected.");
-        });
-        Object.keys(this.state.venueCheckboxes)
-        .filter(checkbox => this.state.venueCheckboxes[checkbox])
-        .forEach(checkbox => {
-            console.log(checkbox, "is selected.");
-        });
-        
         //Initialize user account
         let userData = {
             displayName: this.state.displayName,
@@ -462,7 +445,7 @@ renderFanDialog = () => {
             <button className="modal-close" onClick={this.props.cancel}>&times;</button>
         </div>
         <div className="modal-body">
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleFanSubmit}>
         <br/>
         <label>
             Genres:
@@ -618,9 +601,10 @@ renderVenueDialog = () => {
     );
 }
 
-/////////////////////
-// Testing making Create Account Page use checkmarks instead
-/////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Create Account Page checkboxes
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Functions for select all checkboxes for genre/artist/venue
 selectAllGenreCheckboxes = isSelected => {
     Object.keys(this.state.genreCheckboxes).forEach(checkbox => {
       // BONUS: Can you explain why we pass updater function to setState instead of an object?
@@ -634,7 +618,6 @@ selectAllGenreCheckboxes = isSelected => {
   };
   selectAllArtistCheckboxes = isSelected => {
     Object.keys(this.state.artistCheckboxes).forEach(checkbox => {
-      // BONUS: Can you explain why we pass updater function to setState instead of an object?
       this.setState(prevState => ({
         artistCheckboxes: {
           ...prevState.artistCheckboxes,
@@ -655,6 +638,7 @@ selectAllGenreCheckboxes = isSelected => {
     });
   };
 
+  // Function to update state for select/deselect all checkboxes genre/artist/venue
   selectAllGenre = () => this.selectAllGenreCheckboxes(true);
 
   deselectAllGenre = () => this.selectAllGenreCheckboxes(false);
@@ -667,6 +651,7 @@ selectAllGenreCheckboxes = isSelected => {
 
   deselectAllVenue = () => this.selectAllVenueCheckboxes(false);
 
+  // Functions to handle checkboxe changes genre/artist/venue
   handleGenreCheckboxChange = changeEvent => {
     const { name } = changeEvent.target;
 
@@ -700,6 +685,7 @@ selectAllGenreCheckboxes = isSelected => {
     }));
   };
 
+  // Functions for creating a single checkboxe for genre/artist/venue
   createGenreCheckbox = option => (
     <Checkbox
       label={option}
@@ -726,6 +712,77 @@ selectAllGenreCheckboxes = isSelected => {
     />
   );
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+//handleFanSubmit -- Triggered when user clicks on submit button to
+    //either create or edit a fan account.
+    //Custom data checking ensures user account under this email does not 
+    //already exist and that the rest of the info is valid. We create a new  
+    // object for a fan user, save it to localStorage and take user to app's 
+    //landing page. 
+  handleFanSubmit = async(event) => {
+      event.preventDefault();
+      this.setState({showFanDialog: false})
+      // Initialize checkboxes for create account pages
+       Object.keys(this.state.genreCheckboxes)
+       .filter(checkbox => this.state.genreCheckboxes[checkbox])
+       .forEach(checkbox => {
+           console.log(checkbox, "is selected.");
+        });
+       Object.keys(this.state.artistCheckboxes)
+       .filter(checkbox => this.state.artistCheckboxes[checkbox])
+       .forEach(checkbox => {
+           console.log(checkbox, "is selected.");
+        });
+       Object.keys(this.state.venueCheckboxes)
+       .filter(checkbox => this.state.venueCheckboxes[checkbox])
+       .forEach(checkbox => {
+           console.log(checkbox, "is selected.");
+        });
+        
+        //Initialize user account
+       let userData = {
+           password: this.state.password,
+           displayName: this.state.displayName,
+           profilePicURL: this.state.profilePicURL,
+           securityQuestion: this.state.securityQuestion,
+           securityAnswer: this.state.securityAnswer,
+           artists: this.state.artistCheckboxes,
+           venues: this.state.venueCheckboxes,
+           genres: this.state.genreCheckboxes
+        };
+       const url = '/fans/' + this.state.accountName;
+       let res;
+       if (this.props.create) { //use POST route to create new user account
+        res = await fetch(url, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify(userData)}); 
+            if (res.status == 200) { //successful account creation!
+                this.props.done("New fan account created! Enter credentials to log in.",false);
+            } else { //Unsuccessful account creation
+                //Grab textual error message
+                const resText = await res.text();
+                this.props.done(resText,false);
+            }
+        } else { //use PUT route to update existing user account
+            res = await fetch(url, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                    },
+                method: 'PUT',
+                body: JSON.stringify(userData)}); 
+            if (res.status == 200) { //successful account creation!
+                this.props.done("Fan Account Updated!",false);
+            } else { //Unsuccessful account update
+                //Grab textual error message
+                const resText = await res.text();
+                this.props.done(resText,false);
+            }
+        }
+    }
 }
-
 export default CreateEditAccountDialog;
