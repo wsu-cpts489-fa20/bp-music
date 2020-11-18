@@ -53,7 +53,9 @@ class CreateEditAccountDialog extends React.Component {
                       showFanDialog: false,
                       showArtistDialog: false,
                       showVenueDialog: false,
-
+                      genres: [],
+                      artists: [],
+                      venues: [],
                       genreCheckboxes: genreList.reduce(
                         (options, option) => ({
                           ...options,
@@ -661,6 +663,20 @@ selectAllGenreCheckboxes = isSelected => {
         [name]: !prevState.genreCheckboxes[name]
       }
     }));
+
+    if(!this.state.genres.includes(checkbox)) // Option is not already in list
+    {
+        if(this.state.genreCheckboxes[checkbox] === true) // Option is selected
+        {
+            this.state.genres.push(checkbox);
+        }
+     } else {
+         checkboxIndex = this.state.genres.indexOf(checkbox);
+         if(this.state.genreCheckboxes[checkbox] === false) // Option is not selected, and is in the list
+         {
+            this.state.genres.splice(checkboxIndex, 1);
+         }
+     }
   };
 
   handleArtistCheckboxChange = changeEvent => {
@@ -672,6 +688,19 @@ selectAllGenreCheckboxes = isSelected => {
         [name]: !prevState.artistCheckboxes[name]
       }
     }));
+    if(!this.state.artists.includes(checkbox)) // Option is not already in list
+    {
+        if(this.state.artistCheckboxes[checkbox] === true) // Option is selected
+        {
+            this.state.artists.push(checkbox);
+        }
+     } else {
+         checkboxIndex = this.state.artists.indexOf(checkbox);
+         if(this.state.artistCheckboxes[checkbox] === false) // Option is not selected, and is in the list
+         {
+            this.state.artists.splice(checkboxIndex, 1);
+         }
+     }
   };
 
   handleVenueCheckboxChange = changeEvent => {
@@ -683,6 +712,20 @@ selectAllGenreCheckboxes = isSelected => {
         [name]: !prevState.venueCheckboxes[name]
       }
     }));
+
+    if(!this.state.venues.includes(checkbox)) // Option is not already in list
+    {
+        if(this.state.venueCheckboxes[checkbox] === true) // Option is selected
+        {
+            this.state.venues.push(checkbox);
+        }
+     } else {
+         checkboxIndex = this.state.venues.indexOf(checkbox);
+         if(this.state.venueCheckboxes[checkbox] === false) // Option is not selected, and is in the list
+         {
+            this.state.venues.splice(checkboxIndex, 1);
+         }
+     }
   };
 
   // Functions for creating a single checkboxe for genre/artist/venue
