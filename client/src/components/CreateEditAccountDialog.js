@@ -188,42 +188,40 @@ class CreateEditAccountDialog extends React.Component {
         event.preventDefault();
         this.setState({showFanDialog: false, showArtistDialog: false, showVenueDialog: false})
         //Initialize account
-        let userData;
+        let userData = {
+            displayName: this.state.displayName,
+            password: this.state.password,
+            profilePicURL: this.state.profilePicURL,
+            securityQuestion: this.state.securityQuestion,
+            securityAnswer: this.state.securityAnswer,
+            accountType: this.state.accountType,
+        };
         if (this.state.accountType == "fan") {
-            let userData = {
-            displayName: this.state.displayName,
-            password: this.state.password,
-            profilePicURL: this.state.profilePicURL,
-            securityQuestion: this.state.securityQuestion,
-            securityAnswer: this.state.securityAnswer,
-            accountType: this.state.accountType,
-            genres: this.state.genres,
-            artists: this.state.artists,
-            venues:this.state.venues
-        };}
+            userData.genres = this.state.genres;
+            userData.artists = this.state.artists;
+            userData.venues = this.state.venues;
+            Object.keys(this.state.genreCheckboxes).filter(checkbox => this.state.genreCheckboxes[checkbox]).forEach(checkbox => {
+                console.log(checkbox, "is selected and being stored to fan account.");
+                this.state.genres.push(checkbox);
+            });
+            Object.keys(this.state.artistCheckboxes).filter(checkbox => this.state.artistCheckboxes[checkbox]).forEach(checkbox => {
+                console.log(checkbox, "is selected and being stored to fan account.");
+                this.state.artists.push(checkbox);
+            });
+            Object.keys(this.state.venueCheckboxes).filter(checkbox => this.state.venueCheckboxes[checkbox]).forEach(checkbox => {
+                console.log(checkbox, "is selected and being stored to fan account.");
+                this.state.venues.push(checkbox);
+            });
+        }
         if (this.state.accountType == "artist") {
-            let userData = {
-            displayName: this.state.displayName,
-            password: this.state.password,
-            profilePicURL: this.state.profilePicURL,
-            securityQuestion: this.state.securityQuestion,
-            securityAnswer: this.state.securityAnswer,
-            accountType: this.state.accountType,
-            artistName: this.state.artistName,
-            genres: this.state.genres,
-            instagramHandle: this.state.instagramHandle,
-            facebookHandle: this.state.facebookHandle
-        };}
-        if (this.state.accountType == "venue") {
-            let userData = {
-            displayName: this.state.displayName,
-            password: this.state.password,
-            profilePicURL: this.state.profilePicURL,
-            securityQuestion: this.state.securityQuestion,
-            securityAnswer: this.state.securityAnswer,
-            accountType: this.state.accountType
-        };}
+            userData.artistName = this.state.artistName;
+            userData.genres = this.state.genres;
+            userData.instagramHandle = this.state.instagramHandle;
+            userData.facebookHandle = this.state.facebookHandle;
+        }
+        if (this.state.accountType == "venue") {}
         const url = this.state.url;
+        console.log(url);
         let res;
         if (this.props.create) { //use POST route to create new user account
             res = await fetch(url, {
