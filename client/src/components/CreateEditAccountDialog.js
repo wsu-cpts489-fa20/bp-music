@@ -1,4 +1,5 @@
 import React from 'react';
+import { async } from 'regenerator-runtime';
 import ConfirmDeleteAccount from './ConfirmDeleteAccount.js';
 
 class CreateEditAccountDialog extends React.Component {
@@ -86,7 +87,10 @@ class CreateEditAccountDialog extends React.Component {
             }
         } else if(event.target.name === "genres" || event.target.name === "artists" || event.target.name === "venues") {
             this.setState({genres: Array.from(event.target.selectedOptions, (item) => item.value)});
-        } else {
+        } else if(event.target.name === "venue_location"){
+            this.GPSvalidate();
+        }
+        else {
             this.setState({[event.target.name]: event.target.value,
                            formUpdated: formUpdated},this.checkDataValidity);
         }
@@ -387,6 +391,8 @@ handleAccountType = (event) => {
     }
 }
 
+
+
 renderFanDialog = () => {
     return (
         <div className="modal" role="dialog">
@@ -546,7 +552,17 @@ renderArtistDialog = () => {
     );
 }
 
-renderVenueDialog = () => {
+GPSvalidate = async () => {
+    let result = await fetch('location/' + this.state.venue_location)
+    if (result.status !== 200) {
+        this.setState({validAddress: true});
+    }
+    else{
+        this.setState({validAddress: false});
+    }
+}
+
+renderVenueDialog = () => { 
     return (
         <div className="modal" role="dialog">
         <div className="modal-dialog modal-lg"></div>
@@ -576,7 +592,7 @@ renderVenueDialog = () => {
                 size="30"
                 placeholder="Email"
                 required={true}
-                value={this.state.venue_location}
+                value={this.state.email}
                 onChange={this.handleChange}
                 />
         Phone:
@@ -602,8 +618,10 @@ renderVenueDialog = () => {
                 onChange={this.handleChange}
                 />
         <p></p>
+        {this.state.validAddress ? 
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Venue Account</button>
+             : null}
         </form>
         </div></div></div>
     );
