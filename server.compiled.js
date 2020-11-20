@@ -14,6 +14,8 @@ var _path = _interopRequireDefault(require("path"));
 
 var _express = _interopRequireDefault(require("express"));
 
+var _venueRoutes = _interopRequireDefault(require("./routes/venue-routes"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -118,7 +120,7 @@ function () {
             thisUser = _context2.sent;
 
             if (!thisUser) {
-              _context2.next = 13;
+              _context2.next = 11;
               break;
             }
 
@@ -134,29 +136,106 @@ function () {
             return _context2.abrupt("return", done(null, false));
 
           case 11:
-            _context2.next = 15;
-            break;
+            _context2.next = 13;
+            return Fan[user].findOne({
+              id: userId
+            });
 
           case 13:
+            tryFansUser = _context2.sent;
+
+            if (!tryFansUser) {
+              _context2.next = 21;
+              break;
+            }
+
+            if (!(tryFansUser.password === password)) {
+              _context2.next = 19;
+              break;
+            }
+
+            return _context2.abrupt("return", done(null, tryFansUser));
+
+          case 19:
+            req.authError = "The password is incorrect. Please try again" + " or reset your password.";
+            return _context2.abrupt("return", done(null, false));
+
+          case 21:
+            _context2.next = 23;
+            return Artist.findOne({
+              'user.id': userId
+            });
+
+          case 23:
+            tryArtistUser = _context2.sent;
+
+            if (!tryArtistUser) {
+              _context2.next = 32;
+              break;
+            }
+
+            console.log("Inside tryArtistUser!!");
+
+            if (!(tryArtistUser.password === password)) {
+              _context2.next = 30;
+              break;
+            }
+
+            return _context2.abrupt("return", done(null, tryArtistUser));
+
+          case 30:
+            req.authError = "The password is incorrect. Please try again" + " or reset your password.";
+            return _context2.abrupt("return", done(null, false));
+
+          case 32:
+            _context2.next = 34;
+            return Venue[user].findOne({
+              id: userId
+            });
+
+          case 34:
+            tryVenueUser = _context2.sent;
+
+            if (!tryVenueUser) {
+              _context2.next = 44;
+              break;
+            }
+
+            if (!(tryVenueUser.password === password)) {
+              _context2.next = 40;
+              break;
+            }
+
+            return _context2.abrupt("return", done(null, tryVenueUser));
+
+          case 40:
+            req.authError = "The password is incorrect. Please try again" + " or reset your password.";
+            return _context2.abrupt("return", done(null, false));
+
+          case 42:
+            _context2.next = 46;
+            break;
+
+          case 44:
             //userId not found in DB
             req.authError = "There is no account with email " + userId + ". Please try again.";
             return _context2.abrupt("return", done(null, false));
 
-          case 15:
-            _context2.next = 20;
+          case 46:
+            _context2.next = 51;
             break;
 
-          case 17:
-            _context2.prev = 17;
+          case 48:
+            _context2.prev = 48;
             _context2.t0 = _context2["catch"](0);
             return _context2.abrupt("return", done(_context2.t0));
 
-          case 20:
+          case 51:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 17]]);
+    }, _callee2, null, [[0, 48]]);
   }));
 
   return function (_x5, _x6, _x7, _x8) {

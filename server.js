@@ -10,6 +10,7 @@ import session from 'express-session';
 import regeneratorRuntime from "regenerator-runtime";
 import path from 'path';
 import express from 'express';
+import venueRoutes from './routes/venue-routes';
 
 require('dotenv').config();
 
@@ -66,7 +67,40 @@ passport.use(new LocalStrategy({ passReqToCallback: true },
             " or reset your password.";
           return done(null, false)
         }
-      } else { //userId not found in DB
+      } 
+      tryFansUser = await Fan.findOne({ 'user.id': userId });
+      if (tryFansUser) {
+        if (tryFansUser.password === password) {
+          return done(null, tryFansUser);
+        } else {
+          req.authError = "The password is incorrect. Please try again" +
+            " or reset your password.";
+          return done(null, false)
+        }
+      }
+      tryArtistUser = await Artist.findOne({ 'user.id': userId });
+      if (tryArtistUser) {
+        console.log("Inside tryArtistUser!!");
+        if (tryArtistUser.password === password) {
+          return done(null, tryArtistUser);
+        } else {
+          req.authError = "The password is incorrect. Please try again" +
+            " or reset your password.";
+          return done(null, false)
+        }
+      }
+      tryVenueUser = await Venue.findOne({ 'user.id': userId });
+      if (tryVenueUser) {
+        if (tryVenueUser.password === password) {
+          return done(null, tryVenueUser);
+        } else {
+          req.authError = "The password is incorrect. Please try again" +
+            " or reset your password.";
+          return done(null, false)
+        }
+      }
+      else 
+      { //userId not found in DB
         req.authError = "There is no account with email " + userId +
           ". Please try again.";
         return done(null, false);
