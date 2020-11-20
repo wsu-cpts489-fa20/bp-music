@@ -1,4 +1,5 @@
 import React from 'react';
+import { async } from 'regenerator-runtime';
 import ConfirmDeleteAccount from './ConfirmDeleteAccount.js';
 import Checkbox from './Checkbox.js';
 
@@ -136,7 +137,10 @@ class CreateEditAccountDialog extends React.Component {
             }
         } else if(event.target.name === "genres" || event.target.name === "artists" || event.target.name === "venues") {
             this.setState({genres: Array.from(event.target.selectedOptions, (item) => item.value)});
-        } else {
+        } else if(event.target.name === "venue_location"){
+            this.GPSvalidate();
+        }
+        else {
             this.setState({[event.target.name]: event.target.value,
                            formUpdated: formUpdated},this.checkDataValidity);
         }
@@ -468,6 +472,8 @@ handleAccountType = (event) => {
     }
 }
 
+
+
 renderFanDialog = () => {
     return (
         <div className="modal" role="dialog">
@@ -615,7 +621,17 @@ renderArtistDialog = () => {
     );
 }
 
-renderVenueDialog = () => {
+GPSvalidate = async () => {
+    let result = await fetch('location/' + this.state.venue_location)
+    if (result.status !== 200) {
+        this.setState({validAddress: true});
+    }
+    else{
+        this.setState({validAddress: false});
+    }
+}
+
+renderVenueDialog = () => { 
     return (
         <div className="modal" role="dialog">
         <div className="modal-dialog modal-lg"></div>
@@ -626,9 +642,55 @@ renderVenueDialog = () => {
         </div>
         <div className="modal-body">
         <form onSubmit={this.handleSubmit}>
-
+        Street Address:
+                <input
+                className="form-control form-text form-center"
+                name="venue_location"
+                type="text"
+                size="40"
+                placeholder="123 Example St. Portland, OR"
+                required={true}
+                value={this.state.venue_location}
+                onChange={this.handleChange}
+                />
+        Email:
+                <input
+                className="form-control form-text form-center"
+                name="Email"
+                type="text"
+                size="30"
+                placeholder="Email"
+                required={true}
+                value={this.state.email}
+                onChange={this.handleChange}
+                />
+        Phone:
+        <input
+                className="form-control form-text form-center"
+                name="Phone"
+                type="text"
+                size="30"
+                placeholder="666-777-1337"
+                required={true}
+                value={this.state.phone_number}
+                onChange={this.handleChange}
+                />
+        Social Media Links:
+        <input
+                className="form-control form-text form-center"
+                name="social_media"
+                type="text"
+                size="30"
+                placeholder="Facebook,IG,Etc."
+                required={true}
+                value={this.state.social_media}
+                onChange={this.handleChange}
+                />
+        <p></p>
+        {this.state.validAddress ? 
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Venue Account</button>
+             : null}
         </form>
         </div></div></div>
     );
