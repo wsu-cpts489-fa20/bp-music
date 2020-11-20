@@ -206,7 +206,13 @@ class CreateEditAccountDialog extends React.Component {
             userData.artists = this.state.artists;
             userData.venues = this.state.venues;
             Object.keys(this.state.genreCheckboxes).filter(checkbox => this.state.genreCheckboxes[checkbox]).forEach(checkbox => {
-                console.log(checkbox, "is selected and being stored to fan account.");
+                if(this.state.accountType == "fan"){
+                    console.log(checkbox, "is selected and being stored to fan account.");
+                } else if(this.state.accountType == "artist"){
+                    console.log(checkbox, "is selected and being stored to artist account.");
+                } else {
+                    console.log(checkbox, "is selected and being stored to venue account.");
+                }
                 this.state.genres.push(checkbox);
             });
             Object.keys(this.state.artistCheckboxes).filter(checkbox => this.state.artistCheckboxes[checkbox]).forEach(checkbox => {
@@ -593,16 +599,21 @@ renderArtistDialog = () => {
         <br/>
         <label>
             Genres:
-            <select name="genres" 
-                onChange={this.handleChange} 
-                className="form-control form-textform-center" multiple>
-                <option value="pop">Pop</option>
-                <option value="hip-hop">Hip-Hop</option>
-                <option value="rap">Rap</option>
-                <option value="rock">Rock</option>
-                <option value="edm">EDM</option>
-                <option value="country">Country</option>
-            </select>
+            {genreList.map(this.createGenreCheckbox)}
+            <div className="form-group mt-2">
+                <button
+                id="selectAllGenresBtn"
+                type="button"
+                className="btn btn-outline-primary mr-2"
+                onClick={this.selectAllGenre}
+                > Select All </button>
+                <button
+                type="button"
+                id="deselectAllGenresBtn"
+                className="btn btn-outline-primary mr-2"
+                onClick={this.deselectAllGenre}
+                > Deselect All </button>
+            </div>
         </label>
         <br/>
         <label>
