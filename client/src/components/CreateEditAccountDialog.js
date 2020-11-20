@@ -48,7 +48,8 @@ class CreateEditAccountDialog extends React.Component {
                       passwordRepeat: "",
                       securityQuestion: "",
                       securityAnswer: "",
-                      accountType: "fan",
+                      accountType: "",
+                      url: "",
                       formUpdated: false,
                       confirmDelete: false,
                       showFanDialog: false,
@@ -94,7 +95,8 @@ class CreateEditAccountDialog extends React.Component {
                            passwordRepeat: userData.password,
                            securityQuestion: userData.securityQuestion,
                            securityAnswer: userData.securityAnswer,
-                           accountType: userData.accountType,});
+                           accountType: userData.accountType,
+                           url: '/' + userData.accountType + 's/' + this.state.accountName});
         }
     }
 
@@ -135,7 +137,7 @@ class CreateEditAccountDialog extends React.Component {
                 });
                 
             }
-        } else if(event.target.name === "genres" || event.target.name === "artists" || event.target.name === "venues") {
+        } else if (event.target.name === "genres") {
             this.setState({genres: Array.from(event.target.selectedOptions, (item) => item.value)});
         } else if(event.target.name === "venue_location"){
             this.GPSvalidate();
@@ -221,11 +223,15 @@ class CreateEditAccountDialog extends React.Component {
             userData.artistName = this.state.artistName;
             userData.genres = this.state.genres;
             userData.instagramHandle = this.state.instagramHandle;
-            userData.facebookHandle = this.state.facebookHandle;
+            userData.facebookHandle = this.state.facebookHandle;  
         }
-        if (this.state.accountType == "venue") {}
+        if (this.state.accountType == "venue") {
+            userData.streetAddress = this.state.streetAddress;
+            userData.email = this.state.email;
+            userData.phoneNumber = this.state.phoneNumber;
+            userData.socialMediaLinks = this.state.socialMediaLinks;
+        }
         const url = this.state.url;
-        console.log(url);
         let res;
         if (this.props.create) { //use POST route to create new user account
             res = await fetch(url, {
@@ -572,11 +578,9 @@ renderArtistDialog = () => {
         <br/>
         <label>
             Genres:
-            <select name="genres"
-                value={this.state.genres} 
+            <select name="genres" 
                 onChange={this.handleChange} 
-                className="form-control form-textform-center"
-                multiple>
+                className="form-control form-textform-center" multiple>
                 <option value="pop">Pop</option>
                 <option value="hip-hop">Hip-Hop</option>
                 <option value="rap">Rap</option>
@@ -590,12 +594,12 @@ renderArtistDialog = () => {
             Instagram:
             <input
             className="form-control form-text form-center"
-            name="instagram"
+            name="instagramHandle"
             type="text"
             size="30"
-            placeholder="@"
+            placeholder="@your-handle"
             required={true}
-            value={this.state.instagram}
+            value={this.state.instagramHandle}
             onChange={this.handleChange}
             />
         </label>
@@ -604,12 +608,12 @@ renderArtistDialog = () => {
             Facebook:
             <input
             className="form-control form-text form-center"
-            name="facebook"
+            name="facebookHandle"
             type="text"
             size="30"
-            placeholder="@"
+            placeholder="@your-handle"
             required={true}
-            value={this.state.facebook}
+            value={this.state.facebookHandle}
             onChange={this.handleChange}
             />
         </label>
