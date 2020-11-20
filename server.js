@@ -27,6 +27,12 @@ const app = express();
 //the 'github' strategy in passport.js.
 //////////////////////////////////////////////////////////////////////////
 const User = require('./models').User;
+const Fan = require('./models').Fan;
+const Artist = require('./models').Artist;
+const Venue = require('./models').Venue;
+
+
+
 passport.use(new GithubStrategy({
   clientID: process.env.GH_CLIENT_ID,
   clientSecret: process.env.GH_CLIENT_SECRET,
@@ -57,6 +63,9 @@ passport.use(new LocalStrategy({ passReqToCallback: true },
   //contains the password entered into the form.
   async (req, userId, password, done) => {
     let thisUser;
+    let tryFansUser;
+    let tryArtistUser;
+    let tryVenueUser;
     try {
       thisUser = await User.findOne({ id: userId });
       if (thisUser) {
@@ -70,7 +79,7 @@ passport.use(new LocalStrategy({ passReqToCallback: true },
       } 
       tryFansUser = await Fan.findOne({ 'user.id': userId });
       if (tryFansUser) {
-        if (tryFansUser.password === password) {
+        if (tryFansUser.user.password === password) {
           return done(null, tryFansUser);
         } else {
           req.authError = "The password is incorrect. Please try again" +
@@ -81,7 +90,7 @@ passport.use(new LocalStrategy({ passReqToCallback: true },
       tryArtistUser = await Artist.findOne({ 'user.id': userId });
       if (tryArtistUser) {
         console.log("Inside tryArtistUser!!");
-        if (tryArtistUser.password === password) {
+        if (tryArtistUser.user.password === password) {
           return done(null, tryArtistUser);
         } else {
           req.authError = "The password is incorrect. Please try again" +
@@ -91,7 +100,7 @@ passport.use(new LocalStrategy({ passReqToCallback: true },
       }
       tryVenueUser = await Venue.findOne({ 'user.id': userId });
       if (tryVenueUser) {
-        if (tryVenueUser.password === password) {
+        if (tryVenueUser.user.password === password) {
           return done(null, tryVenueUser);
         } else {
           req.authError = "The password is incorrect. Please try again" +

@@ -37,6 +37,12 @@ var app = (0, _express["default"])(); //////////////////////////////////////////
 
 var User = require('./models').User;
 
+var Fan = require('./models').Fan;
+
+var Artist = require('./models').Artist;
+
+var Venue = require('./models').Venue;
+
 _passport["default"].use(new GithubStrategy({
   clientID: process.env.GH_CLIENT_ID,
   clientSecret: process.env.GH_CLIENT_SECRET,
@@ -105,7 +111,7 @@ _passport["default"].use(new LocalStrategy({
 //contains the password entered into the form.
 function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee2(req, userId, password, done) {
-    var thisUser;
+    var thisUser, tryFansUser, tryArtistUser, tryVenueUser;
     return _regeneratorRuntime["default"].wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -137,8 +143,8 @@ function () {
 
           case 11:
             _context2.next = 13;
-            return Fan[user].findOne({
-              id: userId
+            return Fan.findOne({
+              'user.id': userId
             });
 
           case 13:
@@ -149,7 +155,7 @@ function () {
               break;
             }
 
-            if (!(tryFansUser.password === password)) {
+            if (!(tryFansUser.user.password === password)) {
               _context2.next = 19;
               break;
             }
@@ -176,7 +182,7 @@ function () {
 
             console.log("Inside tryArtistUser!!");
 
-            if (!(tryArtistUser.password === password)) {
+            if (!(tryArtistUser.user.password === password)) {
               _context2.next = 30;
               break;
             }
@@ -189,8 +195,8 @@ function () {
 
           case 32:
             _context2.next = 34;
-            return Venue[user].findOne({
-              id: userId
+            return Venue.findOne({
+              'user.id': userId
             });
 
           case 34:
@@ -201,7 +207,7 @@ function () {
               break;
             }
 
-            if (!(tryVenueUser.password === password)) {
+            if (!(tryVenueUser.user.password === password)) {
               _context2.next = 40;
               break;
             }
