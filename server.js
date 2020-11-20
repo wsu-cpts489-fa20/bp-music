@@ -63,7 +63,7 @@ passport.use(new LocalStrategy({ passReqToCallback: true },
   //contains the password entered into the form.
   async (req, userId, password, done) => {
     let thisUser;
-    let tryFansUser;
+    let tryFanUser;
     let tryArtistUser;
     let tryVenueUser;
     try {
@@ -77,10 +77,10 @@ passport.use(new LocalStrategy({ passReqToCallback: true },
           return done(null, false)
         }
       } 
-      tryFansUser = await Fan.findOne({ 'user.id': userId });
-      if (tryFansUser) {
-        if (tryFansUser.user.password === password) {
-          return done(null, tryFansUser);
+      tryFanUser = await Fan.findOne({ 'user.id': userId });
+      if (tryFanUser) {
+        if (tryFanUser.user.password === password) {
+          return done(null, tryFanUser);
         } else {
           req.authError = "The password is incorrect. Please try again" +
             " or reset your password.";
@@ -89,8 +89,8 @@ passport.use(new LocalStrategy({ passReqToCallback: true },
       }
       tryArtistUser = await Artist.findOne({ 'user.id': userId });
       if (tryArtistUser) {
-        console.log("Inside tryArtistUser!!");
         if (tryArtistUser.user.password === password) {
+          console.log("Logging in as Artist");
           return done(null, tryArtistUser);
         } else {
           req.authError = "The password is incorrect. Please try again" +
@@ -124,7 +124,7 @@ passport.use(new LocalStrategy({ passReqToCallback: true },
 passport.serializeUser((user, done) => {
   console.log("In serializeUser.");
   console.log("Contents of user param: " + JSON.stringify(user));
-  done(null, user.id);
+  done(null, user.user.id);
 });
 
 //Deserialize the current user from the session
@@ -133,11 +133,34 @@ passport.deserializeUser(async (userId, done) => {
   console.log("In deserializeUser.");
   console.log("Contents of userId param: " + userId);
   let thisUser;
+  let tryFanUser;
+  let tryArtistUser;
+  let tryVenueUser;
   try {
     thisUser = await User.findOne({ id: userId });
-    console.log("User with id " + userId +
+    if (thisUser) {
+      console.log("User with id " + userId +
       " found in DB. User object will be available in server routes as req.user.")
-    done(null, thisUser);
+      done(null, thisUser);
+    }
+    tryFanUser = await Fan.findOne({ 'user.id': userId });
+    if (tryFanUser) {
+      console.log("Fan with id " + userId +
+      " found in DB. User object will be available in server routes as req.user.")
+      done(null, tryFanUser);
+    }
+    tryArtistUser = await Artist.findOne({ 'user.id': userId });
+    if (tryArtistUser) {
+      console.log("Artist with id " + userId +
+      " found in DB. User object will be available in server routes as req.user.")
+      done(null, tryArtistUser);
+    }
+    tryVenueUser = await Venue.findOne({ 'user.id': userId });
+    if (tryVenueUser) {
+      console.log("Venue with id " + userId +
+      " found in DB. User object will be available in server routes as req.user.")
+      done(null, tryVenueUser);
+    }
   } catch (err) {
     done(err);
   }

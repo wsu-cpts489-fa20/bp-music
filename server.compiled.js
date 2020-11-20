@@ -111,7 +111,7 @@ _passport["default"].use(new LocalStrategy({
 //contains the password entered into the form.
 function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee2(req, userId, password, done) {
-    var thisUser, tryFansUser, tryArtistUser, tryVenueUser;
+    var thisUser, tryFanUser, tryArtistUser, tryVenueUser;
     return _regeneratorRuntime["default"].wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -148,19 +148,19 @@ function () {
             });
 
           case 13:
-            tryFansUser = _context2.sent;
+            tryFanUser = _context2.sent;
 
-            if (!tryFansUser) {
+            if (!tryFanUser) {
               _context2.next = 21;
               break;
             }
 
-            if (!(tryFansUser.user.password === password)) {
+            if (!(tryFanUser.user.password === password)) {
               _context2.next = 19;
               break;
             }
 
-            return _context2.abrupt("return", done(null, tryFansUser));
+            return _context2.abrupt("return", done(null, tryFanUser));
 
           case 19:
             req.authError = "The password is incorrect. Please try again" + " or reset your password.";
@@ -180,13 +180,12 @@ function () {
               break;
             }
 
-            console.log("Inside tryArtistUser!!");
-
             if (!(tryArtistUser.user.password === password)) {
               _context2.next = 30;
               break;
             }
 
+            console.log("Logging in as Artist");
             return _context2.abrupt("return", done(null, tryArtistUser));
 
           case 30:
@@ -253,14 +252,14 @@ function () {
 _passport["default"].serializeUser(function (user, done) {
   console.log("In serializeUser.");
   console.log("Contents of user param: " + JSON.stringify(user));
-  done(null, user.id);
+  done(null, user.user.id);
 }); //Deserialize the current user from the session
 //to persistent storage.
 
 
 _passport["default"].deserializeUser( /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee3(userId, done) {
-    var thisUser;
+    var thisUser, tryFanUser, tryArtistUser, tryVenueUser;
     return _regeneratorRuntime["default"].wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
@@ -275,22 +274,65 @@ _passport["default"].deserializeUser( /*#__PURE__*/function () {
 
           case 5:
             thisUser = _context3.sent;
-            console.log("User with id " + userId + " found in DB. User object will be available in server routes as req.user.");
-            done(null, thisUser);
+
+            if (thisUser) {
+              console.log("User with id " + userId + " found in DB. User object will be available in server routes as req.user.");
+              done(null, thisUser);
+            }
+
+            _context3.next = 9;
+            return Fan.findOne({
+              'user.id': userId
+            });
+
+          case 9:
+            tryFanUser = _context3.sent;
+
+            if (tryFanUser) {
+              console.log("Fan with id " + userId + " found in DB. User object will be available in server routes as req.user.");
+              done(null, tryFanUser);
+            }
+
             _context3.next = 13;
+            return Artist.findOne({
+              'user.id': userId
+            });
+
+          case 13:
+            tryArtistUser = _context3.sent;
+
+            if (tryArtistUser) {
+              console.log("Artist with id " + userId + " found in DB. User object will be available in server routes as req.user.");
+              done(null, tryArtistUser);
+            }
+
+            _context3.next = 17;
+            return Venue.findOne({
+              'user.id': userId
+            });
+
+          case 17:
+            tryVenueUser = _context3.sent;
+
+            if (tryVenueUser) {
+              console.log("Venue with id " + userId + " found in DB. User object will be available in server routes as req.user.");
+              done(null, tryVenueUser);
+            }
+
+            _context3.next = 24;
             break;
 
-          case 10:
-            _context3.prev = 10;
+          case 21:
+            _context3.prev = 21;
             _context3.t0 = _context3["catch"](2);
             done(_context3.t0);
 
-          case 13:
+          case 24:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, null, [[2, 10]]);
+    }, _callee3, null, [[2, 21]]);
   }));
 
   return function (_x9, _x10) {
