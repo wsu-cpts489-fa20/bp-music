@@ -177,7 +177,6 @@ cancelCreateAccount = () => {
                 className="form-control login-text"
                 type="email"
                 placeholder="Enter Email Address"
-                id="emailInput"
                 pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
                 required={true}
                 />
@@ -202,7 +201,7 @@ cancelCreateAccount = () => {
                 &nbsp;{this.state.loginBtnLabel}
             </button>
             <p>
-            <button type="button" className="btn btn-link login-link" 
+            <button type="button" id="createAccountBtn" className="btn btn-link login-link" 
                     onClick={() => {this.setState({showCreateAccountDialog: true});}}>
                 Create an account</button> | 
                 <button type="button" className="btn btn-link login-link"

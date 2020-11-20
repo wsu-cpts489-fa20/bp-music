@@ -284,7 +284,7 @@ class CreateEditAccountDialog extends React.Component {
 
     render() {
     return (  
-    <div className="modal" role="dialog">
+    <div className="modal" role="dialog" id="createNewAccountDialog">
     <div className="modal-dialog modal-lg"></div>
         <div className="modal-content form-center">
             <div className="modal-header">
@@ -297,18 +297,19 @@ class CreateEditAccountDialog extends React.Component {
             <form onSubmit={this.handleAccountType}>
             <label>
                 Account Type:
-                <select name="accountType" value={this.state.accountType} 
+                <select name="accountType" id="accountType" value={this.state.accountType} 
                     className="form-control form-textform-center" 
                     onChange={this.handleChange}>
-                    <option value="fan">Fan</option>
-                    <option value="artist">Artist</option>
-                    <option value="venue">Venue</option>
+                    <option id="fan" value="fan">Fan</option>
+                    <option id="artist" value="artist">Artist</option>
+                    <option id="venue" value="venue">Venue</option>
                 </select> 
             </label>
             <br/>
             <label>
                 Email: 
-                <input  
+                <input
+                id="emailInput"  
                 autocomplete="off"
                 disabled={!this.props.create}
                 className="form-control form-text form-center"
@@ -328,6 +329,7 @@ class CreateEditAccountDialog extends React.Component {
             <label>
                 Password:
                 <input
+                id="passwordInput"
                 autocomplete="off"
                 className="form-control form-text form-center"
                 name="password"
@@ -345,6 +347,7 @@ class CreateEditAccountDialog extends React.Component {
             <label>
                 Repeat Password:
                 <input
+                id="repeatPasswordInput"
                 className="form-control form-text form-center"
                 name="passwordRepeat"
                 type="password"
@@ -360,6 +363,7 @@ class CreateEditAccountDialog extends React.Component {
             <label>
                 Display Name:
                 <input
+                id="displayNameInput"
                 className="form-control form-text form-center"
                 name="displayName"
                 type="text"
@@ -374,6 +378,7 @@ class CreateEditAccountDialog extends React.Component {
             <label>
                 Profile Picture:<br/>
                 <input
+                id="profilePic"
                 className="form-control form-text form-center"
                 name="profilePic"
                 type="file"
@@ -392,6 +397,7 @@ class CreateEditAccountDialog extends React.Component {
             <label>
                 Security Question:
                 <textarea
+                id="securityQInput"
                 className="form-control form-text form-center"
                 name="securityQuestion"
                 size="35"
@@ -408,6 +414,7 @@ class CreateEditAccountDialog extends React.Component {
             <label>
                 Answer to Security Question:
                 <textarea
+                id="securityAInput"
                 className="form-control form-text form-center"
                 name="securityAnswer"
                 type="text"
@@ -426,7 +433,7 @@ class CreateEditAccountDialog extends React.Component {
                 Delete Account...
             </button> : null}
             <br/><br/>
-            <button role="submit" 
+            <button role="submit" id="submitAccountBtn" 
                 disabled={!this.state.formUpdated}
                 className="btn btn-primary btn-color-theme modal-submit-btn">
                 <span className={this.props.create ? "fa fa-user-plus" : "fa fa-user"}></span>
@@ -470,7 +477,7 @@ handleAccountType = (event) => {
 
 renderFanDialog = () => {
     return (
-        <div className="modal" role="dialog">
+        <div className="modal" role="dialog" id="renderFanDialog">
         <div className="modal-dialog modal-lg"></div>
         <div className="modal-content form-center">
         <div className="modal-header">
@@ -486,12 +493,15 @@ renderFanDialog = () => {
         {genreList.map(this.createGenreCheckbox)}
             <div className="form-group mt-2">
                 <button
+                id="selectAllGenresBtn"
                 type="button"
+                id="selectAllGenreBtn"
                 className="btn btn-outline-primary mr-2"
                 onClick={this.selectAllGenre}
                 > Select All </button>
                 <button
                 type="button"
+                id="deselectAllGenreBtn"
                 className="btn btn-outline-primary mr-2"
                 onClick={this.deselectAllGenre}
                 > Deselect All </button>
@@ -503,12 +513,15 @@ renderFanDialog = () => {
         {artistList.map(this.createArtistCheckbox)}
             <div className="form-group mt-2">
                 <button
+                id="selectAllArtistsBtn"
                 type="button"
+                id="selectAllArtistBtn"
                 className="btn btn-outline-primary mr-2"
                 onClick={this.selectAllArtist}
                 > Select All </button>
                 <button
                 type="button"
+                id="deselectAllArtistBtn"
                 className="btn btn-outline-primary mr-2"
                 onClick={this.deselectAllArtist}
                 > Deselect All </button>
@@ -520,12 +533,15 @@ renderFanDialog = () => {
         {venueList.map(this.createVenueCheckbox)}
             <div className="form-group mt-2">
                 <button
+                id="selectAllVenuesBtn"
                 type="button"
+                id="selectAllVenueBtn"
                 className="btn btn-outline-primary mr-2"
                 onClick={this.selectAllVenue}
                 > Select All </button>
                 <button
                 type="button"
+                id="deselectAllVenueBtn"
                 className="btn btn-outline-primary mr-2"
                 onClick={this.deselectAllVenue}
                 > Deselect All </button>
@@ -735,7 +751,6 @@ selectAllGenreCheckboxes = isSelected => {
       key={option}
     />
   );
-
   createVenueCheckbox = option => (
     <Checkbox
       label={option}
@@ -744,81 +759,5 @@ selectAllGenreCheckboxes = isSelected => {
       key={option}
     />
   );
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-//handleFanSubmit -- Triggered when user clicks on submit button to
-    //either create or edit a fan account.
-    //Custom data checking ensures user account under this email does not 
-    //already exist and that the rest of the info is valid. We create a new  
-    // object for a fan user, save it to localStorage and take user to app's 
-    //landing page. 
-//   handleFanSubmit = async(event) => {
-//       event.preventDefault();
-//       this.setState({showFanDialog: false})
-//       // Initialize checkboxes for create account pages
-//        Object.keys(this.state.genreCheckboxes)
-//        .filter(checkbox => this.state.genreCheckboxes[checkbox])
-//        .forEach(checkbox => {
-//            console.log(checkbox, "is selected.");
-//            this.state.genres.push(checkbox);
-//         });
-//        Object.keys(this.state.artistCheckboxes)
-//        .filter(checkbox => this.state.artistCheckboxes[checkbox])
-//        .forEach(checkbox => {
-//            console.log(checkbox, "is selected.");
-//            this.state.artists.push(checkbox);
-//         });
-//        Object.keys(this.state.venueCheckboxes)
-//        .filter(checkbox => this.state.venueCheckboxes[checkbox])
-//        .forEach(checkbox => {
-//            console.log(checkbox, "is selected.");
-//            this.state.venues.push(checkbox);
-//         });
-
-//         //Initialize user account
-//        let userData = {
-//            password: this.state.password,
-//            displayName: this.state.displayName,
-//            profilePicURL: this.state.profilePicURL,
-//            securityQuestion: this.state.securityQuestion,
-//            securityAnswer: this.state.securityAnswer,
-//            artists: this.state.artists,
-//            venues: this.state.venues,
-//            genres: this.state.genres
-//         };
-//        const url = '/fans/' + this.state.accountName;
-//        let res;
-//        if (this.props.create) { //use POST route to create new user account
-//         res = await fetch(url, {
-//             headers: {
-//                 'Accept': 'application/json',
-//                 'Content-Type': 'application/json'
-//             },
-//             method: 'POST',
-//             body: JSON.stringify(userData)}); 
-//             if (res.status == 200) { //successful account creation!
-//                 this.props.done("New fan account created! Enter credentials to log in.",false);
-//             } else { //Unsuccessful account creation
-//                 //Grab textual error message
-//                 const resText = await res.text();
-//                 this.props.done(resText,false);
-//             }
-//         } else { //use PUT route to update existing user account
-//             res = await fetch(url, {
-//                 headers: {
-//                     'Accept': 'application/json',
-//                     'Content-Type': 'application/json'
-//                     },
-//                 method: 'PUT',
-//                 body: JSON.stringify(userData)}); 
-//             if (res.status == 200) { //successful account creation!
-//                 this.props.done("Fan Account Updated!",false);
-//             } else { //Unsuccessful account update
-//                 //Grab textual error message
-//                 const resText = await res.text();
-//                 this.props.done(resText,false);
-//             }
-//         }
-//     }
 }
 export default CreateEditAccountDialog;
