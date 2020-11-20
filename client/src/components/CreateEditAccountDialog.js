@@ -1,5 +1,36 @@
 import React from 'react';
+import { async } from 'regenerator-runtime';
 import ConfirmDeleteAccount from './ConfirmDeleteAccount.js';
+import Checkbox from './Checkbox.js';
+
+const genreList = [
+    'Pop',
+    'Hip Hop',
+    'Rap',
+    'Rock',
+    'EDM',
+    'Country',
+    'RnB',
+    'Metal'
+];
+const artistList = [
+    'Post Malone',
+    'Ariana Grande', 
+    'Taylor Swift',
+    'Kanye West',
+    'Jay-Z',
+    'Lil Wayne', 
+    'Nicki Minaj',
+    'Snoop Dog'
+];
+const venueList = [
+    'Red Rocks Park and Amphitheatre',
+    'Hollywood Bowl',
+    'Merriweather Post Pavilion',
+    'The Showbox',
+    'The Underground'
+]
+
 
 class CreateEditAccountDialog extends React.Component {
 
@@ -23,7 +54,27 @@ class CreateEditAccountDialog extends React.Component {
                       confirmDelete: false,
                       showFanDialog: false,
                       showArtistDialog: false,
-                      showVenueDialog: false};
+                      showVenueDialog: false,
+                      url: "",
+                      genres: [],
+                      artists: [],
+                      venues: [],
+                      genreCheckboxes: genreList.reduce(
+                        (options, option) => ({
+                          ...options,
+                          [option]: false
+                        }), {}),
+                      artistCheckboxes: artistList.reduce(
+                        (options, option) => ({
+                          ...options,
+                          [option]: false
+                        }), {}),
+                      venueCheckboxes: venueList.reduce(
+                        (options, option) => ({
+                          ...options,
+                          [option]: false
+                        }), {})
+                    };
     } 
 
     //componentDidMount -- If we are editing an existing user acccount, we need to grab the data from
@@ -31,7 +82,7 @@ class CreateEditAccountDialog extends React.Component {
     async componentDidMount() {
         if (!this.props.create) {
             //obtain current user data from database and push into state
-            const url = "/users/" + this.props.userId;
+            const url = this.state.url;
             const res = await fetch(url);
             const json = await res.json();
             const userData = JSON.parse(json);
@@ -88,7 +139,10 @@ class CreateEditAccountDialog extends React.Component {
             }
         } else if (event.target.name === "genres") {
             this.setState({genres: Array.from(event.target.selectedOptions, (item) => item.value)});
-        } else {
+        } else if(event.target.name === "venue_location"){
+            this.GPSvalidate();
+        }
+        else {
             this.setState({[event.target.name]: event.target.value,
                            formUpdated: formUpdated},this.checkDataValidity);
         }
@@ -141,24 +195,35 @@ class CreateEditAccountDialog extends React.Component {
         this.setState({showFanDialog: false, showArtistDialog: false, showVenueDialog: false})
         //Initialize account
         let userData = {
-                displayName: this.state.displayName,
-                password: this.state.password,
-                profilePicURL: this.state.profilePicURL,
-                securityQuestion: this.state.securityQuestion,
-                securityAnswer: this.state.securityAnswer,
-                accountType: this.state.accountType,
-            };
+            displayName: this.state.displayName,
+            password: this.state.password,
+            profilePicURL: this.state.profilePicURL,
+            securityQuestion: this.state.securityQuestion,
+            securityAnswer: this.state.securityAnswer,
+            accountType: this.state.accountType,
+        };
         if (this.state.accountType == "fan") {
-            userData.artists = this.state.artists;
             userData.genres = this.state.genres;
+            userData.artists = this.state.artists;
             userData.venues = this.state.venues;
+            Object.keys(this.state.genreCheckboxes).filter(checkbox => this.state.genreCheckboxes[checkbox]).forEach(checkbox => {
+                console.log(checkbox, "is selected and being stored to fan account.");
+                this.state.genres.push(checkbox);
+            });
+            Object.keys(this.state.artistCheckboxes).filter(checkbox => this.state.artistCheckboxes[checkbox]).forEach(checkbox => {
+                console.log(checkbox, "is selected and being stored to fan account.");
+                this.state.artists.push(checkbox);
+            });
+            Object.keys(this.state.venueCheckboxes).filter(checkbox => this.state.venueCheckboxes[checkbox]).forEach(checkbox => {
+                console.log(checkbox, "is selected and being stored to fan account.");
+                this.state.venues.push(checkbox);
+            });
         }
         if (this.state.accountType == "artist") {
             userData.artistName = this.state.artistName;
             userData.genres = this.state.genres;
             userData.instagramHandle = this.state.instagramHandle;
-            userData.facebookHandle = this.state.facebookHandle;
-            
+            userData.facebookHandle = this.state.facebookHandle;  
         }
         if (this.state.accountType == "venue") {
             userData.streetAddress = this.state.streetAddress;
@@ -395,9 +460,9 @@ handleAccountType = (event) => {
     if (this.state.accountType == "fan") {
         this.setState({showFanDialog: true,
             url: '/fans/' + this.state.accountName,
-            artists: "",
-            venues: "",
-            genres: ""});
+            genres: [],
+            artists: [],
+            venues: []});
     }
     if (this.state.accountType == "artist") {
         this.setState({showArtistDialog: true,
@@ -409,13 +474,11 @@ handleAccountType = (event) => {
     }
     if (this.state.accountType == "venue") {
         this.setState({showVenueDialog: true,
-            url: '/venues/' + this.state.accountName,
-            streetAddress: "",
-            email: "",
-            phoneNumber: "",
-            socialMediaLinks: ""});
+            url: '/venues/' + this.state.accountName});
     }
 }
+
+
 
 renderFanDialog = () => {
     return (
@@ -431,66 +494,54 @@ renderFanDialog = () => {
         <br/>
         <label>
             Genres:
-            <select name="genres"
-                value={this.state.genres} 
-                onChange={this.handleChange} 
-                className="form-control form-textform-center"
-                multiple>
-                <option value="pop">Pop</option>
-                <option value="hip-hop">Hip-Hop</option>
-                <option value="rap">Rap</option>
-                <option value="rock">Rock</option>
-                <option value="edm">EDM</option>
-                <option value="country">Country</option>
-            </select>
         </label>
+        {genreList.map(this.createGenreCheckbox)}
+            <div className="form-group mt-2">
+                <button
+                type="button"
+                className="btn btn-outline-primary mr-2"
+                onClick={this.selectAllGenre}
+                > Select All </button>
+                <button
+                type="button"
+                className="btn btn-outline-primary mr-2"
+                onClick={this.deselectAllGenre}
+                > Deselect All </button>
+            </div>
         <br/>
         <label>
             Artists:
-            <select name="artists"
-                value={this.state.artists} 
-                onChange={this.handleChange} 
-                className="form-control form-textform-center"
-                multiple>
-                <option value="postMalone">Post Malone</option>
-                <option value="arianaGrande">Ariana Grande</option>
-                <option value="taylorSwift">Taylor Swift</option>
-                <option value="drake">Drake</option>
-                <option value="popSmoke">Pop Smoke</option>
-                <option value="lilWayne">Lil Wayne</option>
-                <option value="nickiMinaj">Nicki Minaj</option>
-                <option value="travisScott">Travis Scott</option>
-                <option value="kanyeWest">Kanye West</option>
-                <option value="jayZ">Jay-Z</option>
-                <option value="localArtist1">Local Artist 1</option>
-                <option value="localArtist2">Local Artist 2</option>
-            </select>
         </label>
+        {artistList.map(this.createArtistCheckbox)}
+            <div className="form-group mt-2">
+                <button
+                type="button"
+                className="btn btn-outline-primary mr-2"
+                onClick={this.selectAllArtist}
+                > Select All </button>
+                <button
+                type="button"
+                className="btn btn-outline-primary mr-2"
+                onClick={this.deselectAllArtist}
+                > Deselect All </button>
+            </div>
         <br/>
         <label>
             Venues:
-            <select name="venues"
-                value={this.state.venues} 
-                onChange={this.handleChange} 
-                className="form-control form-textform-center"
-                multiple>
-                <option value="redRocksParkAndAmpitheater">Red Rocks Park and Amphitheatre</option>
-                <option value="hollywoodBowl">Hollywood Bowl</option>
-                <option value="merriweatherPostPavilion">Merriweather Post Pavilion</option>
-                <option value="showbox">The Showbox</option>
-                <option value="underground">The Underground</option>
-                <option value="seamonsterLounge">Seamonster Lounge</option>
-                <option value="crocodile">The Crocodile</option>
-                <option value="venue1">Venue 1</option>
-                <option value="venue1">Venue 1</option>
-                <option value="venue2">Venue 2</option>
-                <option value="venue3">Venue 3</option>
-                <option value="venue4">Venue 4</option>
-                <option value="venue5">Venue 5</option>
-                <option value="venue6">Venue 6</option>
-                <option value="venue7">Venue 7</option>
-            </select>
         </label>
+        {venueList.map(this.createVenueCheckbox)}
+            <div className="form-group mt-2">
+                <button
+                type="button"
+                className="btn btn-outline-primary mr-2"
+                onClick={this.selectAllVenue}
+                > Select All </button>
+                <button
+                type="button"
+                className="btn btn-outline-primary mr-2"
+                onClick={this.deselectAllVenue}
+                > Deselect All </button>
+            </div>
         <br/>
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Fan Account</button>
@@ -574,7 +625,17 @@ renderArtistDialog = () => {
     );
 }
 
-renderVenueDialog = () => {
+GPSvalidate = async () => {
+    let result = await fetch('location/' + this.state.venue_location)
+    if (result.status !== 200) {
+        this.setState({validAddress: true});
+    }
+    else{
+        this.setState({validAddress: false});
+    }
+}
+
+renderVenueDialog = () => { 
     return (
         <div className="modal" role="dialog">
         <div className="modal-dialog modal-lg"></div>
@@ -585,14 +646,245 @@ renderVenueDialog = () => {
         </div>
         <div className="modal-body">
         <form onSubmit={this.handleSubmit}>
-
+        Street Address:
+                <input
+                className="form-control form-text form-center"
+                name="venue_location"
+                type="text"
+                size="40"
+                placeholder="123 Example St. Portland, OR"
+                required={true}
+                value={this.state.venue_location}
+                onChange={this.handleChange}
+                />
+        Email:
+                <input
+                className="form-control form-text form-center"
+                name="Email"
+                type="text"
+                size="30"
+                placeholder="Email"
+                required={true}
+                value={this.state.email}
+                onChange={this.handleChange}
+                />
+        Phone:
+        <input
+                className="form-control form-text form-center"
+                name="Phone"
+                type="text"
+                size="30"
+                placeholder="666-777-1337"
+                required={true}
+                value={this.state.phone_number}
+                onChange={this.handleChange}
+                />
+        Social Media Links:
+        <input
+                className="form-control form-text form-center"
+                name="social_media"
+                type="text"
+                size="30"
+                placeholder="Facebook,IG,Etc."
+                required={true}
+                value={this.state.social_media}
+                onChange={this.handleChange}
+                />
+        <p></p>
+        {this.state.validAddress ? 
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Venue Account</button>
+             : null}
         </form>
         </div></div></div>
     );
 }
 
-}
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Create Account Page checkboxes
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Functions for select all checkboxes for genre/artist/venue
+selectAllGenreCheckboxes = isSelected => {
+    Object.keys(this.state.genreCheckboxes).forEach(checkbox => {
+      // BONUS: Can you explain why we pass updater function to setState instead of an object?
+      this.setState(prevState => ({
+        genreCheckboxes: {
+          ...prevState.genreCheckboxes,
+          [checkbox]: isSelected
+        }
+      }));
+    });
+  };
+  selectAllArtistCheckboxes = isSelected => {
+    Object.keys(this.state.artistCheckboxes).forEach(checkbox => {
+      this.setState(prevState => ({
+        artistCheckboxes: {
+          ...prevState.artistCheckboxes,
+          [checkbox]: isSelected
+        }
+      }));
+    });
+  };
+  selectAllVenueCheckboxes = isSelected => {
+    Object.keys(this.state.venueCheckboxes).forEach(checkbox => {
+      // BONUS: Can you explain why we pass updater function to setState instead of an object?
+      this.setState(prevState => ({
+        venueCheckboxes: {
+          ...prevState.venueCheckboxes,
+          [checkbox]: isSelected
+        }
+      }));
+    });
+  };
 
+  // Function to update state for select/deselect all checkboxes genre/artist/venue
+  selectAllGenre = () => this.selectAllGenreCheckboxes(true);
+
+  deselectAllGenre = () => this.selectAllGenreCheckboxes(false);
+
+  selectAllArtist = () => this.selectAllArtistCheckboxes(true);
+
+  deselectAllArtist = () => this.selectAllArtistCheckboxes(false);
+
+  selectAllVenue = () => this.selectAllVenueCheckboxes(true);
+
+  deselectAllVenue = () => this.selectAllVenueCheckboxes(false);
+
+  // Functions to handle checkboxe changes genre/artist/venue
+  handleGenreCheckboxChange = changeEvent => {
+    const { name } = changeEvent.target;
+
+    this.setState(prevState => ({
+      genreCheckboxes: {
+        ...prevState.genreCheckboxes,
+        [name]: !prevState.genreCheckboxes[name]
+      }
+    }));
+  };
+
+  handleArtistCheckboxChange = changeEvent => {
+    const { name } = changeEvent.target;
+
+    this.setState(prevState => ({
+      artistCheckboxes: {
+        ...prevState.artistCheckboxes,
+        [name]: !prevState.artistCheckboxes[name]
+      }
+    }));
+  };
+
+  handleVenueCheckboxChange = changeEvent => {
+    const { name } = changeEvent.target;
+
+    this.setState(prevState => ({
+      venueCheckboxes: {
+        ...prevState.venueCheckboxes,
+        [name]: !prevState.venueCheckboxes[name]
+      }
+    }));
+  };
+
+  // Functions for creating a single checkboxe for genre/artist/venue
+  createGenreCheckbox = option => (
+    <Checkbox
+      label={option}
+      isSelected={this.state.genreCheckboxes[option]}
+      onCheckboxChange={this.handleGenreCheckboxChange}
+      key={option}
+    />
+  );
+  createArtistCheckbox = option => (
+    <Checkbox
+      label={option}
+      isSelected={this.state.artistCheckboxes[option]}
+      onCheckboxChange={this.handleArtistCheckboxChange}
+      key={option}
+    />
+  );
+
+  createVenueCheckbox = option => (
+    <Checkbox
+      label={option}
+      isSelected={this.state.venueCheckboxes[option]}
+      onCheckboxChange={this.handleVenueCheckboxChange}
+      key={option}
+    />
+  );
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//handleFanSubmit -- Triggered when user clicks on submit button to
+    //either create or edit a fan account.
+    //Custom data checking ensures user account under this email does not 
+    //already exist and that the rest of the info is valid. We create a new  
+    // object for a fan user, save it to localStorage and take user to app's 
+    //landing page. 
+//   handleFanSubmit = async(event) => {
+//       event.preventDefault();
+//       this.setState({showFanDialog: false})
+//       // Initialize checkboxes for create account pages
+//        Object.keys(this.state.genreCheckboxes)
+//        .filter(checkbox => this.state.genreCheckboxes[checkbox])
+//        .forEach(checkbox => {
+//            console.log(checkbox, "is selected.");
+//            this.state.genres.push(checkbox);
+//         });
+//        Object.keys(this.state.artistCheckboxes)
+//        .filter(checkbox => this.state.artistCheckboxes[checkbox])
+//        .forEach(checkbox => {
+//            console.log(checkbox, "is selected.");
+//            this.state.artists.push(checkbox);
+//         });
+//        Object.keys(this.state.venueCheckboxes)
+//        .filter(checkbox => this.state.venueCheckboxes[checkbox])
+//        .forEach(checkbox => {
+//            console.log(checkbox, "is selected.");
+//            this.state.venues.push(checkbox);
+//         });
+
+//         //Initialize user account
+//        let userData = {
+//            password: this.state.password,
+//            displayName: this.state.displayName,
+//            profilePicURL: this.state.profilePicURL,
+//            securityQuestion: this.state.securityQuestion,
+//            securityAnswer: this.state.securityAnswer,
+//            artists: this.state.artists,
+//            venues: this.state.venues,
+//            genres: this.state.genres
+//         };
+//        const url = '/fans/' + this.state.accountName;
+//        let res;
+//        if (this.props.create) { //use POST route to create new user account
+//         res = await fetch(url, {
+//             headers: {
+//                 'Accept': 'application/json',
+//                 'Content-Type': 'application/json'
+//             },
+//             method: 'POST',
+//             body: JSON.stringify(userData)}); 
+//             if (res.status == 200) { //successful account creation!
+//                 this.props.done("New fan account created! Enter credentials to log in.",false);
+//             } else { //Unsuccessful account creation
+//                 //Grab textual error message
+//                 const resText = await res.text();
+//                 this.props.done(resText,false);
+//             }
+//         } else { //use PUT route to update existing user account
+//             res = await fetch(url, {
+//                 headers: {
+//                     'Accept': 'application/json',
+//                     'Content-Type': 'application/json'
+//                     },
+//                 method: 'PUT',
+//                 body: JSON.stringify(userData)}); 
+//             if (res.status == 200) { //successful account creation!
+//                 this.props.done("Fan Account Updated!",false);
+//             } else { //Unsuccessful account update
+//                 //Grab textual error message
+//                 const resText = await res.text();
+//                 this.props.done(resText,false);
+//             }
+//         }
+//     }
+}
 export default CreateEditAccountDialog;

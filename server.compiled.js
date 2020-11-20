@@ -14,8 +14,6 @@ var _path = _interopRequireDefault(require("path"));
 
 var _express = _interopRequireDefault(require("express"));
 
-var _venueRoutes = _interopRequireDefault(require("./routes/venue-routes"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -42,6 +40,7 @@ var Fan = require('./models').Fan;
 var Artist = require('./models').Artist;
 
 var Venue = require('./models').Venue;
+
 
 _passport["default"].use(new GithubStrategy({
   clientID: process.env.GH_CLIENT_ID,
