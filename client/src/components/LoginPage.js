@@ -152,7 +152,7 @@ cancelCreateAccount = () => {
 
   render() {
     return(
-        <div className="padded-page">
+        <div className="padded-page" id="loginPage">
         <center>
         {this.state.statusMsg != "" ? <div className="status-msg"><span>{this.state.statusMsg}</span>
                        <button className="modal-close" onClick={this.closeStatusMsg}>
@@ -173,6 +173,7 @@ cancelCreateAccount = () => {
             <label htmlFor="emailInput" style={{ padding: 0, fontSize: 24 }}>
                 Email:
                 <input
+                id="userEmail"
                 ref={this.emailInputRef}
                 className="form-control login-text"
                 type="email"
@@ -185,6 +186,7 @@ cancelCreateAccount = () => {
             <label htmlFor="passwordInput" style={{ padding: 0, fontSize: 24 }}>
                 Password:
                 <input
+                id="userPassword"
                 ref={this.passwordInputRef}
                 className="form-control login-text"
                 type="password"
@@ -194,8 +196,9 @@ cancelCreateAccount = () => {
                 />
             </label>
             <p className="bg-danger" id="feedback" style={{ fontSize: 16 }} />
-            <button
+            <button 
                 type="submit"
+                id="loginBtn"
                 className="btn-color-theme btn btn-primary btn-block login-btn">
                 <span id="login-btn-icon" className={this.state.loginBtnIcon}/>
                 &nbsp;{this.state.loginBtnLabel}

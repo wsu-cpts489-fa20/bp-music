@@ -12,6 +12,8 @@ test('Test Create Fan Account', async t => {
     const securityA = 'Answer';
 
     const emailInput = Selector('#emailInput');
+    const userEmail = Selector('#userEmail');
+    const userPass = Selector('#userPassword');
     const passwordInput = Selector('#passwordInput');
     const repeatPasswordInput = Selector('#repeatPasswordInput');
     const securityQInput = Selector('#securityQInput');
@@ -28,32 +30,12 @@ test('Test Create Fan Account', async t => {
         await t.click('#submitAccountBtn')
             .expect(Selector('#renderFanDialog').visible).eql(true)
             .click('#checkbox')
-            // .wait(1000)
-            // .click('#checkbox-Jay-Z')
-            // .wait(1000)
-            // .click('#checkbox-Hollywood Bowl')
-            // .wait(1000)
-            // .click('#checkbox-The Showbox')
+            .click('#fanAccountBtn')
+            .expect(Selector('#renderFanDialog').visible).eql(false)
+            await t.click(userEmail)
+                .typeText(userEmail, email)
+                .typeText(userPass, password)
+                .click('#loginBtn')
+                .wait(3000)
+                .expect(Selector('#loginPage').visible).eql(false)
 })
-
-// test('test business search', async t =>{
-
-//     const locationSearch = search.findReact('LocationSearch')
-    
-//     await t
-//     .click(locationSearch)
-//     .expect(locationSearch.find('.locationMenu').visible).eql(true)
-//     .click(locationSearch.find('select'))
-// })
-
-// test('test business search 2', async t =>{
-
-//     const locationSearch = search.findReact('LocationSearch')
-    
-//     await t
-//     .click(locationSearch)
-//     .expect(locationSearch.find('.locationMenu').visible).eql(true)
-//     .click(locationSearch.find('select'))
-//     .click(locationSearch.find('option').filter('[value="AZ"]'))
-//     .expect(locationSearch.find('select').selectedIndex).eql(2)
-// })

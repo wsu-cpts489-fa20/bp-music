@@ -48,14 +48,13 @@ class CreateEditAccountDialog extends React.Component {
                       passwordRepeat: "",
                       securityQuestion: "",
                       securityAnswer: "",
-                      accountType: "",
+                      accountType: "fan",
                       url: "",
                       formUpdated: false,
                       confirmDelete: false,
                       showFanDialog: false,
                       showArtistDialog: false,
                       showVenueDialog: false,
-                      url: "",
                       genres: [],
                       artists: [],
                       venues: [],
@@ -559,7 +558,7 @@ renderFanDialog = () => {
                 > Deselect All </button>
             </div>
         <br/>
-        <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
+        <button role="submit" id="fanAccountBtn" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Fan Account</button>
         </form>
     </div></div></div>
