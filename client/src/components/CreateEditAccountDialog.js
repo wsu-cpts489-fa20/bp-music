@@ -1,4 +1,5 @@
 import React from 'react';
+import { async } from 'regenerator-runtime';
 import ConfirmDeleteAccount from './ConfirmDeleteAccount.js';
 import Checkbox from './Checkbox.js';
 
@@ -47,7 +48,8 @@ class CreateEditAccountDialog extends React.Component {
                       passwordRepeat: "",
                       securityQuestion: "",
                       securityAnswer: "",
-                      accountType: "fan",
+                      accountType: "",
+                      url: "",
                       formUpdated: false,
                       confirmDelete: false,
                       showFanDialog: false,
@@ -93,7 +95,8 @@ class CreateEditAccountDialog extends React.Component {
                            passwordRepeat: userData.password,
                            securityQuestion: userData.securityQuestion,
                            securityAnswer: userData.securityAnswer,
-                           accountType: userData.accountType,});
+                           accountType: userData.accountType,
+                           url: '/' + userData.accountType + 's/' + this.state.accountName});
         }
     }
 
@@ -134,9 +137,12 @@ class CreateEditAccountDialog extends React.Component {
                 });
                 
             }
-        } else if(event.target.name === "genres" || event.target.name === "artists" || event.target.name === "venues") {
+        } else if (event.target.name === "genres") {
             this.setState({genres: Array.from(event.target.selectedOptions, (item) => item.value)});
-        } else {
+        } else if(event.target.name === "venue_location"){
+            this.GPSvalidate();
+        }
+        else {
             this.setState({[event.target.name]: event.target.value,
                            formUpdated: formUpdated},this.checkDataValidity);
         }
@@ -217,11 +223,15 @@ class CreateEditAccountDialog extends React.Component {
             userData.artistName = this.state.artistName;
             userData.genres = this.state.genres;
             userData.instagramHandle = this.state.instagramHandle;
-            userData.facebookHandle = this.state.facebookHandle;
+            userData.facebookHandle = this.state.facebookHandle;  
         }
-        if (this.state.accountType == "venue") {}
+        if (this.state.accountType == "venue") {
+            userData.streetAddress = this.state.streetAddress;
+            userData.email = this.state.email;
+            userData.phoneNumber = this.state.phoneNumber;
+            userData.socialMediaLinks = this.state.socialMediaLinks;
+        }
         const url = this.state.url;
-        console.log(url);
         let res;
         if (this.props.create) { //use POST route to create new user account
             res = await fetch(url, {
@@ -475,6 +485,8 @@ handleAccountType = (event) => {
     }
 }
 
+
+
 renderFanDialog = () => {
     return (
         <div className="modal" role="dialog" id="renderFanDialog">
@@ -582,11 +594,9 @@ renderArtistDialog = () => {
         <br/>
         <label>
             Genres:
-            <select name="genres"
-                value={this.state.genres} 
+            <select name="genres" 
                 onChange={this.handleChange} 
-                className="form-control form-textform-center"
-                multiple>
+                className="form-control form-textform-center" multiple>
                 <option value="pop">Pop</option>
                 <option value="hip-hop">Hip-Hop</option>
                 <option value="rap">Rap</option>
@@ -600,12 +610,12 @@ renderArtistDialog = () => {
             Instagram:
             <input
             className="form-control form-text form-center"
-            name="instagram"
+            name="instagramHandle"
             type="text"
             size="30"
-            placeholder="@"
+            placeholder="@your-handle"
             required={true}
-            value={this.state.instagram}
+            value={this.state.instagramHandle}
             onChange={this.handleChange}
             />
         </label>
@@ -614,12 +624,12 @@ renderArtistDialog = () => {
             Facebook:
             <input
             className="form-control form-text form-center"
-            name="facebook"
+            name="facebookHandle"
             type="text"
             size="30"
-            placeholder="@"
+            placeholder="@your-handle"
             required={true}
-            value={this.state.facebook}
+            value={this.state.facebookHandle}
             onChange={this.handleChange}
             />
         </label>
@@ -631,7 +641,17 @@ renderArtistDialog = () => {
     );
 }
 
-renderVenueDialog = () => {
+GPSvalidate = async () => {
+    let result = await fetch('location/' + this.state.venue_location)
+    if (result.status !== 200) {
+        this.setState({validAddress: true});
+    }
+    else{
+        this.setState({validAddress: false});
+    }
+}
+
+renderVenueDialog = () => { 
     return (
         <div className="modal" role="dialog">
         <div className="modal-dialog modal-lg"></div>
@@ -642,9 +662,55 @@ renderVenueDialog = () => {
         </div>
         <div className="modal-body">
         <form onSubmit={this.handleSubmit}>
-
+        Street Address:
+                <input
+                className="form-control form-text form-center"
+                name="venue_location"
+                type="text"
+                size="40"
+                placeholder="123 Example St. Portland, OR"
+                required={true}
+                value={this.state.venue_location}
+                onChange={this.handleChange}
+                />
+        Email:
+                <input
+                className="form-control form-text form-center"
+                name="Email"
+                type="text"
+                size="30"
+                placeholder="Email"
+                required={true}
+                value={this.state.email}
+                onChange={this.handleChange}
+                />
+        Phone:
+        <input
+                className="form-control form-text form-center"
+                name="Phone"
+                type="text"
+                size="30"
+                placeholder="666-777-1337"
+                required={true}
+                value={this.state.phone_number}
+                onChange={this.handleChange}
+                />
+        Social Media Links:
+        <input
+                className="form-control form-text form-center"
+                name="social_media"
+                type="text"
+                size="30"
+                placeholder="Facebook,IG,Etc."
+                required={true}
+                value={this.state.social_media}
+                onChange={this.handleChange}
+                />
+        <p></p>
+        {this.state.validAddress ? 
         <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Venue Account</button>
+             : null}
         </form>
         </div></div></div>
     );
