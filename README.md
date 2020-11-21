@@ -14,3 +14,4 @@ Main functionalities of this app include:
 
 ## User Story Tests
 1. Fan Create Account with preferences and Login: https://drive.google.com/file/d/1W572uNRQ4NYdWab653ZWnkjhHAy_IzW-/view?usp=sharing
+2. Venute Create Account with valid location and Login info: https://drive.google.com/file/d/1vhFf39YMKWKMftw1znSxAipk4I7w0N7g/view?usp=sharing
