@@ -10,7 +10,7 @@ Main functionalities of this app include:
 
 ## Two code files for review:
 1. CreateEditAccountDialog.js
-2. 
+2. routes/fan-routes.js
 
 ## User Story Tests
 1. Fan Create Account with preferences and Login: https://drive.google.com/file/d/1W572uNRQ4NYdWab653ZWnkjhHAy_IzW-/view?usp=sharing
