@@ -22,7 +22,8 @@
     "passport-google-oauth2": "^0.2.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
-    "regenerator-runtime": "^0.13.7"
+    "regenerator-runtime": "^0.13.7",
+    "testcafe-react-selectors": "^4.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",

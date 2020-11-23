@@ -294,7 +294,7 @@ class CreateEditAccountDialog extends React.Component {
 
     render() {
     return (  
-    <div className="modal" role="dialog">
+    <div className="modal" role="dialog" id="createNewAccountDialog">
     <div className="modal-dialog modal-lg"></div>
         <div className="modal-content form-center">
             <div className="modal-header">
@@ -307,18 +307,19 @@ class CreateEditAccountDialog extends React.Component {
             <form onSubmit={this.handleAccountType}>
             <label>
                 Account Type:
-                <select name="accountType" value={this.state.accountType} 
+                <select name="accountType" id="accountTypeBtn" value={this.state.accountType} 
                     className="form-control form-textform-center" 
                     onChange={this.handleChange}>
-                    <option value="fan">Fan</option>
-                    <option value="artist">Artist</option>
-                    <option value="venue">Venue</option>
+                    <option id="fan" value="fan">Fan</option>
+                    <option id="artist" value="artist">Artist</option>
+                    <option id="venue" value="venue">Venue</option>
                 </select> 
             </label>
             <br/>
             <label>
                 Email: 
-                <input  
+                <input
+                id="accountName"  
                 autocomplete="off"
                 disabled={!this.props.create}
                 className="form-control form-text form-center"
@@ -338,6 +339,7 @@ class CreateEditAccountDialog extends React.Component {
             <label>
                 Password:
                 <input
+                id="passwordInput"
                 autocomplete="off"
                 className="form-control form-text form-center"
                 name="password"
@@ -355,6 +357,7 @@ class CreateEditAccountDialog extends React.Component {
             <label>
                 Repeat Password:
                 <input
+                id="repeatPasswordInput"
                 className="form-control form-text form-center"
                 name="passwordRepeat"
                 type="password"
@@ -370,6 +373,7 @@ class CreateEditAccountDialog extends React.Component {
             <label>
                 Display Name:
                 <input
+                id="displayNameInput"
                 className="form-control form-text form-center"
                 name="displayName"
                 type="text"
@@ -384,6 +388,7 @@ class CreateEditAccountDialog extends React.Component {
             <label>
                 Profile Picture:<br/>
                 <input
+                id="profilePic"
                 className="form-control form-text form-center"
                 name="profilePic"
                 type="file"
@@ -402,6 +407,7 @@ class CreateEditAccountDialog extends React.Component {
             <label>
                 Security Question:
                 <textarea
+                id="securityQInput"
                 className="form-control form-text form-center"
                 name="securityQuestion"
                 size="35"
@@ -418,6 +424,7 @@ class CreateEditAccountDialog extends React.Component {
             <label>
                 Answer to Security Question:
                 <textarea
+                id="securityAInput"
                 className="form-control form-text form-center"
                 name="securityAnswer"
                 type="text"
@@ -436,7 +443,7 @@ class CreateEditAccountDialog extends React.Component {
                 Delete Account...
             </button> : null}
             <br/><br/>
-            <button role="submit" 
+            <button role="submit" id="submitAccountBtn"
                 disabled={!this.state.formUpdated}
                 className="btn btn-primary btn-color-theme modal-submit-btn">
                 <span className={this.props.create ? "fa fa-user-plus" : "fa fa-user"}></span>
@@ -552,7 +559,7 @@ renderFanDialog = () => {
 
 renderArtistDialog = () => {
     return (
-        <div className="modal" role="dialog">
+        <div className="modal" role="dialog" id="renderArtistDialog">
         <div className="modal-dialog modal-lg"></div>
         <div className="modal-content form-center">
         <div className="modal-header">
@@ -565,6 +572,7 @@ renderArtistDialog = () => {
         <label>
             Artist Name:
             <input
+            id="artistNameInput"
             className="form-control form-text form-center"
             name="artistName"
             type="text"
@@ -578,21 +586,22 @@ renderArtistDialog = () => {
         <br/>
         <label>
             Genres:
-            <select name="genres" 
+            <select name="genres" id="genres"
                 onChange={this.handleChange} 
                 className="form-control form-textform-center" multiple>
-                <option value="pop">Pop</option>
-                <option value="hip-hop">Hip-Hop</option>
-                <option value="rap">Rap</option>
-                <option value="rock">Rock</option>
-                <option value="edm">EDM</option>
-                <option value="country">Country</option>
+                <option id="pop" value="pop">Pop</option>
+                <option id="hip-hop" value="hip-hop">Hip-Hop</option>
+                <option id="rap" value="rap">Rap</option>
+                <option id="rock" value="rock">Rock</option>
+                <option id="edm" value="edm">EDM</option>
+                <option id="country" value="country">Country</option>
             </select>
         </label>
         <br/>
         <label>
             Instagram:
             <input
+            id="instagramHandleInput"
             className="form-control form-text form-center"
             name="instagramHandle"
             type="text"
@@ -607,6 +616,7 @@ renderArtistDialog = () => {
         <label>
             Facebook:
             <input
+            id="facebookHandleInput"
             className="form-control form-text form-center"
             name="facebookHandle"
             type="text"
@@ -618,7 +628,7 @@ renderArtistDialog = () => {
             />
         </label>
         <br/>
-        <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
+        <button role="submit" id="submitArtistAccountBtn" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Artist Account</button>
         </form>
         </div></div></div>
