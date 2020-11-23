@@ -309,12 +309,12 @@ class CreateEditAccountDialog extends React.Component {
             <form onSubmit={this.handleAccountType}>
             <label>
                 Account Type:
-                <select name="accountType" value={this.state.accountType} 
+                <select name="accountType" id = "accountType" value={this.state.accountType} 
                     className="form-control form-textform-center" 
                     onChange={this.handleChange}>
                     <option value="fan">Fan</option>
                     <option value="artist">Artist</option>
-                    <option value="venue">Venue</option>
+                    <option value="venue" id="venue">Venue</option>
                 </select> 
             </label>
             <br/>
@@ -325,6 +325,7 @@ class CreateEditAccountDialog extends React.Component {
                 disabled={!this.props.create}
                 className="form-control form-text form-center"
                 name="accountName"
+                id="accountName"
                 type="email"
                 size="35"
                 placeholder="Enter Email Address"
@@ -343,6 +344,7 @@ class CreateEditAccountDialog extends React.Component {
                 autocomplete="off"
                 className="form-control form-text form-center"
                 name="password"
+                id="password"
                 type="password"
                 size="35"
                 placeholder="Enter Password"
@@ -359,6 +361,7 @@ class CreateEditAccountDialog extends React.Component {
                 <input
                 className="form-control form-text form-center"
                 name="passwordRepeat"
+                id = "passwordRepeat"
                 type="password"
                 size="35"
                 placeholder="Repeat Password"
@@ -406,6 +409,7 @@ class CreateEditAccountDialog extends React.Component {
                 <textarea
                 className="form-control form-text form-center"
                 name="securityQuestion"
+                id = "securityQuestion"
                 size="35"
                 placeholder="Security Question"
                 rows="2"
@@ -422,6 +426,7 @@ class CreateEditAccountDialog extends React.Component {
                 <textarea
                 className="form-control form-text form-center"
                 name="securityAnswer"
+                id = "securityAnswer"
                 type="text"
                 placeholder="Answer"
                 rows="2"
@@ -438,7 +443,7 @@ class CreateEditAccountDialog extends React.Component {
                 Delete Account...
             </button> : null}
             <br/><br/>
-            <button role="submit" 
+            <button role="submit" id="submitBtn"
                 disabled={!this.state.formUpdated}
                 className="btn btn-primary btn-color-theme modal-submit-btn">
                 <span className={this.props.create ? "fa fa-user-plus" : "fa fa-user"}></span>
@@ -657,6 +662,7 @@ renderVenueDialog = () => {
                 <input
                 className="form-control form-text form-center"
                 name="streetAddress"
+                id = "streetAddress"
                 type="text"
                 size="40"
                 placeholder="123 Example St. Portland, OR"
@@ -668,6 +674,7 @@ renderVenueDialog = () => {
                 <input
                 className="form-control form-text form-center"
                 name="email"
+                id="email"
                 type="text"
                 size="30"
                 placeholder="Email"
@@ -679,6 +686,7 @@ renderVenueDialog = () => {
         <input
                 className="form-control form-text form-center"
                 name="phoneNumber"
+                id="phoneNumber"
                 type="text"
                 size="30"
                 placeholder="666-777-1337"
@@ -690,6 +698,7 @@ renderVenueDialog = () => {
         <input
                 className="form-control form-text form-center"
                 name="socialMediaLinks"
+                id="socialMediaLinks"
                 type="text"
                 size="30"
                 placeholder="Facebook, Instagram, Etc."
@@ -699,7 +708,7 @@ renderVenueDialog = () => {
                 />
         <p></p>
         {this.state.validAddress ? 
-        <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
+        <button role="submit" id="venueSubmitBtn" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Venue Account</button>
              : null}
         </form>
