@@ -7,7 +7,9 @@ const AppMode = {
     ROUNDS_LOGROUND: "RoundsMode-LogRound",
     ROUNDS_EDITROUND: "RoundsMode-EditRound",
     COURSES: "CoursesMode",
-    LOCATION_SEARCH: "LocationSearchMode"
+    LOCATION_SEARCH: "LocationSearchMode",
+    ACCOUNT: "AccountMode",
+    ACCOUNT_EDIT: "AccountMode-Edit",
 };
 
 Object.freeze(AppMode); //This ensures that the object is immutable.

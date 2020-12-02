@@ -206,13 +206,7 @@ class CreateEditAccountDialog extends React.Component {
             userData.artists = this.state.artists;
             userData.venues = this.state.venues;
             Object.keys(this.state.genreCheckboxes).filter(checkbox => this.state.genreCheckboxes[checkbox]).forEach(checkbox => {
-                if(this.state.accountType == "fan"){
-                    console.log(checkbox, "is selected and being stored to fan account.");
-                } else if(this.state.accountType == "artist"){
-                    console.log(checkbox, "is selected and being stored to artist account.");
-                } else {
-                    console.log(checkbox, "is selected and being stored to venue account.");
-                }
+                console.log(checkbox, "is selected and being stored to fan account.");
                 this.state.genres.push(checkbox);
             });
             Object.keys(this.state.artistCheckboxes).filter(checkbox => this.state.artistCheckboxes[checkbox]).forEach(checkbox => {
@@ -312,12 +306,15 @@ class CreateEditAccountDialog extends React.Component {
             <form onSubmit={this.handleAccountType}>
             <label>
                 Account Type:
-                <select name="accountType" id="accountType" value={this.state.accountType} 
-                    className="form-control form-textform-center" 
-                    onChange={this.handleChange}>
-                    <option id="fan" value="fan">Fan</option>
-                    <option id="artist" value="artist">Artist</option>
-                    <option id="venue" value="venue">Venue</option>
+                <select name="accountType"
+                disabled={!this.props.create}
+                id="accountType" 
+                value={this.state.accountType} 
+                className="form-control form-textform-center" 
+                onChange={this.handleChange}>
+                <option id="fan" value="fan">Fan</option>
+                <option id="artist" value="artist">Artist</option>
+                <option id="venue" value="venue">Venue</option>
                 </select> 
             </label>
             <br/>
@@ -565,7 +562,9 @@ renderFanDialog = () => {
             </div>
         <br/>
         <button role="submit" id="fanAccountBtn" className="btn btn-primary btn-color-theme modal-submit-btn">
-            &nbsp;Create Fan Account</button>
+            <span className={this.props.create ? "fa fa-user-plus" : "fa fa-user"}></span>
+                &nbsp;{this.props.create ? "Create Account" : "Update Account"}
+                </button>
         </form>
     </div></div></div>
     );
@@ -599,21 +598,16 @@ renderArtistDialog = () => {
         <br/>
         <label>
             Genres:
-            {genreList.map(this.createGenreCheckbox)}
-            <div className="form-group mt-2">
-                <button
-                id="selectAllGenresBtn"
-                type="button"
-                className="btn btn-outline-primary mr-2"
-                onClick={this.selectAllGenre}
-                > Select All </button>
-                <button
-                type="button"
-                id="deselectAllGenresBtn"
-                className="btn btn-outline-primary mr-2"
-                onClick={this.deselectAllGenre}
-                > Deselect All </button>
-            </div>
+            <select name="genres" 
+                onChange={this.handleChange} 
+                className="form-control form-textform-center" multiple>
+                <option value="pop">Pop</option>
+                <option value="hip-hop">Hip-Hop</option>
+                <option value="rap">Rap</option>
+                <option value="rock">Rock</option>
+                <option value="edm">EDM</option>
+                <option value="country">Country</option>
+            </select>
         </label>
         <br/>
         <label>
