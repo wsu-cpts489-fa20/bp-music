@@ -14,6 +14,8 @@ var _path = _interopRequireDefault(require("path"));
 
 var _express = _interopRequireDefault(require("express"));
 
+var _venueRoutes = _interopRequireDefault(require("./routes/venue-routes"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -34,6 +36,12 @@ var app = (0, _express["default"])(); //////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
 var User = require('./models').User;
+
+var Fan = require('./models').Fan;
+
+var Artist = require('./models').Artist;
+
+var Venue = require('./models').Venue;
 
 _passport["default"].use(new GithubStrategy({
   clientID: process.env.GH_CLIENT_ID,
@@ -103,7 +111,7 @@ _passport["default"].use(new LocalStrategy({
 //contains the password entered into the form.
 function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee2(req, userId, password, done) {
-    var thisUser;
+    var thisUser, tryFanUser, tryArtistUser, tryVenueUser;
     return _regeneratorRuntime["default"].wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -118,7 +126,7 @@ function () {
             thisUser = _context2.sent;
 
             if (!thisUser) {
-              _context2.next = 13;
+              _context2.next = 11;
               break;
             }
 
@@ -134,29 +142,105 @@ function () {
             return _context2.abrupt("return", done(null, false));
 
           case 11:
-            _context2.next = 15;
-            break;
+            _context2.next = 13;
+            return Fan.findOne({
+              'user.id': userId
+            });
 
           case 13:
+            tryFanUser = _context2.sent;
+
+            if (!tryFanUser) {
+              _context2.next = 21;
+              break;
+            }
+
+            if (!(tryFanUser.user.password === password)) {
+              _context2.next = 19;
+              break;
+            }
+
+            return _context2.abrupt("return", done(null, tryFanUser));
+
+          case 19:
+            req.authError = "The password is incorrect. Please try again" + " or reset your password.";
+            return _context2.abrupt("return", done(null, false));
+
+          case 21:
+            _context2.next = 23;
+            return Artist.findOne({
+              'user.id': userId
+            });
+
+          case 23:
+            tryArtistUser = _context2.sent;
+
+            if (!tryArtistUser) {
+              _context2.next = 32;
+              break;
+            }
+
+            if (!(tryArtistUser.user.password === password)) {
+              _context2.next = 30;
+              break;
+            }
+
+            console.log("Logging in as Artist");
+            return _context2.abrupt("return", done(null, tryArtistUser));
+
+          case 30:
+            req.authError = "The password is incorrect. Please try again" + " or reset your password.";
+            return _context2.abrupt("return", done(null, false));
+
+          case 32:
+            _context2.next = 34;
+            return Venue.findOne({
+              'user.id': userId
+            });
+
+          case 34:
+            tryVenueUser = _context2.sent;
+
+            if (!tryVenueUser) {
+              _context2.next = 44;
+              break;
+            }
+
+            if (!(tryVenueUser.user.password === password)) {
+              _context2.next = 40;
+              break;
+            }
+
+            return _context2.abrupt("return", done(null, tryVenueUser));
+
+          case 40:
+            req.authError = "The password is incorrect. Please try again" + " or reset your password.";
+            return _context2.abrupt("return", done(null, false));
+
+          case 42:
+            _context2.next = 46;
+            break;
+
+          case 44:
             //userId not found in DB
             req.authError = "There is no account with email " + userId + ". Please try again.";
             return _context2.abrupt("return", done(null, false));
 
-          case 15:
-            _context2.next = 20;
+          case 46:
+            _context2.next = 51;
             break;
 
-          case 17:
-            _context2.prev = 17;
+          case 48:
+            _context2.prev = 48;
             _context2.t0 = _context2["catch"](0);
             return _context2.abrupt("return", done(_context2.t0));
 
-          case 20:
+          case 51:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 17]]);
+    }, _callee2, null, [[0, 48]]);
   }));
 
   return function (_x5, _x6, _x7, _x8) {
@@ -168,14 +252,14 @@ function () {
 _passport["default"].serializeUser(function (user, done) {
   console.log("In serializeUser.");
   console.log("Contents of user param: " + JSON.stringify(user));
-  done(null, user.id);
+  done(null, user.user.id);
 }); //Deserialize the current user from the session
 //to persistent storage.
 
 
 _passport["default"].deserializeUser( /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee3(userId, done) {
-    var thisUser;
+    var thisUser, tryFanUser, tryArtistUser, tryVenueUser;
     return _regeneratorRuntime["default"].wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
@@ -190,22 +274,65 @@ _passport["default"].deserializeUser( /*#__PURE__*/function () {
 
           case 5:
             thisUser = _context3.sent;
-            console.log("User with id " + userId + " found in DB. User object will be available in server routes as req.user.");
-            done(null, thisUser);
+
+            if (thisUser) {
+              console.log("User with id " + userId + " found in DB. User object will be available in server routes as req.user.");
+              done(null, thisUser);
+            }
+
+            _context3.next = 9;
+            return Fan.findOne({
+              'user.id': userId
+            });
+
+          case 9:
+            tryFanUser = _context3.sent;
+
+            if (tryFanUser) {
+              console.log("Fan with id " + userId + " found in DB. User object will be available in server routes as req.user.");
+              done(null, tryFanUser);
+            }
+
             _context3.next = 13;
+            return Artist.findOne({
+              'user.id': userId
+            });
+
+          case 13:
+            tryArtistUser = _context3.sent;
+
+            if (tryArtistUser) {
+              console.log("Artist with id " + userId + " found in DB. User object will be available in server routes as req.user.");
+              done(null, tryArtistUser);
+            }
+
+            _context3.next = 17;
+            return Venue.findOne({
+              'user.id': userId
+            });
+
+          case 17:
+            tryVenueUser = _context3.sent;
+
+            if (tryVenueUser) {
+              console.log("Venue with id " + userId + " found in DB. User object will be available in server routes as req.user.");
+              done(null, tryVenueUser);
+            }
+
+            _context3.next = 24;
             break;
 
-          case 10:
-            _context3.prev = 10;
+          case 21:
+            _context3.prev = 21;
             _context3.t0 = _context3["catch"](2);
             done(_context3.t0);
 
-          case 13:
+          case 24:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, null, [[2, 10]]);
+    }, _callee3, null, [[2, 21]]);
   }));
 
   return function (_x9, _x10) {
