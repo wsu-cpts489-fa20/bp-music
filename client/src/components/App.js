@@ -10,6 +10,7 @@ import Rounds from './Rounds.js';
 import CoursesPage from './CoursesPage.js';
 import AboutBox from './AboutBox.js';
 import LocationSearch from './LocationSearch.js';
+import VenueAccount from './VenueAccount.js';
 
 const modeTitle = {};
 modeTitle[AppMode.LOGIN] = "URScene Login";
@@ -41,7 +42,8 @@ class App extends React.Component {
                   editAccount: false,
                   showEditAccountDialog: false,
                   statusMsg: "",
-                  showAboutDialog: false
+                  showAboutDialog: false,
+                  showVenueAccountDialog: false,
                  };
   }
 
@@ -107,6 +109,11 @@ class App extends React.Component {
 
   }
 
+  showVenueAccount = () => {
+    this.setState({showVenueAccountDialog: true});
+
+  }
+
   cancelEditAccount = () => {
     this.setState({showEditAccountDialog: false});
   }
@@ -140,12 +147,19 @@ class App extends React.Component {
               <span>{this.state.statusMsg}</span>
               <button className="modal-close" onClick={this.closeStatusMsg}>
                   <span className="fa fa-times"></span></button></div> : null}
+
         {this.state.showEditAccountDialog ? 
             <CreateEditAccountDialog 
               create={false} 
               userId={this.state.userObj.id} 
               done={this.editAccountDone} 
               cancel={this.cancelEditAccount}/> : null}
+
+        {this.state.showVenueAccountDialog ? 
+            <VenueAccount
+            userId={this.state.userObj.id} 
+              /> : null}
+        
         <NavBar 
           title={modeTitle[this.state.mode]} 
           mode={this.state.mode}
@@ -160,6 +174,9 @@ class App extends React.Component {
             profilePicURL={this.state.userObj.profilePicURL}
             localAccount={this.state.userObj.authStrategy === "local"}
             editAccount={this.showEditAccount}
+
+            VenueAccount={this.showVenueAccount}
+            
             logOut={() => this.handleChangeMode(AppMode.LOGIN)}
             showAbout={() => {this.setState({showAboutDialog: true})}}
             changeMode={this.handleChangeMode}/>
