@@ -1,12 +1,12 @@
 branch-defaults:
   master:
-    environment: SpeedgolfMern-env
+    environment: Music-env
 environment-defaults:
-  SpeedgolfMern-env:
+  Music-env:
     branch: null
     repository: null
 global:
-  application_name: speedgolf-MERN
+  application_name: music
   default_ec2_keyname: null
   default_platform: Node.js 12 running on 64bit Amazon Linux 2
   default_region: us-west-2
@@ -14,6 +14,6 @@ global:
   instance_profile: null
   platform_name: null
   platform_version: null
-  profile: eb-cli
+  profile: null
   sc: git
   workspace_type: Application
