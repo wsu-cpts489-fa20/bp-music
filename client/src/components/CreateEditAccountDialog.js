@@ -138,8 +138,10 @@ class CreateEditAccountDialog extends React.Component {
             }
         } else if (event.target.name === "genres") {
             this.setState({genres: Array.from(event.target.selectedOptions, (item) => item.value)});
-        } else if(event.target.name === "venue_location"){
+        } else if(event.target.name === "streetAddress"){
             this.GPSvalidate();
+            this.setState({[event.target.name]: event.target.value,
+                formUpdated: formUpdated},this.checkDataValidity);
         }
         else {
             this.setState({[event.target.name]: event.target.value,
@@ -486,7 +488,12 @@ handleAccountType = (event) => {
     }
     if (this.state.accountType == "venue") {
         this.setState({showVenueDialog: true,
-            url: '/venues/' + this.state.accountName});
+            url: '/venues/' + this.state.accountName,
+            streetAddress: "",
+            email: "",
+            phoneNumber: "",
+            socialMediaLinks: ""
+        });
     }
 }
 
@@ -652,8 +659,8 @@ renderArtistDialog = () => {
 }
 
 GPSvalidate = async () => {
-    let result = await fetch('location/' + this.state.venue_location)
-    if (result.status !== 200) {
+    let result = await fetch('location/' + this.state.streetAddress)
+    if (result.status === 200) {
         this.setState({validAddress: true});
     }
     else{
@@ -675,18 +682,20 @@ renderVenueDialog = () => {
         Street Address:
                 <input
                 className="form-control form-text form-center"
-                name="venue_location"
+                name="streetAddress"
+                id = "streetAddress"
                 type="text"
                 size="40"
                 placeholder="123 Example St. Portland, OR"
                 required={true}
-                value={this.state.venue_location}
+                value={this.state.streetAddress}
                 onChange={this.handleChange}
                 />
         Email:
                 <input
                 className="form-control form-text form-center"
-                name="Email"
+                name="email"
+                id="email"
                 type="text"
                 size="30"
                 placeholder="Email"
@@ -697,28 +706,30 @@ renderVenueDialog = () => {
         Phone:
         <input
                 className="form-control form-text form-center"
-                name="Phone"
+                name="phoneNumber"
+                id="phoneNumber"
                 type="text"
                 size="30"
                 placeholder="666-777-1337"
                 required={true}
-                value={this.state.phone_number}
+                value={this.state.phoneNumber}
                 onChange={this.handleChange}
                 />
         Social Media Links:
         <input
                 className="form-control form-text form-center"
-                name="social_media"
+                name="socialMediaLinks"
+                id="socialMediaLinks"
                 type="text"
                 size="30"
-                placeholder="Facebook,IG,Etc."
+                placeholder="Facebook, Instagram, Etc."
                 required={true}
-                value={this.state.social_media}
+                value={this.state.socialMediaLinks}
                 onChange={this.handleChange}
                 />
         <p></p>
         {this.state.validAddress ? 
-        <button role="submit" className="btn btn-primary btn-color-theme modal-submit-btn">
+        <button role="submit" id="venueSubmitBtn" className="btn btn-primary btn-color-theme modal-submit-btn">
             &nbsp;Create Venue Account</button>
              : null}
         </form>
