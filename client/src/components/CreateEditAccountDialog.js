@@ -2,6 +2,7 @@ import React from 'react';
 import { async } from 'regenerator-runtime';
 import ConfirmDeleteAccount from './ConfirmDeleteAccount.js';
 import Checkbox from './Checkbox.js';
+import EditFanAccount from './EditFanAccount.js';
 
 const genreList = [
     'Pop',
@@ -58,6 +59,21 @@ class CreateEditAccountDialog extends React.Component {
                       genres: [],
                       artists: [],
                       venues: [],
+                      editedGenreCheckboxes: genreList.reduce(
+                        (options, option) => ({
+                          ...options,
+                          [option]: this.isGenreSelected
+                        }), {}),
+                      editedArtistCheckboxes: artistList.reduce(
+                        (options, option) => ({
+                          ...options,
+                          [option]: this.isArtistSelected
+                        }), {}),
+                      editedVenueCheckboxes: venueList.reduce(
+                        (options, option) => ({
+                          ...options,
+                          [option]: this.isVenueSelected
+                        }), {}),
                       genreCheckboxes: genreList.reduce(
                         (options, option) => ({
                           ...options,
@@ -323,7 +339,7 @@ class CreateEditAccountDialog extends React.Component {
                 <input
                 id="emailInput"  
                 autocomplete="off"
-                disabled={!this.props.create}
+                //disabled={!this.props.create}
                 className="form-control form-text form-center"
                 name="accountName"
                 type="email"
@@ -499,12 +515,12 @@ renderFanDialog = () => {
             <button className="modal-close" onClick={this.props.cancel}>&times;</button>
         </div>
         <div className="modal-body">
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.props.create ? this.handleSubmit : this.handleEditSubmit}>
         <br/>
         <label>
             Genres:
         </label>
-        {genreList.map(this.createGenreCheckbox)}
+        {this.props.create ? genreList.map(this.createGenreCheckbox) : genreList.map(this.editGenreCheckbox)}
             <div className="form-group mt-2">
                 <button
                 id="selectAllGenresBtn"
@@ -725,18 +741,26 @@ renderVenueDialog = () => {
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Functions for select all checkboxes for genre/artist/venue
 selectAllGenreCheckboxes = isSelected => {
-    Object.keys(this.state.genreCheckboxes).forEach(checkbox => {
-      // BONUS: Can you explain why we pass updater function to setState instead of an object?
-      this.setState(prevState => ({
-        genreCheckboxes: {
-          ...prevState.genreCheckboxes,
-          [checkbox]: isSelected
+    Object.keys(this.props.create ? this.state.genreCheckboxes : this.state.editedGenreCheckboxes).forEach(checkbox => {
+      {this.props.create ?
+        this.setState(prevState => ({
+            genreCheckboxes: {
+              ...prevState.genreCheckboxes,
+              [checkbox]: isSelected
+            }
+          }))
+        :
+        this.setState(prevState => ({
+            editedGenreCheckboxes: {
+              ...prevState.editedGenreCheckboxes,
+              [checkbox]: isSelected
+            }
+          }));
         }
-      }));
     });
   };
   selectAllArtistCheckboxes = isSelected => {
-    Object.keys(this.state.artistCheckboxes).forEach(checkbox => {
+    Object.keys(this.props.create ? this.state.artistCheckboxes : this.state.editedArtistCheckboxes).forEach(checkbox => {
       this.setState(prevState => ({
         artistCheckboxes: {
           ...prevState.artistCheckboxes,
@@ -747,7 +771,6 @@ selectAllGenreCheckboxes = isSelected => {
   };
   selectAllVenueCheckboxes = isSelected => {
     Object.keys(this.state.venueCheckboxes).forEach(checkbox => {
-      // BONUS: Can you explain why we pass updater function to setState instead of an object?
       this.setState(prevState => ({
         venueCheckboxes: {
           ...prevState.venueCheckboxes,
@@ -773,13 +796,21 @@ selectAllGenreCheckboxes = isSelected => {
   // Functions to handle checkboxe changes genre/artist/venue
   handleGenreCheckboxChange = changeEvent => {
     const { name } = changeEvent.target;
-
+    {this.props.create ?
     this.setState(prevState => ({
       genreCheckboxes: {
         ...prevState.genreCheckboxes,
         [name]: !prevState.genreCheckboxes[name]
       }
+    }))
+    :
+    this.setState(prevState => ({
+      editedGenreCheckboxes: {
+        ...prevState.editedGenreCheckboxes,
+        [name]: !prevState.editedGenreCheckboxes[name]
+      }
     }));
+    }
   };
 
   handleArtistCheckboxChange = changeEvent => {
@@ -829,5 +860,44 @@ selectAllGenreCheckboxes = isSelected => {
       key={option}
     />
   );
+
+    // Functions for creating a single checkboxe for genre/artist/venue
+    editGenreCheckbox = option => (
+        <Checkbox
+          label={option}
+          isSelected={this.state.editedGenreCheckboxes[option]}
+          onCheckboxChange={this.handleGenreCheckboxChange}
+          key={option}
+        />
+      );
+      editArtistCheckbox = option => (
+        <Checkbox
+          label={option}
+          isSelected={this.state.editArtistCheckboxes[option]}
+          onCheckboxChange={this.handleArtistCheckboxChange}
+          key={option}
+        />
+      );
+      editVenueCheckbox = option => (
+        <Checkbox
+          label={option}
+          isSelected={this.state.editedGenreCheckboxes[option]}
+          onCheckboxChange={this.handleVenueCheckboxChange}
+          key={option}
+        />
+      );
+
+  // Function to check if a checkbox should be selected based on the users data
+  isGenreSelected = () =>
+  {
+    Object.keys(this.state.editedGenreCheckboxes).forEach(checkbox => {
+        this.setState(prevState => ({
+          genreCheckboxes: {
+            ...prevState.genreCheckboxes,
+            [checkbox]: true
+            }  
+        }));
+    });
+  };
 }
 export default CreateEditAccountDialog;
