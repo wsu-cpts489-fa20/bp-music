@@ -10,7 +10,6 @@ import session from 'express-session';
 import regeneratorRuntime from "regenerator-runtime";
 import path from 'path';
 import express from 'express';
-import venueRoutes from './routes/venue-routes';
 
 require('dotenv').config();
 
@@ -195,3 +194,4 @@ require('./routes/venue-routes')(app)
 require('./routes/user-routes')(app);
 require('./routes/auth-routes')(app, passport);
 require('./routes/google-map-routes')(app);
+require('./routes/event-routes')(app);
