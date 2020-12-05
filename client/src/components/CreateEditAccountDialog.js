@@ -55,6 +55,7 @@ class CreateEditAccountDialog extends React.Component {
                       showFanDialog: false,
                       showArtistDialog: false,
                       showVenueDialog: false,
+                      showEditDialog: false,
                       genres: [],
                       artists: [],
                       venues: [],
@@ -79,7 +80,9 @@ class CreateEditAccountDialog extends React.Component {
     //componentDidMount -- If we are editing an existing user acccount, we need to grab the data from
     //the database and push them into the state.
     async componentDidMount() {
+        console.log("IN COMPONENTDIDMOUNT() BRUHHHH");
         if (!this.props.create) {
+            console.log("OBTAINING USER DATA");
             //obtain current user data from database and push into state
             const url = this.state.url;
             const res = await fetch(url);
@@ -461,6 +464,7 @@ class CreateEditAccountDialog extends React.Component {
         {this.state.showFanDialog ? this.renderFanDialog() : null}
         {this.state.showArtistDialog ? this.renderArtistDialog() : null}
         {this.state.showVenueDialog ? this.renderVenueDialog() : null}
+        {this.props.create ? null : this.renderEditArtistDialog()}
     </div>
     );
 }
@@ -722,6 +726,206 @@ renderVenueDialog = () => {
         </form>
         </div></div></div>
     );
+}
+
+renderEditArtistDialog = () => {
+    return (  
+        <div className="modal" role="dialog" id="createNewAccountDialog">
+        <div className="modal-dialog modal-lg"></div>
+            <div className="modal-content form-center">
+                <div className="modal-header">
+                  <h3><b>Edit Artist Account</b></h3>
+                  <button className="modal-close" 
+                           onClick={this.props.cancel}>
+                    &times;</button>
+                </div>
+                <div className="modal-body">
+                <form onSubmit={this.handleEditAccount}>
+                <label>
+                    Email: 
+                    <input
+                    id="emailInput"  
+                    autocomplete="off"
+                    disabled={!this.props.create}
+                    className="form-control form-text form-center"
+                    name="accountName"
+                    type="email"
+                    size="35"
+                    placeholder="ded@wsu.edu"
+                    pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
+                    required={false}
+                    ref={this.newUserRef}
+                    value={this.state.accountName}
+                    onChange={this.handleChange}
+                    onBlur={this.setDefaultDisplayName}
+                    />
+                </label>
+                <br/>
+                <label>
+                    Password:
+                    <input
+                    id="passwordInput"
+                    autocomplete="off"
+                    className="form-control form-text form-center"
+                    name="password"
+                    type="password"
+                    size="35"
+                    placeholder={this.state.password}
+                    pattern=
+                    "(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
+                    required={false}
+                    value={this.state.password}
+                    onChange={this.handleChange}
+                    />
+                </label>
+                <br/>
+                <label>
+                    Repeat Password:
+                    <input
+                    id="repeatPasswordInput"
+                    className="form-control form-text form-center"
+                    name="passwordRepeat"
+                    type="password"
+                    size="35"
+                    placeholder={this.state.password}
+                    required={false}
+                    ref={this.repeatPassRef}
+                    value={this.state.passwordRepeat}
+                    onChange={this.handleChange}
+                    />
+                </label>
+                <br/>
+                <label>
+                    Display Name:
+                    <input
+                    id="displayNameInput"
+                    className="form-control form-text form-center"
+                    name="displayName"
+                    type="text"
+                    size="30"
+                    placeholder="ded@wsu.edu"
+                    required={false}
+                    value={this.state.displayName}
+                    onChange={this.handleChange}
+                    />
+                </label>
+                <br/>
+                <label>
+                    Profile Picture:<br/>
+                    <input
+                    id="profilePic"
+                    className="form-control form-text form-center"
+                    name="profilePic"
+                    type="file"
+                    accept="image/x-png,image/gif,image/jpeg" 
+                    ref={this.profilePicRef}
+                    value={this.state.profilePic}
+                    onChange={this.handleChange}
+                    />
+                    <img src={this.state.profilePicURL != "" ? 
+                                this.state.profilePicURL :
+                                this.state.profilePicDataURL} 
+                            height="60" width="60" 
+                     />
+                </label> 
+                <br/>
+                <label>
+                    Security Question:
+                    <textarea
+                    id="securityQInput"
+                    className="form-control form-text form-center"
+                    name="securityQuestion"
+                    size="35"
+                    placeholder="whats poppin"
+                    rows="2"
+                    cols="35"
+                    maxLength="100"
+                    required={false}
+                    value={this.state.securityQuestion}
+                    onChange={this.handleChange}
+                    />
+                </label>
+                <br/>
+                <label>
+                    Answer to Security Question:
+                    <textarea
+                    id="securityAInput"
+                    className="form-control form-text form-center"
+                    name="securityAnswer"
+                    type="text"
+                    placeholder="brand new whip just hopped in"
+                    rows="2"
+                    cols="35"
+                    maxLength="100"
+                    required={false}
+                    value={this.state.securityAnswer}
+                    onChange={this.handleChange}
+                    />
+                </label>
+                <br/>
+                <label>
+                    Artist Name:
+                    <input
+                    className="form-control form-text form-center"
+                    name="artistName"
+                    type="text"
+                    size="30"
+                    placeholder="MGK"
+                    required={false}
+                    value={this.state.artistName}
+                    onChange={this.handleChange}
+                    />
+                </label>
+                <br/>
+                <label>
+                    Instagram:
+                    <input
+                    className="form-control form-text form-center"
+                    name="instagramHandle"
+                    type="text"
+                    size="30"
+                    placeholder="@machinegunkelly"
+                    required={false}
+                    value={this.state.instagramHandle}
+                    onChange={this.handleChange}
+                    />
+                </label>
+                <br/>
+                <label>
+                    Facebook:
+                    <input
+                    className="form-control form-text form-center"
+                    name="facebookHandle"
+                    type="text"
+                    size="30"
+                    placeholder="@machinegunkelly"
+                    required={false}
+                    value={this.state.facebookHandle}
+                    onChange={this.handleChange}
+                    />
+                </label>
+                <br/>
+                {!this.props.create ?  
+                <button className="btn btn-small btn-danger" onClick={this.confirmDeleteAccount}>
+                    Delete Account...
+                </button> : null}
+                <br/><br/>
+                <button role="submit" id="submitAccountBtn" 
+                    disabled={!this.state.formUpdated}
+                    className="btn btn-primary btn-color-theme modal-submit-btn">
+                    <span className="fa fa-user"></span>
+                    &nbsp;Update Artist Account</button>
+                </form>
+                </div>
+            </div>
+            {this.state.showEditDialog ? this.renderEditArtistDialog() : null}
+        </div>
+        );
+}
+
+handleEditAccount = (event) => {
+    event.preventDefault();
+    this.setState({showEditDialog: false});
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////

@@ -54,9 +54,9 @@ renderModeMenuItems = () => {
           {/* MENU CONTENT */}
           {this.renderModeMenuItems()}
           {/* The following menu items are present regardless of mode */}
-          {this.props.localAccount ? 
-            <a id="accountBtn" className="sidemenu-item" onClick={this.props.editAccount}>
-              <span className="fa fa-user"></span>&nbsp;Account</a> : null}
+          
+          <a id="accountBtn" className="sidemenu-item" id="accountBtn" onClick={this.props.editAccount}>
+            <span className="fa fa-user"></span>&nbsp;Account</a>
           <a id="aboutBtn" className="sidemenu-item" onClick={this.props.showAbout}>
             <span className="fa fa-info-circle"></span>&nbsp;About</a>
           <a className="sidemenu-item" onClick={() => {this.props.changeMode(AppMode.LOCATION_SEARCH)}}>

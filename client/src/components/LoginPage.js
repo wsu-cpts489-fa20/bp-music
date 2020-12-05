@@ -173,11 +173,11 @@ cancelCreateAccount = () => {
             <label htmlFor="emailInput" style={{ padding: 0, fontSize: 24 }}>
                 Email:
                 <input
+                id="userEmail"
                 ref={this.emailInputRef}
                 className="form-control login-text"
                 type="email"
                 placeholder="Enter Email Address"
-                id="emailInput"
                 pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
                 required={true}
                 />
@@ -186,6 +186,7 @@ cancelCreateAccount = () => {
             <label htmlFor="passwordInput" style={{ padding: 0, fontSize: 24 }}>
                 Password:
                 <input
+                id="userPassword"
                 ref={this.passwordInputRef}
                 className="form-control login-text"
                 type="password"
@@ -196,13 +197,13 @@ cancelCreateAccount = () => {
             </label>
             <p className="bg-danger" id="feedback" style={{ fontSize: 16 }} />
             <button
-                type="submit"
+                type="submit" id="loginBtn"
                 className="btn-color-theme btn btn-primary btn-block login-btn">
                 <span id="login-btn-icon" className={this.state.loginBtnIcon}/>
                 &nbsp;{this.state.loginBtnLabel}
             </button>
             <p>
-            <button type="button" className="btn btn-link login-link" 
+            <button type="button" id="createAccountBtn" className="btn btn-link login-link" 
                     onClick={() => {this.setState({showCreateAccountDialog: true});}}>
                 Create an account</button> | 
                 <button type="button" className="btn btn-link login-link"
