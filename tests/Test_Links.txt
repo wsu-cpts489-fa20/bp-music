@@ -10,3 +10,4 @@ Artist Create Account: https://drive.google.com/file/d/1otl_ihz86ulqIbCzKuTnNyh8
 
 ### Edit Account Test Cases (Milestone 3) ###
 Fan Edit Account: https://drive.google.com/file/d/1CDvyGTAYALIe7gACrDbIeq5m9ZeczqGv/view?usp=sharing
+Artist Edit Account: https://drive.google.com/file/d/1uYNOUOmAzj25k3PgP0hF6Y0peHoMwL6S/view?usp=sharing
