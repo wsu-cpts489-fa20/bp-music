@@ -68,17 +68,7 @@ class VenueAccount extends React.Component {
                     value={this.state.name}
                     onChange={this.handleChange}
                     />
-            Venue:
-                    <input
-                    className="form-control form-text form-center"
-                    name="venueID"
-                    id = "venueID"
-                    type="text"
-                    size="40"
-                    required={true}
-                    value={this.state.venueID}
-                    onChange={this.handleChange}
-                    />
+
             Time:
                     <input
                     className="form-control form-text form-center"
