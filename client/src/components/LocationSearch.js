@@ -13,7 +13,8 @@ class LocationSearch extends React.Component {
             mapUrl: '',
             lat: '',
             long: '',
-            search: false
+            search: false,
+            distance: 5
         }
     }
 
@@ -80,38 +81,46 @@ class LocationSearch extends React.Component {
 
     renderSearch = () => {
         return (
-        <center>
-            <form onSubmit={this.handleSubmit}>
-                <label>Enter a search<br />
-                    <input className="form-control form-text form-center"
-                        name="searchVal"
-                        type="text"
-                        value={this.state.searchVal}
-                        onChange={this.handleChange}>
-                    </input>
-                </label>
-                <br />
-                <button role="submit">Submit</button>
-            </form>
-            <div>User lat: {this.state.lat}</div>
-            <div>User long: {this.state.long}</div>
-            {this.state.validSearch ? this.displayResults() : null}
-            <br></br>
-            {this.state.validSearch && this.state.lat && this.state.long ? <div>Your distance from search: {this.computeDistance()} meters</div> : <div>Waiting for location data</div>}
-            <iframe
-                width="400"
-                height="300"
-                frameborder="0" style={{ border: 0 }}
-                src={this.state.mapUrl} allowfullscreen>
-            </iframe>
-        </center>
+            <center>
+                <form onSubmit={this.handleSubmit}>
+                    <label>Enter a search<br />
+                        <input className="form-control form-text form-center"
+                            name="searchVal"
+                            type="text"
+                            value={this.state.searchVal}
+                            onChange={this.handleChange}>
+                        </input>
+                    </label>
+                    <br />
+                    <button role="submit">Submit</button>
+                </form>
+                <div>User lat: {this.state.lat}</div>
+                <div>User long: {this.state.long}</div>
+                {this.state.validSearch ? this.displayResults() : null}
+                <br></br>
+                {this.state.validSearch && this.state.lat && this.state.long ? <div>Your distance from search: {this.computeDistance()} meters</div> : <div>Waiting for location data</div>}
+                <iframe
+                    width="400"
+                    height="300"
+                    frameborder="0" style={{ border: 0 }}
+                    src={this.state.mapUrl} allowfullscreen>
+                </iframe>
+            </center>
         )
     }
 
     renderNearMe = () => {
-        return(
+        return (
             <center>
-                <div></div>
+                <label>Distance:
+                <select name="distance" value={this.state.distance}
+                        className="form-control form-center" onChange={this.handleChange}>
+                        <option value="5">5 miles</option>
+                        <option value="10">10 miles</option>
+                        <option value="20">20 miles</option>
+                        <option value="50">50 miles</option>
+                    </select>
+                </label>
             </center>
         )
     }
