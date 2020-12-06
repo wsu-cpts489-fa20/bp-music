@@ -1,4 +1,5 @@
 import React from 'react';
+import { LatLng, computeDistanceBetween } from 'spherical-geometry-js';
 
 class LocationSearch extends React.Component {
 
@@ -9,9 +10,33 @@ class LocationSearch extends React.Component {
             searchVal: "",
             searchResult: {},
             validSearch: false,
-            mapUrl: ''
+            mapUrl: '',
+            lat: '',
+            long: ''
         }
     }
+
+    updateUserLocation = (position) => {
+        console.log(position)
+        this.setState({lat: position.coords.latitude, long: position.coords.longitude})
+    }
+
+    computeDistance = () => {
+        let from = new LatLng(this.state.lat, this.state.long)
+        let to = new LatLng(this.state.searchResult.candidates[0].geometry.location.lat, this.state.searchResult.candidates[0].geometry.location.lng);
+        let distance = computeDistanceBetween(from, to);
+        return distance;
+    }
+
+    componentDidMount() {
+        if ("geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(this.updateUserLocation, function(err) {
+              console.log(err);
+          });
+        } else {
+          console.log("Not Available");
+        }
+      }
 
     handleSubmit = async (event) => {
         event.preventDefault();
@@ -60,7 +85,11 @@ class LocationSearch extends React.Component {
                         <br />
                         <button role="submit">Submit</button>
                     </form>
+                    <div>User lat: {this.state.lat}</div>
+                    <div>User long: {this.state.long}</div>
                     {this.state.validSearch ? this.displayResults() : null}
+                    <br></br>
+                    {this.state.validSearch && this.state.lat && this.state.long ? <div>Your distance from search: {this.computeDistance()} meters</div> : <div>Waiting for location data</div>}
                     <iframe
                         width="400"
                         height="300"
