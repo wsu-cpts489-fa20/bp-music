@@ -37,10 +37,12 @@ module.exports = function (app) {
       !req.body.hasOwnProperty("streetAddress") ||
       !req.body.hasOwnProperty("email") ||
       !req.body.hasOwnProperty("phoneNumber") || 
-      !req.body.hasOwnProperty("socialMediaLinks")) {
+      !req.body.hasOwnProperty("socialMediaLinks") ||
+      !req.body.hasOwnProperty("lat") ||
+      !req.body.hasOwnProperty("long")) {
       //Body does not contain correct properties
       return res.status(400).send("/venues POST request formulated incorrectly. " +
-        "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', streetAddress, email, phoneNumber, and socialMediaLinks fields in message body.")
+        "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', streetAddress, lat, long, email, phoneNumber, and socialMediaLinks fields in message body.")
     }
 
     try {
@@ -64,7 +66,9 @@ module.exports = function (app) {
         streetAddress: req.body.streetAddress,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
-        socialMediaLinks: req.body.socialMediaLinks
+        socialMediaLinks: req.body.socialMediaLinks,
+        lat: req.body.lat,
+        long: req.body.long
       }).save();
       return res.status(201).send('New venue account created')
     } catch (err) {
@@ -80,12 +84,12 @@ module.exports = function (app) {
         "It must contain 'userId' as parameter.");
     }
     const validProps = ['password', 'displayName', 'profilePicURL',
-      'securityQuestion', 'securityAnswer', 'email', 'phoneNumber', 'streetAddress', 'socialMediaLinks', 'user'];
+      'securityQuestion', 'securityAnswer', 'email', 'phoneNumber', 'streetAddress', 'socialMediaLinks', 'user', 'lat', 'long'];
     for (const bodyProp in req.body) {
       if (!validProps.includes(bodyProp)) {
         return res.status(400).send("venue/ PUT request formulated incorrectly." +
           "Only the following props are allowed in body: " +
-          "'password', 'displayname', 'profilePicURL', 'securityQuestion', 'securityAnswer', 'streetAddress', 'email', 'phoneNumber', 'socialMediaLinks' and 'user'");
+          "'password', 'displayname', 'profilePicURL', 'securityQuestion', 'securityAnswer', 'streetAddress', long, lat, 'email', 'phoneNumber', 'socialMediaLinks' and 'user'");
       }
     }
     try {

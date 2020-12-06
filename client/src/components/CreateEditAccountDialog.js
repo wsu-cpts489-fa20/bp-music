@@ -237,7 +237,10 @@ class CreateEditAccountDialog extends React.Component {
             userData.email = this.state.email;
             userData.phoneNumber = this.state.phoneNumber;
             userData.socialMediaLinks = this.state.socialMediaLinks;
+            userData.lat = this.state.lat;
+            userData.long = this.state.long;
         }
+        console.log('user data: ' + JSON.stringify(userData))
         const url = this.state.url;
         let res;
         if (this.props.create) { //use POST route to create new user account
@@ -661,7 +664,8 @@ renderArtistDialog = () => {
 GPSvalidate = async () => {
     let result = await fetch('location/' + this.state.streetAddress)
     if (result.status === 200) {
-        this.setState({validAddress: true});
+        let data = JSON.parse(await result.text());
+        this.setState({validAddress: true, lat: data.candidates[0].geometry.location.lat, long: data.candidates[0].geometry.location.lng});
     }
     else{
         this.setState({validAddress: false});

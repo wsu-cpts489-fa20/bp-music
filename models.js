@@ -52,7 +52,9 @@ const venueSchema = new Schema({
   streetAddress: String,
   email: String,
   phoneNumber: String,
-  socialMediaLinks: String
+  socialMediaLinks: String,
+  lat: Number,
+  long: Number
 });
 const Venue = mongoose.model('Venue', venueSchema);
 
