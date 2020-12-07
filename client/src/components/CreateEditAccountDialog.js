@@ -255,7 +255,7 @@ class CreateEditAccountDialog extends React.Component {
                     'Content-Type': 'application/json'
                     },
                 method: 'POST',
-                body: JSON.stringify(userData)}); 
+                body: JSON.stringify(userData)}).then(console.log(JSON.stringify(userData), "is current body being updated")); 
             if (res.status == 200) { //successful account creation!
                 this.props.done("New account created! Enter credentials to log in.",false);
             } else { //Unsuccessful account creation
@@ -270,7 +270,7 @@ class CreateEditAccountDialog extends React.Component {
                     'Content-Type': 'application/json'
                     },
                 method: 'PUT',
-                body: JSON.stringify(userData)}); 
+                body: JSON.stringify(userData)}).then(console.log(JSON.stringify(userData), "is current body being updated")); 
             if (res.status == 200) { //successful account creation!
                 this.props.done("User Account Updated!",false);
             } else { //Unsuccessful account update
@@ -339,12 +339,12 @@ class CreateEditAccountDialog extends React.Component {
                 <input
                 id="emailInput"  
                 autocomplete="off"
-                //disabled={!this.props.create}
+                readOnly={!this.props.create}
                 className="form-control form-text form-center"
                 name="accountName"
                 type="email"
                 size="35"
-                placeholder="Enter Email Address"
+                placeholder={this.props.create ? "Enter Email Address" : "ImmaFan@live.com"}
                 pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
                 required={true}
                 ref={this.newUserRef}
@@ -392,11 +392,12 @@ class CreateEditAccountDialog extends React.Component {
                 Display Name:
                 <input
                 id="displayNameInput"
+                readOnly={!this.props.create}
                 className="form-control form-text form-center"
                 name="displayName"
                 type="text"
                 size="30"
-                placeholder="Display Name"
+                placeholder={this.props.create ? "Display Name": "My Name"}
                 required={true}
                 value={this.state.displayName}
                 onChange={this.handleChange}
@@ -407,6 +408,7 @@ class CreateEditAccountDialog extends React.Component {
                 Profile Picture:<br/>
                 <input
                 id="profilePic"
+                readOnly={!this.props.create}
                 className="form-control form-text form-center"
                 name="profilePic"
                 type="file"
@@ -426,10 +428,11 @@ class CreateEditAccountDialog extends React.Component {
                 Security Question:
                 <textarea
                 id="securityQInput"
+                readOnly={!this.props.create}
                 className="form-control form-text form-center"
                 name="securityQuestion"
                 size="35"
-                placeholder="Security Question"
+                placeholder={this.props.create ? "Security Question": "SQ"}
                 rows="2"
                 cols="35"
                 maxLength="100"
@@ -443,10 +446,11 @@ class CreateEditAccountDialog extends React.Component {
                 Answer to Security Question:
                 <textarea
                 id="securityAInput"
+                readOnly={!this.props.create}
                 className="form-control form-text form-center"
                 name="securityAnswer"
                 type="text"
-                placeholder="Answer"
+                placeholder={this.props.create ? "Security Answer": "SA"}
                 rows="2"
                 cols="35"
                 maxLength="100"
