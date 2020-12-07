@@ -49,6 +49,7 @@ class App extends React.Component {
 
   //componentDidMount
   componentDidMount() {
+
     if (!this.state.authenticated) { 
       //Use /auth/test route to (re)-test authentication and obtain user data
       fetch("/auth/test")
@@ -56,14 +57,16 @@ class App extends React.Component {
         .then((obj) => {
           if (obj.isAuthenticated) {
             this.setState({
-              userObj: obj.user,
+              userObj: obj.user.user,
               authenticated: true,
               mode: AppMode.FEED //We're authenticated so can get into the app.
             });
+            console.log(obj);
           }
         }
       )
     } 
+
   }
 
   //refreshOnUpdate(newMode) -- Called by child components when user data changes in 
@@ -139,6 +142,8 @@ class App extends React.Component {
 
   render() {
     const ModePage = modeToPage[this.state.mode];
+
+    this.componentDidMount();
     return (
       <div>
         {this.state.showAboutDialog ? 
