@@ -9,7 +9,6 @@ class VenueAccount extends React.Component {
         this.state = {
             url: '',
             name: '',
-            venueID: '',
             time:'',
             artists:''
                     };
@@ -25,7 +24,8 @@ class VenueAccount extends React.Component {
     handleSubmit = async(event) => {
         event.preventDefault();
         let userData = {
-            venueId: this.state.venueID,
+            venueId: this.props.userId,
+            name: this.state.name,
             time: this.state.time,
             artists: this.state.artists
         };
@@ -68,7 +68,6 @@ class VenueAccount extends React.Component {
                     value={this.state.name}
                     onChange={this.handleChange}
                     />
-
             Time:
                     <input
                     className="form-control form-text form-center"

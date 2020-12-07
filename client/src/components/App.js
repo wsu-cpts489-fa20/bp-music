@@ -39,6 +39,7 @@ class App extends React.Component {
                   menuOpen: false,
                   authenticated: false,
                   userObj: {displayName: "", profilePicURL: ""},
+                  //accountId: "",
                   editAccount: false,
                   showEditAccountDialog: false,
                   statusMsg: "",
@@ -162,7 +163,9 @@ class App extends React.Component {
 
         {this.state.showVenueAccountDialog ? 
             <VenueAccount
-            userId={this.state.userObj.id} 
+            userId={this.state.userObj._id} 
+            done={this.editAccountDone}
+            cancel={this.cancelEditAccount}
               /> : null}
         
         <NavBar 
