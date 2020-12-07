@@ -1,0 +1,7 @@
+(12/7) Local Music Retrospective
+	- What went well?
+		○ Everyone communicated where they could, it was a rough week and so there wasn't a whole lot of good progress, but we minimally had something new to demo. 
+	- What didn't go well?
+		○ Weren't able to get data to re-populate for users to edit. Mis prioritized to get a minimum viable product and ended up getting a lot of errors that impeded progress for merging. Conflicts with other classes also made communication and progress difficult.
+	- How to improve?
+Get started early, focus on getting the highest priority functional requirements satisfied before worrying about user interaction. Keep in contact when struggling, even if you feel like it's something you should know.
