@@ -11,16 +11,17 @@ class LocationSearch extends React.Component {
             searchResult: {},
             validSearch: false,
             mapUrl: '',
-            lat: '',
-            long: '',
+            lat: undefined,
+            long: undefined,
             search: false,
-            distance: 5
+            distance: 5,
+            venuesNearMe: []
         }
+        this.showNearMe();
     }
 
     updateUserLocation = (position) => {
-        console.log(position)
-        this.setState({ lat: position.coords.latitude, long: position.coords.longitude })
+        this.setState({ lat: position.coords.latitude, long: position.coords.longitude }, this.getVenuesNearMe)
     }
 
     computeDistance = () => {
@@ -57,7 +58,11 @@ class LocationSearch extends React.Component {
     }
 
     handleChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value })
+        if (event.target.name === 'distance') {
+            this.setState({[event.target.name]: event.target.value}, this.getVenuesNearMe)
+        } else {
+            this.setState({ [event.target.name]: event.target.value })
+        }
     }
 
     displayResults = () => {
@@ -75,7 +80,23 @@ class LocationSearch extends React.Component {
         this.setState({ search: true });
     }
 
-    showNearMe = () => {
+    getVenuesNearMe = async () => {
+        if (this.state.lat && this.state.long) {
+            let res = await fetch('/venues/nearme/' + this.state.distance, {
+                method: 'POST', 
+                body: JSON.stringify({lat: this.state.lat, long: this.state.long}),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+            let venues = await res.text()
+            this.setState({venuesNearMe: JSON.parse(venues)})
+        }
+    }
+
+    showNearMe = async () => {
+        this.getVenuesNearMe();
         this.setState({ search: false })
     }
 
@@ -109,6 +130,16 @@ class LocationSearch extends React.Component {
         )
     }
 
+    renderVenues = () => {
+        let table = [];
+        for (let venue of this.state.venuesNearMe) {
+            table.push(
+                <div>{venue.streetAddress}</div>
+            )
+        }
+        return table;
+    }
+
     renderNearMe = () => {
         return (
             <center>
@@ -121,6 +152,7 @@ class LocationSearch extends React.Component {
                         <option value="50">50 miles</option>
                     </select>
                 </label>
+                {this.renderVenues()}
             </center>
         )
     }
@@ -131,8 +163,8 @@ class LocationSearch extends React.Component {
                 <center>
                     <table>
                         <tr>
-                            <th><button className="btn btn-primary" disabled={!this.state.search} onClick={this.showNearMe}>Near me</button></th>
-                            <th><button className="btn btn-primary" disabled={this.state.search} onClick={this.showSearch}>Search</button></th>
+                            <th><button className="btn btn-primary btn-color-theme" disabled={!this.state.search} onClick={this.showNearMe}>Near me</button></th>
+                            <th><button className="btn btn-primary btn-color-theme" disabled={this.state.search} onClick={this.showSearch}>Search</button></th>
                         </tr>
                     </table>
                 </center>
