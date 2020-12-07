@@ -1,6 +1,7 @@
 import React from 'react';
 import { async } from 'regenerator-runtime';
 import ConfirmDeleteAccount from './ConfirmDeleteAccount.js';
+import FanAccountDialog from './FanAccountDialog.js';
 import Checkbox from './Checkbox.js';
 
 const genreList = [
@@ -454,7 +455,7 @@ class CreateEditAccountDialog extends React.Component {
                 disabled={!this.state.formUpdated}
                 className="btn btn-primary btn-color-theme modal-submit-btn">
                 <span className={this.props.create ? "fa fa-user-plus" : "fa fa-user"}></span>
-                &nbsp;{this.props.create ? "Create Account" : "Update Account"}
+                &nbsp;{"Create Account"}
             </button>
             </form>
             </div>
@@ -462,7 +463,7 @@ class CreateEditAccountDialog extends React.Component {
         {this.state.confirmDelete ? 
           <ConfirmDeleteAccount email={this.state.accountName} deleteAccount={this.deleteAccount}
                                 close={() => (this.setState({confirmDelete: false}))}/> : null}
-        {this.state.showFanDialog ? this.renderFanDialog() : null}
+        {this.state.create? (this.state.showFanDialog ? this.renderFanDialog() : null) : this.viewFanAccount()}
         {this.state.showArtistDialog ? this.renderArtistDialog() : null}
         {this.state.showVenueDialog ? this.renderVenueDialog() : null}
     </div>
@@ -846,5 +847,16 @@ selectAllGenreCheckboxes = isSelected => {
       key={option}
     />
   );
+
+  
+  // Viewing Fan Account Information Functions
+  viewFanAccount = () => (
+      <FanAccountDialog
+      genres={this.state.genres}
+      artists={this.state.artists}
+      venues={this.state.venues}
+      cancel={this.props.cancel}
+      />
+  )
 }
 export default CreateEditAccountDialog;
