@@ -186,6 +186,7 @@ class App extends React.Component {
             localAccount={this.state.userObj.authStrategy === "local"}
             editAccount={this.showEditAccount}
 
+            accountType={this.state.userObj.accountType}
             VenueAccount={this.showVenueAccount}
             
             logOut={() => this.handleChangeMode(AppMode.LOGIN)}
