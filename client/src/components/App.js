@@ -39,7 +39,6 @@ class App extends React.Component {
                   menuOpen: false,
                   authenticated: false,
                   userObj: {displayName: "", profilePicURL: ""},
-                  //accountId: "",
                   editAccount: false,
                   showEditAccountDialog: false,
                   statusMsg: "",
@@ -122,6 +121,9 @@ class App extends React.Component {
     this.setState({showEditAccountDialog: false});
   }
 
+  cancelVenueAccount = () => {
+    this.setState({showVenueAccountDialog: false});
+  }
   //editAccountDone -- called after successful edit or
   //deletion of user account. msg contains the status
   //message and deleted indicates whether an account was
@@ -134,6 +136,7 @@ class App extends React.Component {
       } else {
         this.setState({showEditAccountDialog: false,
           statusMsg: msg});
+        this.setState({showVenueAccountDialog: false});
       }
   }
 
@@ -165,7 +168,7 @@ class App extends React.Component {
             <VenueAccount
             userId={this.state.userObj._id} 
             done={this.editAccountDone}
-            cancel={this.cancelEditAccount}
+            cancel={this.cancelVenueAccount}
               /> : null}
         
         <NavBar 
@@ -183,6 +186,7 @@ class App extends React.Component {
             localAccount={this.state.userObj.authStrategy === "local"}
             editAccount={this.showEditAccount}
 
+            accountType={this.state.userObj.accountType}
             VenueAccount={this.showVenueAccount}
             
             logOut={() => this.handleChangeMode(AppMode.LOGIN)}

@@ -37,7 +37,9 @@ module.exports = function (app) {
       !req.body.hasOwnProperty("streetAddress") ||
       !req.body.hasOwnProperty("email") ||
       !req.body.hasOwnProperty("phoneNumber") || 
-      !req.body.hasOwnProperty("socialMediaLinks")) {
+      !req.body.hasOwnProperty("socialMediaLinks") ||
+      !req.body.hasOwnProperty("accountType")
+      ){
       //Body does not contain correct properties
       return res.status(400).send("/venues POST request formulated incorrectly. " +
         "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', streetAddress, email, phoneNumber, and socialMediaLinks fields in message body.")
@@ -56,7 +58,8 @@ module.exports = function (app) {
         authStrategy: 'local',
         profilePicURL: req.body.profilePicURL,
         securityQuestion: req.body.securityQuestion,
-        securityAnswer: req.body.securityAnswer
+        securityAnswer: req.body.securityAnswer,
+        accountType: req.body.accountType
       });
 
       await new Venue({
