@@ -24,6 +24,7 @@ const userSchema = new Schema({
   authStrategy: String, //strategy used to authenticate, e.g., github, local
   profilePicURL: String, //link to profile image
   securityQuestion: String,
+  accountType: String,
   securityAnswer: {
     type: String, required: function () { return this.securityQuestion ? true : false }
   },
@@ -62,15 +63,10 @@ const eventSchema = new Schema({
   venueId: Schema.ObjectId,
   name: String,
   time: String,
-  artists: [String]
+  artists: [String],
+  eventIDs: [Schema.ObjectId]
 });
 const Event = mongoose.model('Event', eventSchema)
-// new Event({
-//   venueId: mongoose.Types.ObjectId('5fbaf3e8ff3904a26f086397'),
-//   name: 'Test',
-//   time: '11',
-//   artists: []
-// }).save()
 
 exports.User = User;
 exports.Artist = Artist;
