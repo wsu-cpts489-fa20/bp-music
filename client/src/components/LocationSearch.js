@@ -17,7 +17,8 @@ class LocationSearch extends React.Component {
             distance: 5,
             venuesNearMe: [],
             eventsNearMe: [],
-            noEvents: false
+            noEvents: false,
+            searchType: '1'
         }
         this.showNearMe();
     }
@@ -36,7 +37,7 @@ class LocationSearch extends React.Component {
     componentDidMount() {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(this.updateUserLocation, function (err) {
-                console.log(err);
+                console.log('Geolocation error: ' + err);
             });
         } else {
             console.log("Not Available");
@@ -46,17 +47,21 @@ class LocationSearch extends React.Component {
     handleSubmit = async (event) => {
         event.preventDefault();
 
-        let result = await fetch('location/' + this.state.searchVal)
+        if (this.state.searchType === '1') {
 
-        if (result.status === 200) {
-            let text = await result.text();
-            let parsedText = JSON.parse(text);
-            result = await fetch('map/' + parsedText.candidates[0].formatted_address);
-            let mapUrl = await result.text();
-            this.setState({ searchResult: JSON.parse(text), validSearch: true, mapUrl: mapUrl });
         } else {
-            this.setState({ searchResult: {}, validSearch: false, mapUrl: "" });
+
         }
+
+        // if (result.status === 200) {
+        //     let text = await result.text();
+        //     let parsedText = JSON.parse(text);
+        //     result = await fetch('map/' + parsedText.candidates[0].formatted_address);
+        //     let mapUrl = await result.text();
+        //     this.setState({ searchResult: JSON.parse(text), validSearch: true, mapUrl: mapUrl });
+        // } else {
+        //     this.setState({ searchResult: {}, validSearch: false, mapUrl: "" });
+        // }
     }
 
     handleChange = (event) => {
@@ -129,7 +134,14 @@ class LocationSearch extends React.Component {
         return (
             <center>
                 <form onSubmit={this.handleSubmit}>
-                    <label>Enter a search<br />
+                <label>Search Type:
+                    <select name="searchType" value={this.state.searchType}
+                            className="form-control form-center" onChange={this.handleChange}>
+                            <option value="1">Venues</option>
+                            <option value="2">Events</option>
+                        </select>
+                    </label>
+                    <label>Enter a search
                         <input className="form-control form-text form-center"
                             name="searchVal"
                             type="text"
@@ -137,22 +149,38 @@ class LocationSearch extends React.Component {
                             onChange={this.handleChange}>
                         </input>
                     </label>
-                    <br />
-                    <button role="submit">Submit</button>
+                    <br></br>
+                    <button className="btn btn-primary btn-color-theme" role="submit">Submit</button>
                 </form>
-                <div>User lat: {this.state.lat}</div>
-                <div>User long: {this.state.long}</div>
-                {this.state.validSearch ? this.displayResults() : null}
-                <br></br>
-                {this.state.validSearch && this.state.lat && this.state.long ? <div>Your distance from search: {this.computeDistance()} meters</div> : <div>Waiting for location data</div>}
-                <iframe
-                    width="400"
-                    height="300"
-                    frameborder="0" style={{ border: 0 }}
-                    src={this.state.mapUrl} allowfullscreen>
-                </iframe>
             </center>
         )
+        // return (
+        //     <center>
+        //         <form onSubmit={this.handleSubmit}>
+        //             <label>Enter a search<br />
+        //                 <input className="form-control form-text form-center"
+        //                     name="searchVal"
+        //                     type="text"
+        //                     value={this.state.searchVal}
+        //                     onChange={this.handleChange}>
+        //                 </input>
+        //             </label>
+        //             <br />
+        //             <button role="submit">Submit</button>
+        //         </form>
+        //         <div>User lat: {this.state.lat}</div>
+        //         <div>User long: {this.state.long}</div>
+        //         {this.state.validSearch ? this.displayResults() : null}
+        //         <br></br>
+        //         {this.state.validSearch && this.state.lat && this.state.long ? <div>Your distance from search: {this.computeDistance()} meters</div> : <div>Waiting for location data</div>}
+        //         <iframe
+        //             width="400"
+        //             height="300"
+        //             frameborder="0" style={{ border: 0 }}
+        //             src={this.state.mapUrl} allowfullscreen>
+        //         </iframe>
+        //     </center>
+        // )
     }
 
     renderVenues = () => {
