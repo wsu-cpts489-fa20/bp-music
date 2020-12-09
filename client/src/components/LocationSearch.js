@@ -8,7 +8,7 @@ class LocationSearch extends React.Component {
 
         this.state = {
             searchVal: "",
-            searchResult: {},
+            eventSearchResult: {},
             validSearch: false,
             mapUrl: '',
             lat: undefined,
@@ -18,7 +18,7 @@ class LocationSearch extends React.Component {
             venuesNearMe: [],
             eventsNearMe: [],
             noEvents: false,
-            searchType: '1'
+            searchType: '1',
         }
         this.showNearMe();
     }
@@ -50,7 +50,13 @@ class LocationSearch extends React.Component {
         if (this.state.searchType === '1') {
 
         } else {
-
+            let res = await fetch('/events/search/' + this.state.searchVal, {method: 'GET'});
+            if (res.status === 200) {
+                let data = JSON.parse(await res.text())
+                this.setState({eventSearchResult: data});
+            } else {
+                this.setState({eventSearchResult: {}})
+            }
         }
 
         // if (result.status === 200) {
@@ -152,6 +158,7 @@ class LocationSearch extends React.Component {
                     <br></br>
                     <button className="btn btn-primary btn-color-theme" role="submit">Submit</button>
                 </form>
+                {this.state.eventSearchResult !== {} ? <div>{this.state.eventSearchResult.name}</div> : null}
             </center>
         )
         // return (
