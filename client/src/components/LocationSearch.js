@@ -8,7 +8,8 @@ class LocationSearch extends React.Component {
 
         this.state = {
             searchVal: "",
-            eventSearchResult: {},
+            eventSearchResult: null,
+            venueSearchResult: null,
             validSearch: false,
             mapUrl: '',
             lat: undefined,
@@ -40,7 +41,7 @@ class LocationSearch extends React.Component {
                 console.log('Geolocation error: ' + err);
             });
         } else {
-            console.log("Not Available");
+            console.log("Geolocation Not Available");
         }
     }
 
@@ -48,31 +49,33 @@ class LocationSearch extends React.Component {
         event.preventDefault();
 
         if (this.state.searchType === '1') {
-
+            let res = await fetch('/venues/search/' + this.state.searchVal, {method: 'GET'});
+            if (res.status === 200) {
+                let data = JSON.parse(await res.text());
+                this.setState({venueSearchResult: data});
+            } else {
+                this.setState({venueSearchResult: null})
+            }
         } else {
             let res = await fetch('/events/search/' + this.state.searchVal, {method: 'GET'});
             if (res.status === 200) {
                 let data = JSON.parse(await res.text())
                 this.setState({eventSearchResult: data});
             } else {
-                this.setState({eventSearchResult: {}})
+                this.setState({eventSearchResult: null})
             }
         }
-
-        // if (result.status === 200) {
-        //     let text = await result.text();
-        //     let parsedText = JSON.parse(text);
-        //     result = await fetch('map/' + parsedText.candidates[0].formatted_address);
-        //     let mapUrl = await result.text();
-        //     this.setState({ searchResult: JSON.parse(text), validSearch: true, mapUrl: mapUrl });
-        // } else {
-        //     this.setState({ searchResult: {}, validSearch: false, mapUrl: "" });
-        // }
     }
 
     handleChange = (event) => {
         if (event.target.name === 'distance') {
             this.setState({ [event.target.name]: event.target.value }, this.getVenuesNearMe)
+        } else if(event.target.name === 'searchType') {
+            if (event.target.value === '1') {
+                this.setState({[event.target.name]: event.target.value, eventSearchResult: null})
+            } else {
+                this.setState({[event.target.name]: event.target.value, venueSearchResult: null})
+            }
         } else {
             this.setState({ [event.target.name]: event.target.value })
         }
@@ -158,7 +161,8 @@ class LocationSearch extends React.Component {
                     <br></br>
                     <button className="btn btn-primary btn-color-theme" role="submit">Submit</button>
                 </form>
-                {this.state.eventSearchResult !== {} ? <div>{this.state.eventSearchResult.name}</div> : null}
+                {this.state.eventSearchResult !== null ? <div>{this.state.eventSearchResult.name}</div> : null }
+                {this.state.venueSearchResult !== null ? <div>{this.state.venueSearchResult.user.displayName}</div> : null }
             </center>
         )
         // return (
