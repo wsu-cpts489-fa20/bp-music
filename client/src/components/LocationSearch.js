@@ -15,7 +15,9 @@ class LocationSearch extends React.Component {
             long: undefined,
             search: false,
             distance: 5,
-            venuesNearMe: []
+            venuesNearMe: [],
+            eventsNearMe: [],
+            noEvents: false
         }
         this.showNearMe();
     }
@@ -59,7 +61,7 @@ class LocationSearch extends React.Component {
 
     handleChange = (event) => {
         if (event.target.name === 'distance') {
-            this.setState({[event.target.name]: event.target.value}, this.getVenuesNearMe)
+            this.setState({ [event.target.name]: event.target.value }, this.getVenuesNearMe)
         } else {
             this.setState({ [event.target.name]: event.target.value })
         }
@@ -80,19 +82,42 @@ class LocationSearch extends React.Component {
         this.setState({ search: true });
     }
 
+    // Called as soon as user location data is recieved
     getVenuesNearMe = async () => {
         if (this.state.lat && this.state.long) {
             let res = await fetch('/venues/nearme/' + this.state.distance, {
-                method: 'POST', 
-                body: JSON.stringify({lat: this.state.lat, long: this.state.long}),
+                method: 'POST',
+                body: JSON.stringify({ lat: this.state.lat, long: this.state.long }),
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 }
             });
-            let venues = await res.text()
-            this.setState({venuesNearMe: JSON.parse(venues)})
+            if (res.status === 200) {
+                let venues = await res.text()
+                this.setState({ venuesNearMe: JSON.parse(venues) }, this.getEventsNearMe)
+            } else {
+                this.setState({venuesNearMe: []})
+            }
         }
+    }
+
+    getEventsNearMe = async () => {
+        let events = []
+        let noEventsFound = false;
+        for (let venue of this.state.venuesNearMe) {
+            for (let eventId of venue.eventIDs) {
+                let res = await fetch('events/' + eventId, { method: 'GET' });
+                if (res.status === 200) {
+                    events.push(JSON.parse(await res.text()));
+                }
+            }
+        }
+        if (events.length === 0) {
+            console.log('No events')
+            noEventsFound = true;
+        }
+        this.setState({eventsNearMe: events, noEvents: noEventsFound})
     }
 
     showNearMe = async () => {
@@ -137,7 +162,28 @@ class LocationSearch extends React.Component {
                 <div>{venue.streetAddress}</div>
             )
         }
-        return table;
+        if (table.length > 0) {
+            return table;
+        } else {
+            return (<div>Loading nearby venues...</div>)
+        }
+    }
+
+    renderEvents = () => {
+        let table = []
+        for (let newEvent of this.state.eventsNearMe) {
+            table.push(
+                <div>{newEvent.name}</div>
+            )
+        }
+
+        if (table.length > 0) {
+            return table;
+        } else if(this.state.noEvents){
+            return (<div>No events were found</div>)
+        } else {
+            return (<div>Loading nearby events...</div>)
+        }
     }
 
     renderNearMe = () => {
@@ -153,6 +199,8 @@ class LocationSearch extends React.Component {
                     </select>
                 </label>
                 {this.renderVenues()}
+                <hr></hr>
+                {this.renderEvents()}
             </center>
         )
     }

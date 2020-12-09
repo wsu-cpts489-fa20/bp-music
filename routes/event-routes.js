@@ -7,7 +7,7 @@ module.exports = function (app) {
     app.get('/events/:eventId', async (req, res, next) => {
         console.log("In /events route (GET) with eventId = " + JSON.stringify(req.params.eventId));
         try {
-            let thisEvent = await Event.findOne({ name: req.params.eventId });
+            let thisEvent = await Event.findById(req.params.eventId);
             if (thisEvent) {
                 return res.status(200).send(JSON.stringify(thisEvent));
             } else {
