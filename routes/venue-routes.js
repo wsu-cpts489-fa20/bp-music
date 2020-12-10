@@ -145,18 +145,21 @@ module.exports = function (app) {
       }
     }
     try {
-      let venue = await Venue.findOne({ 'user.id': req.params.userId })
+      let venue = await Venue.findOne({ 'user.id': req.params.userId})
       if (venue) {
         for (const [key, value] of Object.entries(req.body)) {
           // Prevent user model from being completely over written and removing wanted properties
-          if (key !== 'user') {
+          if (key !== 'user'&& key !== 'eventIDs') {
             venue[key] = value;
           }
         }
         if (req.body.hasOwnProperty('user')) {
           for (const [key, value] of Object.entries(req.body.user)) {
             venue.user[key] = value;
-          }
+          } 
+        }
+        if (req.body.hasOwnProperty('eventIDs')) {
+          venue.eventIDs.push(req.body.eventIDs);
         }
 
         await venue.save();

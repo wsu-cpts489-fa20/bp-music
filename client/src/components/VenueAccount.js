@@ -53,7 +53,7 @@ class VenueAccount extends React.Component {
                 console.log(resText);
                 let venueData = {
                     //userId : this.props.venueID,
-                    eventIDs : resText
+                    eventIDs : this.state.name
                 }
                 console.log(venueData);
                 let res2;
