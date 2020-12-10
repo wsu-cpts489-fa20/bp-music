@@ -70,13 +70,13 @@ module.exports = function (app) {
       !req.body.hasOwnProperty("phoneNumber") ||
       !req.body.hasOwnProperty("socialMediaLinks") ||
       !req.body.hasOwnProperty("lat") ||
-      !req.body.hasOwnProperty("long") || 
-      !req.body.hasOwnProperty("accountType")
-      ){
+      !req.body.hasOwnProperty("long") ||
+      !req.body.hasOwnProperty("accountType"))
+      {
       //Body does not contain correct properties
       return res.status(400).send("/venues POST request formulated incorrectly. " +
         "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', streetAddress, lat, long, email, phoneNumber, and socialMediaLinks fields in message body.")
-    }
+      }
 
     try {
       let thisVenue = await Venue.findOne({ 'user.id': req.params.userId });

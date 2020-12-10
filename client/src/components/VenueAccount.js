@@ -48,10 +48,11 @@ class VenueAccount extends React.Component {
         
     }
 
-    appendID = async(event) => {
+    /*appendID = async(event) => {
 
-        let result = await fetch(url, {method: 'GET'});
-    }
+        let result = await fetch(this.state.url, {method: 'GET'});
+    }*/
+
     render() {
         return(
             <div className="modal" role="dialog">
