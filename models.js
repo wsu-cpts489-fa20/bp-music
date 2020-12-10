@@ -55,7 +55,8 @@ const venueSchema = new Schema({
   phoneNumber: String,
   socialMediaLinks: String,
   lat: Number,
-  long: Number
+  long: Number,
+  eventIDs: [Schema.ObjectId]
 });
 const Venue = mongoose.model('Venue', venueSchema);
 
