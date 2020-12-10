@@ -30,6 +30,7 @@ module.exports = function (app) {
         try {
             let data = await request;
             let formattedData = JSON.parse(data)
+            console.log(data);
             if (formattedData.status === 'OK') {
                 return res.status(200).send(data);
             } else {

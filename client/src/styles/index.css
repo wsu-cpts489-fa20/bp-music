@@ -142,9 +142,20 @@ text-align: center;
 
 /* The SpeedScore dark blue color theme  */       
 .btn-color-theme {
-      background-color: #530763;
-      color: white;
+  background-color: #530763;
+  border-color: #530763;
+  color: white;
   }
+
+.btn.btn-primary:disabled{
+  background-color: #c338f5;
+  border-color: #c338f5;
+}
+
+.btn.btn-primary:hover{
+  background-color: #c338f5;
+  border-color: #c338f5;
+}
   
 /* The color theme when a bottom bar menu item is selected */
 .btn-alt-color-theme {

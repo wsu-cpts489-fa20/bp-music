@@ -1,0 +1,13 @@
+## Test Links ##
+
+This document contains link to our test execution GIFs. 
+### Create Account Test Cases (Milestone 2) ###
+Fan Create Account with preferences and Login: https://drive.google.com/file/d/1W572uNRQ4NYdWab653ZWnkjhHAy_IzW-/view?usp=sharing
+
+Venue Create Account with valid location and Login info: https://drive.google.com/file/d/1vhFf39YMKWKMftw1znSxAipk4I7w0N7g/view?usp=sharing
+
+Artist Create Account: https://drive.google.com/file/d/1otl_ihz86ulqIbCzKuTnNyh8zwhUnzBm/view?usp=sharing //Test failed because after hours and hours still couldn't get multi select to work with testcafe
+
+### Edit Account Test Cases (Milestone 3) ###
+Fan Edit Account: https://drive.google.com/file/d/1CDvyGTAYALIe7gACrDbIeq5m9ZeczqGv/view?usp=sharing
+Artist Edit Account: https://drive.google.com/file/d/1uYNOUOmAzj25k3PgP0hF6Y0peHoMwL6S/view?usp=sharing

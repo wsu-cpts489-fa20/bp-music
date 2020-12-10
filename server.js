@@ -13,8 +13,8 @@ import express from 'express';
 
 require('dotenv').config();
 
-const LOCAL_PORT = 8081;
-const DEPLOY_URL = "http://localhost:8081";
+const LOCAL_PORT = 8080;
+const DEPLOY_URL = "http://localhost:8080";
 const PORT = process.env.HTTP_PORT || LOCAL_PORT;
 const GithubStrategy = passportGithub.Strategy;
 const LocalStrategy = passportLocal.Strategy;
@@ -26,6 +26,12 @@ const app = express();
 //the 'github' strategy in passport.js.
 //////////////////////////////////////////////////////////////////////////
 const User = require('./models').User;
+const Fan = require('./models').Fan;
+const Artist = require('./models').Artist;
+const Venue = require('./models').Venue;
+
+
+
 passport.use(new GithubStrategy({
   clientID: process.env.GH_CLIENT_ID,
   clientSecret: process.env.GH_CLIENT_SECRET,
@@ -56,6 +62,9 @@ passport.use(new LocalStrategy({ passReqToCallback: true },
   //contains the password entered into the form.
   async (req, userId, password, done) => {
     let thisUser;
+    let tryFanUser;
+    let tryArtistUser;
+    let tryVenueUser;
     try {
       thisUser = await User.findOne({ id: userId });
       if (thisUser) {
@@ -66,7 +75,40 @@ passport.use(new LocalStrategy({ passReqToCallback: true },
             " or reset your password.";
           return done(null, false)
         }
-      } else { //userId not found in DB
+      } 
+      tryFanUser = await Fan.findOne({ 'user.id': userId });
+      if (tryFanUser) {
+        if (tryFanUser.user.password === password) {
+          return done(null, tryFanUser);
+        } else {
+          req.authError = "The password is incorrect. Please try again" +
+            " or reset your password.";
+          return done(null, false)
+        }
+      }
+      tryArtistUser = await Artist.findOne({ 'user.id': userId });
+      if (tryArtistUser) {
+        if (tryArtistUser.user.password === password) {
+          console.log("Logging in as Artist");
+          return done(null, tryArtistUser);
+        } else {
+          req.authError = "The password is incorrect. Please try again" +
+            " or reset your password.";
+          return done(null, false)
+        }
+      }
+      tryVenueUser = await Venue.findOne({ 'user.id': userId });
+      if (tryVenueUser) {
+        if (tryVenueUser.user.password === password) {
+          return done(null, tryVenueUser);
+        } else {
+          req.authError = "The password is incorrect. Please try again" +
+            " or reset your password.";
+          return done(null, false)
+        }
+      }
+      else 
+      { //userId not found in DB
         req.authError = "There is no account with email " + userId +
           ". Please try again.";
         return done(null, false);
@@ -81,7 +123,7 @@ passport.use(new LocalStrategy({ passReqToCallback: true },
 passport.serializeUser((user, done) => {
   console.log("In serializeUser.");
   console.log("Contents of user param: " + JSON.stringify(user));
-  done(null, user.id);
+  done(null, user.user.id);
 });
 
 //Deserialize the current user from the session
@@ -90,11 +132,34 @@ passport.deserializeUser(async (userId, done) => {
   console.log("In deserializeUser.");
   console.log("Contents of userId param: " + userId);
   let thisUser;
+  let tryFanUser;
+  let tryArtistUser;
+  let tryVenueUser;
   try {
     thisUser = await User.findOne({ id: userId });
-    console.log("User with id " + userId +
+    if (thisUser) {
+      console.log("User with id " + userId +
       " found in DB. User object will be available in server routes as req.user.")
-    done(null, thisUser);
+      done(null, thisUser);
+    }
+    tryFanUser = await Fan.findOne({ 'user.id': userId });
+    if (tryFanUser) {
+      console.log("Fan with id " + userId +
+      " found in DB. User object will be available in server routes as req.user.")
+      done(null, tryFanUser);
+    }
+    tryArtistUser = await Artist.findOne({ 'user.id': userId });
+    if (tryArtistUser) {
+      console.log("Artist with id " + userId +
+      " found in DB. User object will be available in server routes as req.user.")
+      done(null, tryArtistUser);
+    }
+    tryVenueUser = await Venue.findOne({ 'user.id': userId });
+    if (tryVenueUser) {
+      console.log("Venue with id " + userId +
+      " found in DB. User object will be available in server routes as req.user.")
+      done(null, tryVenueUser);
+    }
   } catch (err) {
     done(err);
   }
@@ -129,3 +194,4 @@ require('./routes/venue-routes')(app)
 require('./routes/user-routes')(app);
 require('./routes/auth-routes')(app, passport);
 require('./routes/google-map-routes')(app);
+require('./routes/event-routes')(app);

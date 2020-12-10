@@ -1,11 +1,59 @@
 /////////////////////////////////
 //VENUE ACCOUNT MANAGEMENT ROUTES
 ////////////////////////////////
-
+var LatLng = require('spherical-geometry-js').LatLng;
+var computeDistanceBetween = require('spherical-geometry-js').computeDistanceBetween;
 const User = require('../models').User;
 const Venue = require('../models').Venue;
 
 module.exports = function (app) {
+
+  app.post('/venues/nearme/:distance', async (req, res, next) => {
+    console.log('In /venue/nearme route with distance = ' + req.params.distance +
+      ' and body = ' + req.body);
+    if (req.body === undefined ||
+      !req.body.hasOwnProperty('lat') ||
+      !req.body.hasOwnProperty('long')) {
+      return res.status(400).send('venues/nearme request formulated incorrectly. It must contain lat and long in body.')
+    }
+    try {
+      // get all venues in the collection
+      let venues = await Venue.find({});
+      let nearVenues = [];
+      for (let venue of venues) {
+        let from = new LatLng(venue.lat, venue.long)
+        let to = new LatLng(req.body.lat, req.body.long);
+        let newDistance = computeDistanceBetween(from, to);
+        if ((newDistance * 0.000621371) <= req.params.distance) {
+          nearVenues.push(venue);
+        }
+      }
+      if (nearVenues.length > 0) {
+        return res.status(200).send(nearVenues);
+      } else {
+        return res.status(404).send('No veneues found within the given search distance = ' + req.params.distance);
+      }
+    } catch (err) {
+      return res.status(400).send('An unexpected error occured while retrieving venues ' + err);
+    }
+  });
+
+  app.get('/venues/search/:displayName', async (req, res, next) => {
+    console.log("in /venues search route (GET) with userId = " +
+      JSON.stringify(req.params.displayName));
+    try {
+      let thisVenue = await Venue.findOne({ 'user.displayName': req.params.displayName });
+      if (!thisVenue) {
+        return res.status(404).send("No venue account with displayName " +
+          req.params.displayName + " was found in database.");
+      } else {
+        return res.status(200).send(thisVenue);
+      }
+    } catch (err) {
+      return res.status(400).send("Unexpected error occurred when looking up venue with displayName " +
+        req.params.displayName + " in database: " + err);
+    }
+  });  
 
   app.get('/venues/:userId', async (req, res, next) => {
     console.log("in /venues route (GET) with userId = " +
@@ -36,12 +84,16 @@ module.exports = function (app) {
       !req.body.hasOwnProperty("securityAnswer") ||
       !req.body.hasOwnProperty("streetAddress") ||
       !req.body.hasOwnProperty("email") ||
-      !req.body.hasOwnProperty("phoneNumber") || 
-      !req.body.hasOwnProperty("socialMediaLinks")) {
+      !req.body.hasOwnProperty("phoneNumber") ||
+      !req.body.hasOwnProperty("socialMediaLinks") ||
+      !req.body.hasOwnProperty("lat") ||
+      !req.body.hasOwnProperty("long") ||
+      !req.body.hasOwnProperty("accountType"))
+      {
       //Body does not contain correct properties
       return res.status(400).send("/venues POST request formulated incorrectly. " +
-        "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', streetAddress, email, phoneNumber, and socialMediaLinks fields in message body.")
-    }
+        "It must contain 'password','displayName','profilePicURL','securityQuestion', 'securityAnswer', streetAddress, lat, long, email, phoneNumber, and socialMediaLinks fields in message body.")
+      }
 
     try {
       let thisVenue = await Venue.findOne({ 'user.id': req.params.userId });
@@ -56,7 +108,8 @@ module.exports = function (app) {
         authStrategy: 'local',
         profilePicURL: req.body.profilePicURL,
         securityQuestion: req.body.securityQuestion,
-        securityAnswer: req.body.securityAnswer
+        securityAnswer: req.body.securityAnswer,
+        accountType: req.body.accountType
       });
 
       await new Venue({
@@ -64,7 +117,9 @@ module.exports = function (app) {
         streetAddress: req.body.streetAddress,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
-        socialMediaLinks: req.body.socialMediaLinks
+        socialMediaLinks: req.body.socialMediaLinks,
+        lat: req.body.lat,
+        long: req.body.long
       }).save();
       return res.status(201).send('New venue account created')
     } catch (err) {
@@ -80,12 +135,12 @@ module.exports = function (app) {
         "It must contain 'userId' as parameter.");
     }
     const validProps = ['password', 'displayName', 'profilePicURL',
-      'securityQuestion', 'securityAnswer', 'email', 'phoneNumber', 'streetAddress', 'socialMediaLinks', 'user'];
+      'securityQuestion', 'securityAnswer', 'email', 'phoneNumber', 'streetAddress', 'socialMediaLinks', 'user', 'lat', 'long'];
     for (const bodyProp in req.body) {
       if (!validProps.includes(bodyProp)) {
         return res.status(400).send("venue/ PUT request formulated incorrectly." +
           "Only the following props are allowed in body: " +
-          "'password', 'displayname', 'profilePicURL', 'securityQuestion', 'securityAnswer', 'streetAddress', 'email', 'phoneNumber', 'socialMediaLinks' and 'user'");
+          "'password', 'displayname', 'profilePicURL', 'securityQuestion', 'securityAnswer', 'streetAddress', long, lat, 'email', 'phoneNumber', 'socialMediaLinks' and 'user'");
       }
     }
     try {

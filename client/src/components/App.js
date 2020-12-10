@@ -10,6 +10,7 @@ import Rounds from './Rounds.js';
 import CoursesPage from './CoursesPage.js';
 import AboutBox from './AboutBox.js';
 import LocationSearch from './LocationSearch.js';
+import VenueAccount from './VenueAccount.js';
 
 const modeTitle = {};
 modeTitle[AppMode.LOGIN] = "URScene Login";
@@ -41,12 +42,14 @@ class App extends React.Component {
                   editAccount: false,
                   showEditAccountDialog: false,
                   statusMsg: "",
-                  showAboutDialog: false
+                  showAboutDialog: false,
+                  showVenueAccountDialog: false,
                  };
   }
 
   //componentDidMount
   componentDidMount() {
+
     if (!this.state.authenticated) { 
       //Use /auth/test route to (re)-test authentication and obtain user data
       fetch("/auth/test")
@@ -54,14 +57,16 @@ class App extends React.Component {
         .then((obj) => {
           if (obj.isAuthenticated) {
             this.setState({
-              userObj: obj.user,
+              userObj: obj.user.user,
               authenticated: true,
               mode: AppMode.FEED //We're authenticated so can get into the app.
             });
+            console.log(obj);
           }
         }
       )
     } 
+
   }
 
   //refreshOnUpdate(newMode) -- Called by child components when user data changes in 
@@ -107,10 +112,18 @@ class App extends React.Component {
 
   }
 
+  showVenueAccount = () => {
+    this.setState({showVenueAccountDialog: true});
+
+  }
+
   cancelEditAccount = () => {
     this.setState({showEditAccountDialog: false});
   }
 
+  cancelVenueAccount = () => {
+    this.setState({showVenueAccountDialog: false});
+  }
   //editAccountDone -- called after successful edit or
   //deletion of user account. msg contains the status
   //message and deleted indicates whether an account was
@@ -123,6 +136,7 @@ class App extends React.Component {
       } else {
         this.setState({showEditAccountDialog: false,
           statusMsg: msg});
+        this.setState({showVenueAccountDialog: false});
       }
   }
 
@@ -132,6 +146,8 @@ class App extends React.Component {
 
   render() {
     const ModePage = modeToPage[this.state.mode];
+
+    this.componentDidMount();
     return (
       <div>
         {this.state.showAboutDialog ? 
@@ -140,12 +156,21 @@ class App extends React.Component {
               <span>{this.state.statusMsg}</span>
               <button className="modal-close" onClick={this.closeStatusMsg}>
                   <span className="fa fa-times"></span></button></div> : null}
+
         {this.state.showEditAccountDialog ? 
             <CreateEditAccountDialog 
               create={false} 
               userId={this.state.userObj.id} 
               done={this.editAccountDone} 
               cancel={this.cancelEditAccount}/> : null}
+
+        {this.state.showVenueAccountDialog ? 
+            <VenueAccount
+            userId={this.state.userObj._id} 
+            done={this.editAccountDone}
+            cancel={this.cancelVenueAccount}
+              /> : null}
+        
         <NavBar 
           title={modeTitle[this.state.mode]} 
           mode={this.state.mode}
@@ -160,6 +185,10 @@ class App extends React.Component {
             profilePicURL={this.state.userObj.profilePicURL}
             localAccount={this.state.userObj.authStrategy === "local"}
             editAccount={this.showEditAccount}
+
+            accountType={this.state.userObj.accountType}
+            VenueAccount={this.showVenueAccount}
+            
             logOut={() => this.handleChangeMode(AppMode.LOGIN)}
             showAbout={() => {this.setState({showAboutDialog: true})}}
             changeMode={this.handleChangeMode}/>

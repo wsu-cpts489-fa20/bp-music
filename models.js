@@ -24,6 +24,7 @@ const userSchema = new Schema({
   authStrategy: String, //strategy used to authenticate, e.g., github, local
   profilePicURL: String, //link to profile image
   securityQuestion: String,
+  accountType: String,
   securityAnswer: {
     type: String, required: function () { return this.securityQuestion ? true : false }
   },
@@ -42,8 +43,8 @@ const artistSchema = new Schema({
   user: userSchema,
   artistName: String,
   genres: [String],
-  facebookLink: String,
-  instagramLink: String
+  facebookHandle: String,
+  instagramHandle: String
 });
 const Artist = mongoose.model("Artist", artistSchema);
 
@@ -52,11 +53,24 @@ const venueSchema = new Schema({
   streetAddress: String,
   email: String,
   phoneNumber: String,
-  socialMediaLinks: String
+  socialMediaLinks: String,
+  lat: Number,
+  long: Number,
+  eventIDs: [Schema.ObjectId]
 });
 const Venue = mongoose.model('Venue', venueSchema);
+
+const eventSchema = new Schema({
+  venueId: Schema.ObjectId,
+  name: String,
+  time: String,
+  artists: [String],
+  eventIDs: [Schema.ObjectId]
+});
+const Event = mongoose.model('Event', eventSchema)
 
 exports.User = User;
 exports.Artist = Artist;
 exports.Fan = Fan;
 exports.Venue = Venue;
+exports.Event = Event;
