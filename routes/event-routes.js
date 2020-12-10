@@ -7,11 +7,26 @@ module.exports = function (app) {
     app.get('/events/:eventId', async (req, res, next) => {
         console.log("In /events route (GET) with eventId = " + JSON.stringify(req.params.eventId));
         try {
-            let thisEvent = await Event.findOne({ name: req.params.eventId });
+            let thisEvent = await Event.findById(req.params.eventId);
             if (thisEvent) {
                 return res.status(200).send(JSON.stringify(thisEvent));
             } else {
-                return res.status(404).send("No event with name: " + req.params.eventId + " found in database")
+                return res.status(404).send("No event with eventId: " + req.params.eventId + " found in database")
+            }
+        } catch (err) {
+            console.log(err)
+            return res.status(400).send("Unexpected error during event retrieval")
+        }
+    });
+
+    app.get('/events/search/:eventName', async (req, res, next) => {
+        console.log("In /events/search route (GET) with eventName = " + JSON.stringify(req.params.eventName));
+        try {
+            let thisEvent = await Event.findOne({name: req.params.eventName});
+            if (thisEvent) {
+                return res.status(200).send(JSON.stringify(thisEvent));
+            } else {
+                return res.status(404).send("No event with name: " + req.params.eventName + " found in database")
             }
         } catch (err) {
             console.log(err)
