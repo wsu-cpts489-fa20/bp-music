@@ -70,7 +70,7 @@ module.exports = function (app) {
       !req.body.hasOwnProperty("phoneNumber") ||
       !req.body.hasOwnProperty("socialMediaLinks") ||
       !req.body.hasOwnProperty("lat") ||
-      !req.body.hasOwnProperty("long")) {
+      !req.body.hasOwnProperty("long") || 
       !req.body.hasOwnProperty("accountType")
       ){
       //Body does not contain correct properties
@@ -102,7 +102,8 @@ module.exports = function (app) {
         phoneNumber: req.body.phoneNumber,
         socialMediaLinks: req.body.socialMediaLinks,
         lat: req.body.lat,
-        long: req.body.long
+        long: req.body.long,
+        eventIDs: req.body.eventIDs
       }).save();
       return res.status(201).send('New venue account created')
     } catch (err) {

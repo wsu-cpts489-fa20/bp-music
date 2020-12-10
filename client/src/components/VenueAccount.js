@@ -39,13 +39,19 @@ class VenueAccount extends React.Component {
                     },
                 method: 'POST',
                 body: JSON.stringify(userData)}); 
+            console.log(res);
             if (res.status == 200) { //successful account creation!
                  //Unsuccessful account creation
                 //Grab textual error message
                 console.log("Something failed");
             }
+        
     }
 
+    appendID = async(event) => {
+
+        let result = await fetch(url, {method: 'GET'});
+    }
     render() {
         return(
             <div className="modal" role="dialog">
