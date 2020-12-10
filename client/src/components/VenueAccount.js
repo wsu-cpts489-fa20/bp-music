@@ -23,6 +23,7 @@ class VenueAccount extends React.Component {
 
     handleSubmit = async(event) => {
         event.preventDefault();
+        console.log("id is " +this.props.userId);
         let userData = {
             venueId: this.props.userId,
             name: this.state.name,
@@ -38,15 +39,34 @@ class VenueAccount extends React.Component {
                     'Content-Type': 'application/json'
                     },
                 method: 'POST',
-                body: JSON.stringify(userData)}); 
-            console.log(res);
+                body: JSON.stringify(userData)});
+            //console.log(res);
+            //console.log(res.get('eventID'));
             if (res.status == 200) { //successful account creation!
-                 //Unsuccessful account creation
+                //Unsuccessful account creation
                 //Grab textual error message
+                const resText = await res.text();
                 console.log("Something failed");
             }
-        
-    }
+            else{
+                const resText = await res.text();
+                console.log(resText);
+                let venueData = {
+                    //userId : this.props.venueID,
+                    eventIDs : resText
+                }
+                console.log(venueData);
+                let res2;
+                res2 = await fetch(("/venues/" + this.props.userId), {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                        },
+                    method: 'PUT',
+                    body: JSON.stringify(venueData)});
+                console.log(res2);
+                }
+            }
 
     /*appendID = async(event) => {
 

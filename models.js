@@ -56,15 +56,15 @@ const venueSchema = new Schema({
   socialMediaLinks: String,
   lat: Number,
   long: Number,
-  eventIDs: [Schema.ObjectId]
+  eventIDs: [String]
 });
 const Venue = mongoose.model('Venue', venueSchema);
 
 const eventSchema = new Schema({
-  venueId: Schema.ObjectId,
+  venueId: String,//Schema.ObjectId,
   name: String,
   time: String,
-  artists: [String],
+  artists: [String]
 });
 const Event = mongoose.model('Event', eventSchema)
 

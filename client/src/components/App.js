@@ -166,7 +166,7 @@ class App extends React.Component {
 
         {this.state.showVenueAccountDialog ? 
             <VenueAccount
-            userId={this.state.userObj._id} 
+            userId={this.state.userObj.id} 
             done={this.editAccountDone}
             cancel={this.cancelVenueAccount}
               /> : null}

@@ -39,6 +39,7 @@ module.exports = function (app) {
         "and body" + JSON.stringify(req.body));
         if (req.body === undefined || 
             !req.body.hasOwnProperty("venueId") ||
+            !req.body.hasOwnProperty("name") ||
             !req.body.hasOwnProperty("time") ||
             !req.body.hasOwnProperty("artists")) {
                 return res.status(400).send("/events POST request formulated incorrectly" +
@@ -46,13 +47,14 @@ module.exports = function (app) {
             }
         
         try {
-            await new Event({
-                venueId: mongoose.Types.ObjectId(req.body.venueId),
+            let doc = await new Event({
+                venueId: req.params.venueId,
                 name: req.params.name,
                 time: req.body.time,
                 artists: req.body.artists
-            }).save()
-            return res.status(201).send("New event created");
+            }).save();
+            console.log('New venues ID: ' + doc._id);
+            return res.status(201).send(doc._id);
         } catch (err) {
             return res.status(400).send("Unexpected error occured when adding event to database")
         }
