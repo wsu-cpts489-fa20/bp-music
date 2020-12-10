@@ -8,8 +8,8 @@ class FeedPage extends React.Component {
             <center>
             <h1 >Activity Feed</h1>
             <h2>This page is under construction.</h2>
-            <img src="https://drive.google.com/thumbnail?id=1YMtwfKIdjcTE9rrqphYZ5AhJYnmOsarQ" 
-             height="200" width="200"/>
+            <img src="https://drive.google.com/thumbnail?id=1eZNPpR_z5XeD0EgHckjFhyPXxTNrkT0Y" 
+             height="200" width="300"/>
             <p style={{fontStyle: "italic"}}>Version CptS 489 React Demo</p>
             </center>
         </div>

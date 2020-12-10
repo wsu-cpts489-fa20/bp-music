@@ -5,7 +5,7 @@
 .navbar {
   overflow: hidden; /* Don't allow scrolling */
   display: block; /* Occupies its own horizontal space */
-  background-color: #530763;
+  background-color: #C4C4C4;
   outline-style: double;
   outline-width: 4px;
   outline: #000;
@@ -21,6 +21,7 @@
 .navbar-title {
 color: white;
 font-size: 18px;
+font-family: Roboto Slab;
 }
 
 /* navbarItems defines styling of items within navbar. They should be centered top-to-bottom
@@ -40,20 +41,20 @@ padding-bottom: 5px;
   z-index: 150; /* Force the menu to be at front */
   top: 48px; /* Position menu 48 px from top of screen; accomodates top navbar */
   left: 0; /* Position the menu on the left hand side */
-  background-color: #530763; /* Background color is dark blue */
+  /* background-color: rgba(51, 170, 51, .1)  #3B3B3B;  Background color is dark blue */
   overflow-x: hidden; /* Don't allow horizontal scroll */
   transition: 0.5s; /* Animation transition time is 0.5 sec */
   padding-top: 12px; /* Place menu content 12 px from top */
+  font-family: Roboto Slab;
 }
 
 /* applies only to an anchor tag that's a child of a sidenav element. */
 .sidemenu a {
       padding: 16px 8px 16px 32px;
-      text-decoration: none;
       font-size: 16px;
-      color: white;
+      color: #4D0112;
       display: block;
-      transition: 0.3s;
+      transition: 0.3s; 
   }
   
 
@@ -61,22 +62,22 @@ padding-bottom: 5px;
       padding: 0px 0px 10px 6px;
       text-decoration: none;
       font-size: 16px;
-      color: white;
+      color: #3D3D3D;
       display: block;
       transition: 0.3s;
-      /* border-bottom: 2px solid white; */
+      border-bottom: 2px solid #3D3D3D;
   }
 
 /* Required ordering of link style definitions: visited, hover, active. If out of this order, they won't work!! */
 
 .sidemenu a:visited {
-background-color:  #530763 !important;
-color: white !important;
+background-color:  #8C011F !important;
+color: #F1F1ED !important;
 }
 
 .sidemenu a:active {
-background-color:  #530763 !important;
-color: white !important;
+background-color:  #8C011F !important;
+color: #F1F1ED !important;
 }
 
 
@@ -91,33 +92,38 @@ color: white !important;
       font-size: 18px;
       margin-top: 20px;
       margin-bottom: 20px !important;
-      border-bottom: 2px solid white;
+      border-bottom: 2px solid #ec850f;
  }
 
  .sidemenu .sidemenu-userID {
-   font-size: 14px;
+   font-size: 28px;
+   color: #8C011F;
  }
 
 /* side menu button styling */
 .sidemenu-btn {
 background-color: transparent;
-border-color: #530763;
+border-color: #F1F1ED;
 text-align: center;
 }
 
 .sidemenu-btn-icon {
-color: white;
+color: #8C011F;
 font-size: 30px;
 cursor: pointer;
 text-align: center;
 }
 
+.sidemenu-item {
+  background-color: #F1F1ED;
+  border-radius: 25px;
+}
 
 .sidemenu-item:hover {
   cursor: default;
-  text-decoration: none;
-  color: #530763 !important;
-  background-color: #F0F0F0;
+  text-decoration: underline dotted;
+  color: #fffff4 !important;
+  background-color: #3D3D3D;
 }
 
 /* side menu styling when menu item selected */
@@ -125,8 +131,8 @@ text-align: center;
        pointer-events: none;
        cursor: default;
        text-decoration: none;
-       color: #530763 !important;
-       background-color: #F0F0F0;
+       color: #F1F1ED !important;
+       background-color: #3D3D3D;
 }
 
 /* set width to 250px when menu is open */
@@ -142,25 +148,25 @@ text-align: center;
 
 /* The SpeedScore dark blue color theme  */       
 .btn-color-theme {
-  background-color: #530763;
-  border-color: #530763;
+  background-color: #C4C4C4;
+  border-color: #C4C4C4;
   color: white;
   }
 
 .btn.btn-primary:disabled{
-  background-color: #c338f5;
-  border-color: #c338f5;
+  background-color: #8C011F;
+  border-color: #4D0112;
 }
 
 .btn.btn-primary:hover{
-  background-color: #c338f5;
-  border-color: #c338f5;
+  background-color: #8C011F;
+  border-color: #4D0112;
 }
   
 /* The color theme when a bottom bar menu item is selected */
 .btn-alt-color-theme {
       background-color: #F0F0F0;
-      color: #530763;
+      color: #8C011F;
   }
 
 /* change items to gray when disabled class is applied  */
@@ -171,8 +177,8 @@ color: gray;
 
 .btn-color-theme-outline {
       border: 2px;
-      border-color: #530763;
-      color: #530763;
+      border-color: #C4C4C4;
+      color: #C4C4C4;
 }
 
 /* Styling for the divs in the app. Ensures that the content at top isn't obscured by top bar */
@@ -193,7 +199,7 @@ cursor: pointer;
 
 /* Styling for mode bar at the bottom of the page */
 .modebar {
-background-color: #530763;
+background: repeating-linear-gradient(#8C011F, #8C011F 49.9%, #4D0112 50.1%, #4D0112 100%);;
 overflow: hidden;
 position: fixed;
 bottom: 0;
@@ -215,13 +221,13 @@ font-size: 17px;
 
 /* Add a gray background color to the button when it is selected */
 .modebar a:active {
-background-color: #F0F0F0;
-color: #530763;
+color: #3D3D3D;
 }
 
-/* Add a gray background color to button when it is hovered */
+/* Add a red background color to button when it is hovered */
 .modebar a:hover {
-  color: #F0F0F0;
+  color: #F1F1ED;
+  font-size: 25px;
 }
 
 /* Hide the link that should open and close the navbar on small screens */
@@ -249,7 +255,7 @@ width:60px;
 height:60px;
 bottom:60px;
 right:40px;
-background-color:#530763;
+background-color:#C4C4C4;
 color:white;
 border-radius:50px;
 text-align:center;
@@ -297,6 +303,7 @@ font-size: 24px;
 .login-btn {
 width: 70%;
 font-size: 36px;
+font-family: Roboto Slab;
 }
 
 /* Form styling */
@@ -320,7 +327,7 @@ text-align: center;
   pointer-events: none;
   cursor: default;
   text-decoration: none;
-  color: #530763 !important;
+  color: #C4C4C4 !important;
   background-color: #F0F0F0;
 }
 
@@ -330,7 +337,7 @@ text-align: center;
 }
 
 .login-link {
-  color:  #530763;
+  color:  #C4C4C4;
 }
 
 .modal {
@@ -356,7 +363,7 @@ text-align: center;
 
 .modal-header {
     padding: 2px 16px;
-    background-color: #530763;
+    background-color: #C4C4C4;
     color: white;
   }
   
@@ -390,6 +397,7 @@ text-align: center;
 .modal-submit-btn {
   width: 70%;
   font-size: 24px;
+  font-family: Roboto Slab;
   }
 
   .status-msg {
@@ -398,3 +406,6 @@ text-align: center;
     color: black;
     background-color: lightgray;
   }
+
+  /* Updated Style Changes */
+  

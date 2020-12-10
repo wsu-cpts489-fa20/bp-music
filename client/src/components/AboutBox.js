@@ -15,8 +15,8 @@ render() {
             </div>
             <div className="modal-body">
                 <img
-                src="https://dl.dropboxusercontent.com/s/awuwr1vpuw1lkyl/SpeedScore4SplashLogo.png"
-                height="200" width="200"/>
+                src="https://drive.google.com/thumbnail?id=1eZNPpR_z5XeD0EgHckjFhyPXxTNrkT0Y"
+                height="200" width="300"/>
                 <h3>The World's First and Only Suite of Apps for
                 Speedgolf</h3>
                 <p>Version CptS 489 Fa20 Complete (MERN)<br/>
