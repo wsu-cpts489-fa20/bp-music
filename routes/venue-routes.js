@@ -36,7 +36,24 @@ module.exports = function (app) {
     } catch (err) {
       return res.status(400).send('An unexpected error occured while retrieving venues ' + err);
     }
-  })
+  });
+
+  app.get('/venues/search/:displayName', async (req, res, next) => {
+    console.log("in /venues search route (GET) with userId = " +
+      JSON.stringify(req.params.displayName));
+    try {
+      let thisVenue = await Venue.findOne({ 'user.displayName': req.params.displayName });
+      if (!thisVenue) {
+        return res.status(404).send("No venue account with displayName " +
+          req.params.displayName + " was found in database.");
+      } else {
+        return res.status(200).send(thisVenue);
+      }
+    } catch (err) {
+      return res.status(400).send("Unexpected error occurred when looking up venue with displayName " +
+        req.params.displayName + " in database: " + err);
+    }
+  });  
 
   app.get('/venues/:userId', async (req, res, next) => {
     console.log("in /venues route (GET) with userId = " +
