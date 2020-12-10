@@ -221,7 +221,7 @@ font-size: 17px;
 
 /* Add a gray background color to the button when it is selected */
 .modebar a:active {
-color: #3D3D3D;
+background-color: #3D3D3D;
 }
 
 /* Add a red background color to button when it is hovered */
