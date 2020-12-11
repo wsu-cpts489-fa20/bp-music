@@ -115,18 +115,15 @@ class CoursesPage extends React.Component {
     render() {
         return (
             <div className="padded-page">
-            <h1>Subscribe To Your Nearby Venues</h1>
+            <h1>Your Venues</h1>
             <table className="table table-hover">
               <thead className="thead-light">
               <tr>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Distance (in miles)</th>
-                <th>Subscribe</th>
+                <th></th>
               </tr>
               </thead>
               <tbody>
-                {this.renderVenues()}
+                
               </tbody>
             </table>
             {this.state.statusMsg != "" ? <div className="status-msg">

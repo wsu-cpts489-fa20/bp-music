@@ -20,6 +20,7 @@ class LocationSearch extends React.Component {
             eventsNearMe: [],
             noEvents: false,
             searchType: '1',
+            statusMsg: "",
         }
         this.showNearMe();
     }
@@ -194,17 +195,53 @@ class LocationSearch extends React.Component {
         // )
     }
 
+    computeMiles(venueLat, venueLong) {
+        let from = new LatLng(this.state.lat, this.state.long)
+        let to = new LatLng(venueLat, venueLong);
+        let distance = computeDistanceBetween(from, to);
+        return distance*0.000621371;
+    }
+
     renderVenues = () => {
         let table = [];
         for (let venue of this.state.venuesNearMe) {
             table.push(
-                <div>{venue.streetAddress}</div>
+                <tr key={venue}>
+                    <td>{venue.user.displayName}</td>
+                    <td>{venue.streetAddress}</td>
+                    <td>{this.computeMiles(venue.lat, venue.long)}</td>
+                    <td><button onClick={() => this.subscribe(venue)}><span className="fa fa-bookmark-o"></span></button></td>
+                </tr>
             )
         }
         if (table.length > 0) {
             return table;
         } else {
-            return (<div>Loading nearby venues...</div>)
+            return (<div>No Nearby Venues Found :(</div>)
+        }
+    }
+
+    subscribe = async (venue) => {
+        if (this.props.accountType === "fan") {
+            this.props.accountObj.venues.push(venue._id.toString());
+            let data = {venues: this.props.accountObj.venues}
+            const url = '/fans/' + this.props.accountObj.user.id
+            const res = await fetch(url, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                    },
+                method: 'PUT',
+                body: JSON.stringify(data)}); 
+            const msg = await res.text();
+            if (res.status != 200) {
+                this.setState({statusMsg: msg});
+            } else {
+                this.setState({statusMsg: "Successfully subscribed to " + venue.user.displayName + "!"});
+            }
+        }
+        else {
+            this.setState({statusMsg: "Oops! Please sign in on your Fan Account to subscribe to other Venues."});
         }
     }
 
@@ -256,6 +293,10 @@ class LocationSearch extends React.Component {
                     </table>
                 </center>
                 {this.state.search ? this.renderSearch() : this.renderNearMe()}
+                {this.state.statusMsg != "" ? <div className="status-msg">
+              <span>{this.state.statusMsg}</span>
+              <button className="modal-close" onClick={this.closeStatusMsg}>
+                  <span className="fa fa-times"></span></button></div> : null}
             </div>
         )
     }
