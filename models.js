@@ -48,6 +48,14 @@ const artistSchema = new Schema({
 });
 const Artist = mongoose.model("Artist", artistSchema);
 
+const eventSchema = new Schema({
+  venueId: Schema.ObjectId,
+  name: String,
+  time: String,
+  artists: [String]
+});
+const Event = mongoose.model('Event', eventSchema)
+
 const venueSchema = new Schema({
   user: userSchema,
   streetAddress: String,
@@ -56,18 +64,9 @@ const venueSchema = new Schema({
   socialMediaLinks: String,
   lat: Number,
   long: Number,
-  eventIDs: [Schema.ObjectId]
+  eventIDs: [eventSchema]
 });
 const Venue = mongoose.model('Venue', venueSchema);
-
-const eventSchema = new Schema({
-  venueId: Schema.ObjectId,
-  name: String,
-  time: String,
-  artists: [String],
-  eventIDs: [Schema.ObjectId]
-});
-const Event = mongoose.model('Event', eventSchema)
 
 exports.User = User;
 exports.Artist = Artist;
