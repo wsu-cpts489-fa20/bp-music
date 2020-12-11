@@ -47,13 +47,13 @@ module.exports = function (app) {
             }
         
         try {
+            console.log('New venues ID: ' +  req.body.venueId);
             let doc = await new Event({
-                venueId: req.params.venueId,
+                venueId: req.body.venueId,
                 name: req.params.name,
                 time: req.body.time,
                 artists: req.body.artists
             }).save();
-            console.log('New venues ID: ' + doc._id);
             return res.status(201).send(doc._id);
         } catch (err) {
             return res.status(400).send("Unexpected error occured when adding event to database")
