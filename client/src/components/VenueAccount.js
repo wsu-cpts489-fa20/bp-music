@@ -52,8 +52,8 @@ class VenueAccount extends React.Component {
                 const resText = await res.text();
                 console.log(resText);
                 let venueData = {
-                    //userId : this.props.venueID,
-                    eventIDs : this.state.name
+                    eventIDs : userData
+                    //eventIDs : this.state.name
                 }
                 console.log(venueData);
                 let res2;

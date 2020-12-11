@@ -53,11 +53,14 @@ class EventsTable extends React.Component {
     );
   }
   */
+  console.log("The array is" + this.props.rounds)
   let table = [];
   for (let r = 0; r < this.props.rounds.length; ++r) {
     table.push(
       <tr key={r}>
-        <td>{this.props.rounds[r]}</td>
+        <td>{this.props.rounds[r].name}</td>
+        <td>{this.props.rounds[r].time}</td>
+        <td>{this.props.rounds[r].artists}</td>
       </tr> 
     );
   }

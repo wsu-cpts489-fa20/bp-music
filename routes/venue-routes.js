@@ -5,6 +5,7 @@ var LatLng = require('spherical-geometry-js').LatLng;
 var computeDistanceBetween = require('spherical-geometry-js').computeDistanceBetween;
 const User = require('../models').User;
 const Venue = require('../models').Venue;
+const Event = require('../models').Event;
 
 module.exports = function (app) {
 
@@ -159,7 +160,14 @@ module.exports = function (app) {
           } 
         }
         if (req.body.hasOwnProperty('eventIDs')) {
-          venue.eventIDs.push(req.body.eventIDs);
+          //venue.eventIDs.push(req.body.eventIDs);
+          let thisEvent = new Event({
+            venueId: req.body.eventIDs.userId,
+            name: req.body.eventIDs.name,
+            time: req.body.eventIDs.time,
+            artists: req.body.eventIDs.artists
+          })
+          venue.eventIDs.push(thisEvent);
         }
 
         await venue.save();
