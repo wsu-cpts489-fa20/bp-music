@@ -17,17 +17,17 @@ class ModeBar extends React.Component {
                this.props.mode === AppMode.ROUNDS_LOGROUND ? 
                   " item-selected" : null)}
            onClick={()=>this.props.changeMode(AppMode.ROUNDS)}>
-          <span className="modebar-icon  fa fa-history"></span>
+          <span className="modebar-icon  fa fa-music"></span>
           <span className="modebar-text">Events</span>
         </a>
         <a className={(this.props.mode === AppMode.COURSES ? " item-selected" : null)}
           onClick={()=>this.props.changeMode(AppMode.COURSES)}>
-          <span className="modebar-icon  fa fa-flag"></span>
+          <span className="modebar-icon  fa fa-map-marker"></span>
           <span className="modebar-text">Venues</span>
         </a> 
         <a className={(this.props.mode === AppMode.LOCATION_SEARCH ? " item-selected" : null)}
           onClick={()=>this.props.changeMode(AppMode.LOCATION_SEARCH)}>
-          <span className="modebar-icon  fa fa-flag"></span>
+          <span className="modebar-icon  fa fa-map-o"></span>
           <span className="modebar-text">Location/Event Finder</span>
         </a> 
         </div>

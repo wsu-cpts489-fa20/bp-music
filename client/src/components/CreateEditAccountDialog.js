@@ -208,13 +208,7 @@ class CreateEditAccountDialog extends React.Component {
             userData.artists = this.state.artists;
             userData.venues = this.state.venues;
             Object.keys(this.state.genreCheckboxes).filter(checkbox => this.state.genreCheckboxes[checkbox]).forEach(checkbox => {
-                if(this.state.accountType == "fan"){
-                    console.log(checkbox, "is selected and being stored to fan account.");
-                } else if(this.state.accountType == "artist"){
-                    console.log(checkbox, "is selected and being stored to artist account.");
-                } else {
-                    console.log(checkbox, "is selected and being stored to venue account.");
-                }
+                console.log(checkbox, "is selected and being stored to fan account.");
                 this.state.genres.push(checkbox);
             });
             Object.keys(this.state.artistCheckboxes).filter(checkbox => this.state.artistCheckboxes[checkbox]).forEach(checkbox => {

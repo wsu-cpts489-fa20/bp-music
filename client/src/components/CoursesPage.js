@@ -1,4 +1,5 @@
 import React from 'react';
+import AppMode from './../AppMode.js';
 import { LatLng, computeDistanceBetween } from 'spherical-geometry-js';
 
 class CoursesPage extends React.Component {
@@ -15,6 +16,8 @@ class CoursesPage extends React.Component {
             distance: 20,
             venuesNearMe: [],
             noEvents: false,
+            statusMsg: "",
+            submitBtnIcon: "fa fa-bookmark-o"
         }
     }    
 
@@ -63,11 +66,11 @@ class CoursesPage extends React.Component {
         let table = [];
         for (let venue of this.state.venuesNearMe) {
             table.push(
-                <tr>
-                <td>{venue.user.displayName}</td>
-                <td>{venue.streetAddress}</td>
-                <td>{this.computeDistance(venue.lat, venue.long)}</td>
-                <td><button onClick={this.state.subscribe}><span className="fa fa-bookmark-o"></span></button></td>
+                <tr key={venue}>
+                    <td>{venue.user.displayName}</td>
+                    <td>{venue.streetAddress}</td>
+                    <td>{this.computeDistance(venue.lat, venue.long)}</td>
+                    <td><button onClick={() => this.subscribe(venue)}><span className="fa fa-bookmark-o"></span></button></td>
                 </tr>
             )
         }
@@ -78,8 +81,21 @@ class CoursesPage extends React.Component {
         }
     }
 
-    subscribe = () => {
+    subscribe = (venue) => {
+        console.log(venue._id);
+        console.log(this.props.userObj);
+        console.log(this.props.accountObj);
+        if (this.props.accountType === "fan") {
+            this.props.accountObj.venues.push(venue._id.str);
+            this.setState({statusMsg: "Successfully subscribed to " + venue.user.displayName + "!"});
+        }
+        else {
+            this.setState({statusMsg: "Oops! Please sign in on your Fan Account to subscribe to other Venues."});
+        }
+    }
 
+    closeStatusMsg = () => {
+        this.setState({statusMsg: ""});
     }
 
     render() {
@@ -99,6 +115,10 @@ class CoursesPage extends React.Component {
                 {this.renderVenues()}
               </tbody>
             </table>
+            {this.state.statusMsg != "" ? <div className="status-msg">
+              <span>{this.state.statusMsg}</span>
+              <button className="modal-close" onClick={this.closeStatusMsg}>
+                  <span className="fa fa-times"></span></button></div> : null}
           </div>
         );
     }   
