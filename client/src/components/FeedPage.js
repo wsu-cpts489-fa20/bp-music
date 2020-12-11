@@ -1,17 +1,25 @@
 import React from 'react';
-
+import EventsTable from './EventsTable.js';
 class FeedPage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.origAccountInfo = null;
+        //Create a ref for the Time input DOM element
+        this.state = {
+            url: '',
+            name: '',
+            time:'',
+            artists:''
+                    };
+    }
 
     render() {
+        console.log(this.props.overObj);
         return (
         <div className="padded-page">
-            <center>
-            <h1 >Activity Feed</h1>
-            <h2>This page is under construction.</h2>
-            <img src="https://drive.google.com/thumbnail?id=1YMtwfKIdjcTE9rrqphYZ5AhJYnmOsarQ" 
-             height="200" width="200"/>
-            <p style={{fontStyle: "italic"}}>Version CptS 489 React Demo</p>
-            </center>
+            <EventsTable
+            rounds={this.props.overObj.eventIDs}
+            />
         </div>
         );
     }   

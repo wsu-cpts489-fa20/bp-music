@@ -57,9 +57,10 @@ class App extends React.Component {
         .then((obj) => {
           if (obj.isAuthenticated) {
             this.setState({
+              overObj: obj.user,
               userObj: obj.user.user,
               authenticated: true,
-              mode: AppMode.FEED //We're authenticated so can get into the app.
+              mode: AppMode.LOCATION_SEARCH //We're authenticated so can get into the app.
             });
             console.log(obj);
           }
@@ -200,6 +201,7 @@ class App extends React.Component {
             menuOpen={this.state.menuOpen}
             mode={this.state.mode}
             changeMode={this.handleChangeMode}
+            overObj={this.state.overObj}
             userObj={this.state.userObj}
             refreshOnUpdate={this.refreshOnUpdate}/>
       </div>
