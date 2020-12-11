@@ -3,6 +3,7 @@ import { async } from 'regenerator-runtime';
 import ConfirmDeleteAccount from './ConfirmDeleteAccount.js';
 import Checkbox from './Checkbox.js';
 
+// Constant lists that currently populate the checkbox data, needs to get replaced by a GET from artist/venue/event MongoDB document
 const genreList = [
     'Pop',
     'Hip Hop',
@@ -41,23 +42,26 @@ class CreateEditAccountDialog extends React.Component {
         this.newUserRef = React.createRef();
         this.repeatPassRef = React.createRef();
         this.profilePicRef = React.createRef();
-        this.state = {accountName: "",
+        this.state = {// Account Information
+                      accountType: "fan",
+                      accountName: "",
                       displayName: "",
                       profilePicURL: "https://icon-library.net//images/default-profile-icon/default-profile-icon-24.jpg",
                       password: "",
                       passwordRepeat: "",
                       securityQuestion: "",
                       securityAnswer: "",
-                      accountType: "fan",
-                      url: "",
+                      // Rendering page views
                       formUpdated: false,
                       confirmDelete: false,
                       showFanDialog: false,
                       showArtistDialog: false,
                       showVenueDialog: false,
+                      // List that gets populated by user input, and updates their data in MongoDB
                       genres: [],
                       artists: [],
                       venues: [],
+                      // State variables for checkboxes
                       genreCheckboxes: genreList.reduce(
                         (options, option) => ({
                           ...options,
@@ -494,8 +498,8 @@ handleAccountType = (event) => {
     }
 }
 
-
-
+// renderFanDialog -- Handles rendering the fan dialog for creating a new account
+// Calls on createCheckbox and map to create a list of strings into clickable checkboxes
 renderFanDialog = () => {
     return (
         <div className="modal" role="dialog" id="renderFanDialog">
@@ -575,6 +579,9 @@ renderFanDialog = () => {
     );
 }
 
+// renderArtistDialog -- Handles rendering the artist dialog for creating a new account
+// Calls on createCheckbox and map to create a list of strings into clickable checkboxes
+// Currently not fully implemented, Venues and Fan accounts were priorities.
 renderArtistDialog = () => {
     return (
         <div className="modal" role="dialog">
@@ -655,6 +662,7 @@ renderArtistDialog = () => {
     );
 }
 
+// GPSvalidate -- Makes sure entered locations are valid locations
 GPSvalidate = async () => {
     let result = await fetch('location/' + this.state.streetAddress)
     if (result.status === 200) {
@@ -666,6 +674,7 @@ GPSvalidate = async () => {
     }
 }
 
+// renderVenueDialog -- Handles rendering the Venue dialog for creating a new account
 renderVenueDialog = () => { 
     return (
         <div className="modal" role="dialog">

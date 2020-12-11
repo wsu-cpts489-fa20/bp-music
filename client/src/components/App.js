@@ -58,10 +58,11 @@ class App extends React.Component {
         .then((obj) => {
           if (obj.isAuthenticated) {
             this.setState({
+              overObj: obj.user,
               userObj: obj.user.user,
               accountObj: obj.user,
               authenticated: true,
-              mode: AppMode.FEED //We're authenticated so can get into the app.
+              mode: AppMode.LOCATION_SEARCH //We're authenticated so can get into the app.
             });
             console.log(obj);
           }
@@ -168,7 +169,7 @@ class App extends React.Component {
 
         {this.state.showVenueAccountDialog ? 
             <VenueAccount
-            userId={this.state.userObj._id} 
+            userId={this.state.userObj.id} 
             done={this.editAccountDone}
             cancel={this.cancelVenueAccount}/> : null}
         

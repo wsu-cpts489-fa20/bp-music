@@ -5,6 +5,7 @@ var LatLng = require('spherical-geometry-js').LatLng;
 var computeDistanceBetween = require('spherical-geometry-js').computeDistanceBetween;
 const User = require('../models').User;
 const Venue = require('../models').Venue;
+const Event = require('../models').Event;
 
 module.exports = function (app) {
 
@@ -119,7 +120,8 @@ module.exports = function (app) {
         phoneNumber: req.body.phoneNumber,
         socialMediaLinks: req.body.socialMediaLinks,
         lat: req.body.lat,
-        long: req.body.long
+        long: req.body.long,
+        eventIDs: req.body.eventIDs
       }).save();
       return res.status(201).send('New venue account created')
     } catch (err) {
@@ -135,7 +137,7 @@ module.exports = function (app) {
         "It must contain 'userId' as parameter.");
     }
     const validProps = ['password', 'displayName', 'profilePicURL',
-      'securityQuestion', 'securityAnswer', 'email', 'phoneNumber', 'streetAddress', 'socialMediaLinks', 'user', 'lat', 'long'];
+      'securityQuestion', 'securityAnswer', 'email', 'phoneNumber', 'streetAddress', 'socialMediaLinks', 'user', 'lat', 'long', "eventIDs"];
     for (const bodyProp in req.body) {
       if (!validProps.includes(bodyProp)) {
         return res.status(400).send("venue/ PUT request formulated incorrectly." +
@@ -144,18 +146,28 @@ module.exports = function (app) {
       }
     }
     try {
-      let venue = await Venue.findOne({ 'user.id': req.params.userId })
+      let venue = await Venue.findOne({ 'user.id': req.params.userId})
       if (venue) {
         for (const [key, value] of Object.entries(req.body)) {
           // Prevent user model from being completely over written and removing wanted properties
-          if (key !== 'user') {
+          if (key !== 'user'&& key !== 'eventIDs') {
             venue[key] = value;
           }
         }
         if (req.body.hasOwnProperty('user')) {
           for (const [key, value] of Object.entries(req.body.user)) {
             venue.user[key] = value;
-          }
+          } 
+        }
+        if (req.body.hasOwnProperty('eventIDs')) {
+          //venue.eventIDs.push(req.body.eventIDs);
+          let thisEvent = new Event({
+            venueId: req.body.eventIDs.userId,
+            name: req.body.eventIDs.name,
+            time: req.body.eventIDs.time,
+            artists: req.body.eventIDs.artists
+          })
+          venue.eventIDs.push(thisEvent);
         }
 
         await venue.save();

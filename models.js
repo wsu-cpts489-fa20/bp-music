@@ -49,7 +49,7 @@ const artistSchema = new Schema({
 const Artist = mongoose.model("Artist", artistSchema);
 
 const eventSchema = new Schema({
-  venueId: Schema.ObjectId,
+  venueId: String,//Schema.ObjectId,
   name: String,
   time: String,
   artists: [String]
