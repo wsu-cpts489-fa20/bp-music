@@ -100,7 +100,6 @@ class CoursesPage extends React.Component {
             if (res.status != 200) {
                 this.setState({statusMsg: msg});
             } else {
-                this.props.refreshOnUpdate(AppMode.COURSES);
                 this.setState({statusMsg: "Successfully subscribed to " + venue.user.displayName + "!"});
             }
         }
