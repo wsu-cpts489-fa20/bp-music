@@ -54,7 +54,8 @@ module.exports = function (app) {
                 authStrategy: 'local',
                 profilePicURL: req.body.profilePicURL,
                 securityQuestion: req.body.securityQuestion,
-                securityAnswer: req.body.securityAnswer
+                securityAnswer: req.body.securityAnswer,
+                accountType: req.body.accountType
             });
 
             await new Fan({
