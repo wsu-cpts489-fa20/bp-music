@@ -14,12 +14,14 @@ class FeedPage extends React.Component {
     }
 
     render() {
-        console.log(this.props.overObj);
+        console.log("the userObj is" + this.props.userObj.accountType);
         return (
         <div className="padded-page">
+             {(this.props.userObj.accountType === "venue") ? 
             <EventsTable
             rounds={this.props.overObj.eventIDs}
             />
+            :null}
         </div>
         );
     }   
