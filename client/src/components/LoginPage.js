@@ -221,6 +221,7 @@ cancelCreateAccount = () => {
                 done={this.accountCreateDone}
                 cancel={this.cancelCreateAccount} /> : null}
             {this.state.showResetPasswordDialog ? <ResetPasswordDialog /> : null}
+            <img src="https://drive.google.com/thumbnail?id=1hmU7yFQq-w-I65D3FlkdJvznyC_nMF3L" alt="background" className="login-background"></img>
         </center>
         </div>
         )
