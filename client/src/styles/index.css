@@ -1,4 +1,4 @@
-/* INDEX.CSS -- The style definitions for the Speedgolf App. These are imported
+/* INDEX.CSS -- The style definitions for the Local Music App. These are imported
   in index.css for the entire app. */
 
 /* Styling of the fixed top bar in the app */
@@ -16,6 +16,7 @@
   border-radius: 0px;
   padding: 0px;
   z-index: 100; /* Force it to be on top */
+  font-family: Roboto Slab;
 }
 
 .navbar-title {
@@ -41,7 +42,6 @@ padding-bottom: 5px;
   z-index: 150; /* Force the menu to be at front */
   top: 48px; /* Position menu 48 px from top of screen; accomodates top navbar */
   left: 0; /* Position the menu on the left hand side */
-  /* background-color: rgba(51, 170, 51, .1)  #3B3B3B;  Background color is dark blue */
   overflow-x: hidden; /* Don't allow horizontal scroll */
   transition: 0.5s; /* Animation transition time is 0.5 sec */
   padding-top: 12px; /* Place menu content 12 px from top */
@@ -146,11 +146,11 @@ text-align: center;
 }
 
 
-/* The SpeedScore dark blue color theme  */       
+/* Local Music Red and light grey color theme  */       
 .btn-color-theme {
   background-color: #C4C4C4;
-  border-color: #C4C4C4;
-  color: white;
+  border-color: #8C011F;
+  color: #8C011F;
   }
 
 .btn.btn-primary:disabled{
@@ -199,7 +199,7 @@ cursor: pointer;
 
 /* Styling for mode bar at the bottom of the page */
 .modebar {
-background: repeating-linear-gradient(#8C011F, #8C011F 49.9%, #4D0112 50.1%, #4D0112 100%);;
+background: repeating-linear-gradient(#8C011F, #8C011F 49.9%, #4D0112 50.1%, #4D0112 100%);
 overflow: hidden;
 position: fixed;
 bottom: 0;
@@ -306,6 +306,10 @@ font-size: 36px;
 font-family: Roboto Slab;
 }
 
+.login-background {
+  opacity: 0.2;
+}
+
 /* Form styling */
 
 .form-center {
@@ -337,7 +341,7 @@ text-align: center;
 }
 
 .login-link {
-  color:  #C4C4C4;
+  color:  #8C011F;
 }
 
 .modal {
@@ -352,6 +356,7 @@ text-align: center;
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  font-family: Roboto Slab;
 }
 
 .modal-content {
@@ -363,7 +368,7 @@ text-align: center;
 
 .modal-header {
     padding: 2px 16px;
-    background-color: #C4C4C4;
+    background-color: repeating-linear-gradient(#8C011F, #8C011F 49.9%, #4D0112 50.1%, #4D0112 100%);
     color: white;
   }
   
