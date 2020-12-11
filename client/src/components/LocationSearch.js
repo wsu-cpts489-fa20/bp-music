@@ -121,7 +121,7 @@ class LocationSearch extends React.Component {
         let noEventsFound = false;
         for (let venue of this.state.venuesNearMe) {
             for (let eventId of venue.eventIDs) {
-                let res = await fetch('events/' + eventId, { method: 'GET' });
+                let res = await fetch('events/search/' + eventId.name, { method: 'GET' });
                 if (res.status === 200) {
                     events.push(JSON.parse(await res.text()));
                 }
