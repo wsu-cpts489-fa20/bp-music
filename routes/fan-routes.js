@@ -42,7 +42,7 @@ module.exports = function (app) {
         }
 
         try {
-            let thisFan = await Fan.findOne({ 'user.id': req.params.userId });
+            let thisFan = await Fan.findOne({ 'id': req.params.userId });
             if (thisFan) { //account already exists
                 return res.status(400).send("There is already an account with email '" +
                     req.params.userId + "'.");

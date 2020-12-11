@@ -39,7 +39,7 @@ class CoursesPage extends React.Component {
         let from = new LatLng(this.state.lat, this.state.long)
         let to = new LatLng(venueLat, venueLong);
         let distance = computeDistanceBetween(from, to);
-        return distance;
+        return distance*0.000621371;
     }
 
     // Called as soon as user location data is recieved
@@ -81,13 +81,28 @@ class CoursesPage extends React.Component {
         }
     }
 
-    subscribe = (venue) => {
-        console.log(venue._id);
-        console.log(this.props.userObj);
+    subscribe = async (venue) => {
         console.log(this.props.accountObj);
+        console.log(this.props.accountObj._id);
+        console.log(this.props.accountObj.user.id);
         if (this.props.accountType === "fan") {
-            this.props.accountObj.venues.push(venue._id.str);
-            this.setState({statusMsg: "Successfully subscribed to " + venue.user.displayName + "!"});
+            this.props.accountObj.venues.push(venue._id.toString());
+            let data = {venues: this.props.accountObj.venues}
+            const url = '/fans/' + this.props.accountObj.user.id
+            const res = await fetch(url, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                    },
+                method: 'PUT',
+                body: JSON.stringify(data)}); 
+            const msg = await res.text();
+            if (res.status != 200) {
+                this.setState({statusMsg: msg});
+            } else {
+                this.props.refreshOnUpdate(AppMode.COURSES);
+                this.setState({statusMsg: "Successfully subscribed to " + venue.user.displayName + "!"});
+            }
         }
         else {
             this.setState({statusMsg: "Oops! Please sign in on your Fan Account to subscribe to other Venues."});
@@ -107,7 +122,7 @@ class CoursesPage extends React.Component {
               <tr>
                 <th>Name</th>
                 <th>Address</th>
-                <th>Distance (in meters)</th>
+                <th>Distance (in miles)</th>
                 <th>Subscribe</th>
               </tr>
               </thead>
