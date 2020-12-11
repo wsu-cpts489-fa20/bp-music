@@ -39,6 +39,7 @@ class App extends React.Component {
                   menuOpen: false,
                   authenticated: false,
                   userObj: {displayName: "", profilePicURL: ""},
+                  accountObj: {},
                   editAccount: false,
                   showEditAccountDialog: false,
                   statusMsg: "",
@@ -59,6 +60,7 @@ class App extends React.Component {
             this.setState({
               overObj: obj.user,
               userObj: obj.user.user,
+              accountObj: obj.user,
               authenticated: true,
               mode: AppMode.LOCATION_SEARCH //We're authenticated so can get into the app.
             });
@@ -169,8 +171,7 @@ class App extends React.Component {
             <VenueAccount
             userId={this.state.userObj.id} 
             done={this.editAccountDone}
-            cancel={this.cancelVenueAccount}
-              /> : null}
+            cancel={this.cancelVenueAccount}/> : null}
         
         <NavBar 
           title={modeTitle[this.state.mode]} 
@@ -178,32 +179,34 @@ class App extends React.Component {
           changeMode={this.handleChangeMode}
           menuOpen={this.state.menuOpen}
           toggleMenuOpen={this.toggleMenuOpen}/>
-          <SideMenu 
-            menuOpen = {this.state.menuOpen}
-            mode={this.state.mode}
-            toggleMenuOpen={this.toggleMenuOpen}
-            displayName={this.state.userObj.displayName}
-            profilePicURL={this.state.userObj.profilePicURL}
-            localAccount={this.state.userObj.authStrategy === "local"}
-            editAccount={this.showEditAccount}
+        <SideMenu 
+          menuOpen = {this.state.menuOpen}
+          mode={this.state.mode}
+          toggleMenuOpen={this.toggleMenuOpen}
+          displayName={this.state.userObj.displayName}
+          profilePicURL={this.state.userObj.profilePicURL}
+          localAccount={this.state.userObj.authStrategy === "local"}
+          editAccount={this.showEditAccount}
 
-            accountType={this.state.userObj.accountType}
-            VenueAccount={this.showVenueAccount}
-            
-            logOut={() => this.handleChangeMode(AppMode.LOGIN)}
-            showAbout={() => {this.setState({showAboutDialog: true})}}
-            changeMode={this.handleChangeMode}/>
-          <ModeBar 
-            mode={this.state.mode} 
-            changeMode={this.handleChangeMode}
-            menuOpen={this.state.menuOpen}/>
-          <ModePage 
-            menuOpen={this.state.menuOpen}
-            mode={this.state.mode}
-            changeMode={this.handleChangeMode}
-            overObj={this.state.overObj}
-            userObj={this.state.userObj}
-            refreshOnUpdate={this.refreshOnUpdate}/>
+          accountType={this.state.userObj.accountType}
+          VenueAccount={this.showVenueAccount}
+          
+          logOut={() => this.handleChangeMode(AppMode.LOGIN)}
+          showAbout={() => {this.setState({showAboutDialog: true})}}
+          changeMode={this.handleChangeMode}/>
+        <ModeBar 
+          mode={this.state.mode} 
+          changeMode={this.handleChangeMode}
+          menuOpen={this.state.menuOpen}
+          accountType={this.state.userObj.accountType}/>
+        <ModePage 
+          menuOpen={this.state.menuOpen}
+          mode={this.state.mode}
+          changeMode={this.handleChangeMode}
+          userObj={this.state.userObj}
+          accountObj= {this.state.accountObj}
+          accountType={this.state.userObj.accountType}
+          refreshOnUpdate={this.refreshOnUpdate}/>
       </div>
     );  
   }
