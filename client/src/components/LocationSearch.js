@@ -20,8 +20,7 @@ class LocationSearch extends React.Component {
             eventsNearMe: [],
             noEvents: false,
             searchType: '1',
-            statusMsg: "",
-            subscribed: false
+            statusMsg: ""
         }
         this.showNearMe();
     }
@@ -301,7 +300,7 @@ class LocationSearch extends React.Component {
         if (table.length > 0) {
             return table;
         } else if(this.state.noEvents){
-            return (<div>No events were found</div>)
+            return (<div>No nearby events found</div>)
         } else {
             return (<div>Loading nearby events...</div>)
         }
