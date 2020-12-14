@@ -20,7 +20,7 @@ class LocationSearch extends React.Component {
             eventsNearMe: [],
             noEvents: false,
             searchType: '1',
-            statusMsg: "",
+            statusMsg: ""
         }
         this.showNearMe();
     }
@@ -163,7 +163,9 @@ class LocationSearch extends React.Component {
                     <button className="btn btn-primary btn-color-theme" role="submit">Submit</button>
                 </form>
                 {this.state.eventSearchResult !== null ? <div>{this.state.eventSearchResult.name}</div> : null }
-                {this.state.venueSearchResult !== null ? <div>{this.state.venueSearchResult.user.displayName}</div> : null }
+                {this.state.venueSearchResult !== null ? 
+                    <div>{this.state.venueSearchResult.user.displayName}
+                    {this.state.venueSearchResult.user.address}</div> : null }
             </center>
         )
         // return (
@@ -210,7 +212,7 @@ class LocationSearch extends React.Component {
                     <td>{venue.user.displayName}</td>
                     <td>{venue.streetAddress}</td>
                     <td>{this.computeMiles(venue.lat, venue.long)}</td>
-                    <td><button onClick={() => this.subscribe(venue)}><span className="fa fa-bookmark-o"></span></button></td>
+                    <td><button onClick={() => this.subscribe(venue)}><span id={venue.user.displayName} className={this.props.accountObj.venues.includes(venue._id.toString()) ? "fa fa-bookmark" : "fa fa-bookmark-o"}></span></button></td>
                 </tr>
             )
         }
@@ -221,9 +223,47 @@ class LocationSearch extends React.Component {
         }
     }
 
+    renderVenuesTable = () => {
+        return(
+            <div className="padded-page">
+              <h1></h1>
+              <table className="table table-hover">
+                <thead className="thead-light">
+                <tr>
+                  <th>Name</th>
+                  <th>Address</th>
+                  <th>Distance (in miles)</th>
+                  <th>Subscribe</th>
+                </tr>
+                </thead>
+                <tbody>
+                  {this.renderVenues()}
+                </tbody>
+              </table>
+            </div>
+        );
+    }
+
     subscribe = async (venue) => {
+        let othermsg;
         if (this.props.accountType === "fan") {
-            this.props.accountObj.venues.push(venue._id.toString());
+            if (this.props.accountObj.venues.includes(venue._id.toString())) {
+                for ( var i = 0; i < this.props.accountObj.venues.length; i++){ 
+                    if ( this.props.accountObj.venues[i] === venue._id.toString()) { 
+                        this.props.accountObj.venues.splice(i, 1); 
+                    }
+                }
+                if (!this.props.accountObj.venues.includes(venue._id.toString())) {
+                    const othermsg = "Unsubscribed from " + venue.user.displayName;
+                }
+            }
+            else {
+                this.props.accountObj.venues.push(venue._id.toString());
+                if (this.props.accountObj.venues.includes(venue._id.toString())) {
+                    const othermsg = "Successfully subscribed to " + venue.user.displayName + "!";
+                }
+            }
+            // Push data to mongodb
             let data = {venues: this.props.accountObj.venues}
             const url = '/fans/' + this.props.accountObj.user.id
             const res = await fetch(url, {
@@ -237,7 +277,7 @@ class LocationSearch extends React.Component {
             if (res.status != 200) {
                 this.setState({statusMsg: msg});
             } else {
-                this.setState({statusMsg: "Successfully subscribed to " + venue.user.displayName + "!"});
+                this.setState({statusMsg: othermsg});
             }
         }
         else {
@@ -249,17 +289,41 @@ class LocationSearch extends React.Component {
         let table = []
         for (let newEvent of this.state.eventsNearMe) {
             table.push(
-                <div>{newEvent.name}</div>
+                <tr>
+                    <td>{newEvent.name}</td>
+                    <td>{newEvent.time}</td>
+                    <td>{newEvent.artists}</td>
+                </tr>
             )
         }
 
         if (table.length > 0) {
             return table;
         } else if(this.state.noEvents){
-            return (<div>No events were found</div>)
+            return (<div>No nearby events found</div>)
         } else {
             return (<div>Loading nearby events...</div>)
         }
+    }
+
+    renderEventsTable = () => {
+        return(
+            <div className="padded-page">
+              <h1></h1>
+              <table className="table table-hover">
+                <thead className="thead-light">
+                <tr>
+                  <th>Name</th>
+                  <th>Time</th>
+                  <th>Artists</th>
+                </tr>
+                </thead>
+                <tbody>
+                  {this.renderEvents()}
+                </tbody>
+              </table>
+            </div>
+            );
     }
 
     renderNearMe = () => {
@@ -274,9 +338,9 @@ class LocationSearch extends React.Component {
                         <option value="50">50 miles</option>
                     </select>
                 </label>
-                {this.renderVenues()}
+                {this.renderVenuesTable()}
                 <hr></hr>
-                {this.renderEvents()}
+                {this.renderEventsTable()}
             </center>
         )
     }
@@ -293,10 +357,6 @@ class LocationSearch extends React.Component {
                     </table>
                 </center>
                 {this.state.search ? this.renderSearch() : this.renderNearMe()}
-                {this.state.statusMsg != "" ? <div className="status-msg">
-              <span>{this.state.statusMsg}</span>
-              <button className="modal-close" onClick={this.closeStatusMsg}>
-                  <span className="fa fa-times"></span></button></div> : null}
             </div>
         )
     }
