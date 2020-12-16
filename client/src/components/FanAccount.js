@@ -133,7 +133,6 @@ class FanAccount extends React.Component {
     render() {
         return(
             <div className="modal" role="dialog" id="editFanDialog">
-            {console.log(this.props.genres)}
             <div className="modal-dialog modal-lg"></div>
             <div className="modal-content form-center">
             <div className="modal-header">
@@ -143,8 +142,6 @@ class FanAccount extends React.Component {
             <div className="modal-body">
             <form onSubmit={this.props.cancel}>
             <br/>
-            {console.log("This.props.genres: ", this.props.genres)}
-            {console.log("This.props.userData.genres: ", this.userData.genres)}
             <label>
                 Favorited Genres:
                 {/*this.userData.genres.map(this.createGenreCheckbox)*/}
