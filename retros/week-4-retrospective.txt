@@ -1,0 +1,11 @@
+(12/15) Local Music Retrospective
+	- What went well?
+		○ Closed out all rollover from milestone 3 and hit our milestone 4 goals.
+    ○ Estimated our work commitments better and pruned tasks for minimum product.
+    ○ Communicated mvp design goals better and had a consolidated vision.
+	- What didn't go well?
+		○ Last minute demo preparation
+    ○ Too quick of code reviews that missed issues that became bugs later
+    ○ Merge issues
+  - What can we do better?
+    ○ If we were continuing on this project, refactoring the code for future development and managing our deadlines a little more precisely

@@ -226,6 +226,7 @@ class App extends React.Component {
           mode={this.state.mode}
           changeMode={this.handleChangeMode}
           userObj={this.state.userObj}
+          overObj={this.state.overObj}
           accountObj= {this.state.accountObj}
           accountType={this.state.userObj.accountType}
           refreshOnUpdate={this.refreshOnUpdate}/>

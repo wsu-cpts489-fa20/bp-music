@@ -112,17 +112,47 @@ class CoursesPage extends React.Component {
         this.setState({statusMsg: ""});
     }
 
+    renderUserVenues = async () => {
+        let table = [];
+        for (let venue of this.props.accountObj.venues) {
+            let res = await fetch('/venues/' + venue, { method: 'GET' });
+            if (res.status === 200) {
+                let data = JSON.parse(await res.text());
+            }
+            table.push(
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><button><span className="fa fa-facebook"></span></button></td>
+                    <td><button><span className="fa fa-instagram"></span></button></td>
+                </tr>
+            )
+        }
+        if (table.length > 0) {
+            return table;
+        } else {
+            return (<div>You're not subscribed to any venues!</div>)
+        }
+
+    }
+
     render() {
-        return (
-        <div className="padded-page">
-            <center>
-            <h1 >Your Venues</h1>
-            <h2>This page is under construction.</h2>
-            <img src="https://drive.google.com/thumbnail?id=1eZNPpR_z5XeD0EgHckjFhyPXxTNrkT0Y" 
-             height="200" width="300"/>
-            <p style={{fontStyle: "italic"}}>Version CptS 489 React Demo</p>
-            </center>
-        </div>
+        return(
+            <div className="padded-page">
+              <h1>Your Venues</h1>
+              <table className="table table-hover">
+                <thead className="thead-light">
+                <tr>
+                  <th>Name</th>
+                  <th>Address</th>
+                  <th>Social</th>
+                </tr>
+                </thead>
+                <tbody>
+                  
+                </tbody>
+              </table>
+            </div>
         );
     }   
 }
