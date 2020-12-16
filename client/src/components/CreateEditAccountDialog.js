@@ -206,6 +206,9 @@ class CreateEditAccountDialog extends React.Component {
             securityQuestion: this.state.securityQuestion,
             securityAnswer: this.state.securityAnswer,
             accountType: this.state.accountType,
+            genres: [],
+            artists: [],
+            venues: []
         };
         if (this.state.accountType == "fan") {
             userData.genres = this.state.genres;
@@ -794,7 +797,7 @@ selectAllGenreCheckboxes = isSelected => {
 
   deselectAllVenue = () => this.selectAllVenueCheckboxes(false);
 
-  // Functions to handle checkboxe changes genre/artist/venue
+  // Functions to handle checkbox changes genre/artist/venue
   handleGenreCheckboxChange = changeEvent => {
     const { name } = changeEvent.target;
 

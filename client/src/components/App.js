@@ -11,6 +11,7 @@ import CoursesPage from './CoursesPage.js';
 import AboutBox from './AboutBox.js';
 import LocationSearch from './LocationSearch.js';
 import VenueAccount from './VenueAccount.js';
+import FanAccount from './FanAccount.js';
 
 const modeTitle = {};
 modeTitle[AppMode.LOGIN] = "URScene Login";
@@ -45,12 +46,12 @@ class App extends React.Component {
                   statusMsg: "",
                   showAboutDialog: false,
                   showVenueAccountDialog: false,
+                  showFanAccountDialog: false,
                  };
   }
 
   //componentDidMount
   componentDidMount() {
-
     if (!this.state.authenticated) { 
       //Use /auth/test route to (re)-test authentication and obtain user data
       fetch("/auth/test")
@@ -127,6 +128,17 @@ class App extends React.Component {
   cancelVenueAccount = () => {
     this.setState({showVenueAccountDialog: false});
   }
+
+  // Fan Account show/hide dialog
+  showFanAccount = () => {
+    this.setState({showFanAccountDialog: true});
+
+  }
+
+  cancelFanAccount = () => {
+    this.setState({showFanAccountDialog: false});
+  }
+
   //editAccountDone -- called after successful edit or
   //deletion of user account. msg contains the status
   //message and deleted indicates whether an account was
@@ -139,7 +151,7 @@ class App extends React.Component {
       } else {
         this.setState({showEditAccountDialog: false,
           statusMsg: msg});
-        this.setState({showVenueAccountDialog: false});
+        this.setState({showVenueAccountDialog: false, showFanAccountDialog: false});
       }
   }
 
@@ -172,7 +184,16 @@ class App extends React.Component {
             userId={this.state.userObj.id} 
             done={this.editAccountDone}
             cancel={this.cancelVenueAccount}/> : null}
-        
+
+        {this.state.showFanAccountDialog ? 
+            <FanAccount
+              userId={this.state.userObj.id} 
+              genres={this.state.userObj.genres}
+              venues={this.state.userObj.venues}
+              artists={this.state.userObj.artists}
+              done={this.editAccountDone}
+              cancel={this.cancelFanAccount}/> : null}
+
         <NavBar 
           title={modeTitle[this.state.mode]} 
           mode={this.state.mode}
@@ -190,6 +211,7 @@ class App extends React.Component {
 
           accountType={this.state.userObj.accountType}
           VenueAccount={this.showVenueAccount}
+          FanAccount={this.showFanAccount}
           
           logOut={() => this.handleChangeMode(AppMode.LOGIN)}
           showAbout={() => {this.setState({showAboutDialog: true})}}
