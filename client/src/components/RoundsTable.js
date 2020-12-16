@@ -74,34 +74,9 @@ class RoundsTable extends React.Component {
   //render--render the entire rounds table with header, displaying a "No
   //Rounds Logged" message in case the table is empty.
   render() {
-    return(
-    <div className="padded-page">
-      <h1></h1>
-      <table className="table table-hover">
-        <thead className="thead-light">
-        <tr>
-          <th>Date</th>
-          <th>Course</th>
-          <th>Score</th>
-          <th>View/Edit...</th>
-          <th>Delete</th>
-        </tr>
-        </thead>
-        <tbody>
-          {Object.keys(this.props.rounds).length === 0 ? 
-          <tr>
-          <td colSpan="5" style={{fontStyle: "italic"}}>No rounds logged</td>
-          </tr> : this.renderTable()
-          }
-        </tbody>
-      </table>
-      {this.state.showConfirmDelete ?
-        <ConfirmDeleteRound 
-          close={() => this.setState({showConfirmDelete: false})} 
-          deleteRound={this.deleteRound} /> : null}
-    </div>
-    );
+    return(1);
   }
+
 }
 
 export default RoundsTable;

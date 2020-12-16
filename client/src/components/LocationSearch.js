@@ -20,7 +20,8 @@ class LocationSearch extends React.Component {
             eventsNearMe: [],
             noEvents: false,
             searchType: '1',
-            statusMsg: ""
+            statusMsg: "",
+            subscribed: false
         }
         this.showNearMe();
     }
@@ -212,7 +213,7 @@ class LocationSearch extends React.Component {
                     <td>{venue.user.displayName}</td>
                     <td>{venue.streetAddress}</td>
                     <td>{this.computeMiles(venue.lat, venue.long)}</td>
-                    <td><button onClick={() => this.subscribe(venue)}><span id={venue.user.displayName} className={this.props.accountObj.venues.includes(venue._id.toString()) ? "fa fa-bookmark" : "fa fa-bookmark-o"}></span></button></td>
+                    <td><button onClick={() => this.subscribe(venue)}><span id={venue.user.displayName} className="fa fa-bookmark-o"></span></button></td>
                 </tr>
             )
         }
@@ -247,6 +248,7 @@ class LocationSearch extends React.Component {
     subscribe = async (venue) => {
         let othermsg;
         if (this.props.accountType === "fan") {
+            // unsubscribe
             if (this.props.accountObj.venues.includes(venue._id.toString())) {
                 for ( var i = 0; i < this.props.accountObj.venues.length; i++){ 
                     if ( this.props.accountObj.venues[i] === venue._id.toString()) { 
@@ -255,12 +257,14 @@ class LocationSearch extends React.Component {
                 }
                 if (!this.props.accountObj.venues.includes(venue._id.toString())) {
                     const othermsg = "Unsubscribed from " + venue.user.displayName;
+                    document.getElementById(venue.user.displayName).className = "fa fa-bookmark-o"
                 }
             }
-            else {
+            else { // subscribe
                 this.props.accountObj.venues.push(venue._id.toString());
                 if (this.props.accountObj.venues.includes(venue._id.toString())) {
                     const othermsg = "Successfully subscribed to " + venue.user.displayName + "!";
+                    document.getElementById(venue.user.displayName).className = "fa fa-bookmark"
                 }
             }
             // Push data to mongodb
@@ -300,7 +304,7 @@ class LocationSearch extends React.Component {
         if (table.length > 0) {
             return table;
         } else if(this.state.noEvents){
-            return (<div>No nearby events found</div>)
+            return (<div>No events were found</div>)
         } else {
             return (<div>Loading nearby events...</div>)
         }
